@@ -1,0 +1,21 @@
+{
+  "pass": "Appendix D Conformance (Official Appendix D.1-D.7 Dual-Profile + 7 Formally Verified Witness Vectors)",
+  "total_cases": 96,
+  "appendix_d_draft08_cases": 40,
+  "appendix_d_strict_cases": 40,
+  "strict_profile_witness_cases": 16,
+  "positive_cases_accepted": 24,
+  "negative_cases_rejected_invalid": 30,
+  "boundary_cases_unverifiable": 42,
+  "python_vs_rust_divergences": 0,
+  "spec_assertion_failures": 0,
+  "d1_d2_merkle_root_verified": "b4d19ae256a6c3bceb27d1a31fbb3dd3e4574616ebe99a367d6ad7224b7e0749",
+  "d3_block_height_verified": 957289,
+  "d3_bip113_preceding11_mtp": "2026-07-09T09:24:46Z (1783589086)",
+  "d3_printed_mtp_discrepancy_detected": "2026-07-09T09:26:48Z (1783589208, [H-10..H] inclusive window)",
+  "d3_forward_mtp_h_plus_5": "2026-07-09T10:02:59Z (1783591379, exact 6 confirmations / zero extra wait)",
+  "d3_forward_mtp_h_plus_6": "2026-07-09T10:33:10Z (1783593190)",
+  "d3_forward_mtp_h_plus_11": "2026-07-09T11:03:53Z (1783595033)",
+  "elapsed_ms": 29.78,
+  "verdict": "PASS"
+}

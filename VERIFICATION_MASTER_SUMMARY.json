@@ -1,0 +1,40 @@
+{
+  "target_specification": "draft-fassbender-scitt-time-anchor-08",
+  "profiles": [
+    "draft08",
+    "strict"
+  ],
+  "engines": [
+    "python3-stdlib",
+    "rust-safe-no-unsafe",
+    "wasm32-unknown-unknown-zero-imports"
+  ],
+  "wasm_binary_bytes": 114738,
+  "wasm_sha256": "ba6485945a52eca8e3d1176855de91518b3224f60045276663abcc21bb24aff3",
+  "appendix_d_conformance": {
+    "total_cases": 96,
+    "passed": 96,
+    "py_rust_divergences": 0
+  },
+  "z3_formal_proofs": {
+    "theorems_verified": 10,
+    "status": "ALL_VERIFIED"
+  },
+  "triple_engine_differential_50k": {
+    "total_vectors": 50000,
+    "divergences": 0
+  },
+  "adversarial_mutation_fuzz_100k": {
+    "total_mutations": 100000,
+    "divergences": {
+      "python_vs_rust": 0,
+      "rust_vs_wasm": 0,
+      "python_vs_wasm": 0,
+      "total": 0
+    },
+    "wasm_single_instance_calls": 120000,
+    "wasm_steady_state_heap_delta_bytes": 0
+  },
+  "draft09_patch_dry_run_clean": true,
+  "elapsed_seconds": 1.31
+}

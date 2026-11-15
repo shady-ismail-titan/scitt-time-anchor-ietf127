@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IETF 127 Hackathon — draft-fassbender-scitt-time-anchor-08</title>
+<style>
+  @page { size: 16in 9in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #fff; color: #0f172a; }
+  .slide {
+    width: 16in; height: 9in; padding: 0.65in 0.8in;
+    page-break-after: always; display: flex; flex-direction: column; justify-content: space-between;
+    background: #ffffff; border-bottom: 6px solid #0f172a;
+  }
+  .slide:last-child { page-break-after: auto; }
+  .hdr { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #cbd5e1; padding-bottom: 14px; }
+  .tag { font-size: 20pt; font-weight: 700; color: #1d4ed8; letter-spacing: 0.02em; }
+  .meta { font-size: 18pt; color: #475569; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  h1 { font-size: 34pt; line-height: 1.18; color: #0f172a; margin-top: 14px; font-weight: 800; }
+  h2 { font-size: 28pt; line-height: 1.2; color: #0f172a; margin-top: 10px; font-weight: 800; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 18px; flex: 1; align-content: start; }
+  .card { background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 20px 24px; }
+  .card h3 { font-size: 22pt; color: #1e3a8a; margin-bottom: 10px; }
+  ul { padding-left: 28px; }
+  li { font-size: 20pt; line-height: 1.38; margin-bottom: 9px; color: #1e293b; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #e2e8f0; padding: 1px 6px; border-radius: 4px; font-size: 18.5pt; color: #0f172a; }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 18.5pt; }
+  th, td { border: 1.5px solid #cbd5e1; padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: #0f172a; color: #ffffff; font-weight: 700; font-size: 18.5pt; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  .ok { color: #15803d; font-weight: 700; }
+  .warn { color: #b45309; font-weight: 700; }
+  .bad { color: #b91c1c; font-weight: 700; }
+  .ftr { display: flex; justify-content: space-between; font-size: 17pt; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+</style>
+</head>
+<body>
+
+<section class="slide">
+  <div>
+    <div class="hdr">
+      <span class="tag">IETF 127 HACKATHON &middot; SAN FRANCISCO / REMOTE</span>
+      <span class="meta">draft-fassbender-scitt-time-anchor-08</span>
+    </div>
+    <h1>Independent Triple-Engine Verifier, Multi-Vendor Interop &amp; Formal Spec Audit</h1>
+    <div class="grid2">
+      <div class="card">
+        <h3>What Was Built (Apache-2.0)</h3>
+        <ul>
+          <li><strong>Python 3 Verifier:</strong> Pure standard library (<code>0</code> runtime deps).</li>
+          <li><strong>Safe Rust Verifier:</strong> <code>#![forbid(unsafe_code)]</code>, iterative <code>O(1)</code> stack parser.</li>
+          <li><strong>Offline Browser WASM Lab:</strong> <code>112.0 KB</code> raw (<code>44.7 KB</code> gzip), <code>0</code> host imports, <code>connect-src 'none'</code>.</li>
+          <li><strong>Z3 SMT + Differential Harness:</strong> <code>50,000</code> triple-engine vectors + <code>100,000</code> binary/CBOR mutations (<code>0</code> divergences).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Answering the Champion's Core Question</h3>
+        <ul>
+          <li><strong>Appendix D.1&ndash;D.7 Conformance:</strong> <code>100%</code> match across Python, Rust, and WASM in <code>--mode draft08</code>.</li>
+          <li><strong>Where Two Readings Were Defensible:</strong> Found <code>7</code> concrete ambiguities across wire parsing, consensus fork-choice, <code>BIP-113</code> MTP, and SCITT <code>COSE_Sign1</code> header <code>394</code> relay.</li>
+          <li><strong>Non-Normative Feedback to Editor:</strong> Illustrative diff + byte-exact <code>.ots</code> &amp; <code>COSE_Sign1</code> vectors (<code>C1</code>, <code>N9&ndash;N16</code>); default <code>draft08</code> mode stays <code>100%</code> compatible.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ftr">
+    <span>Shady Ismail &middot; Independent Time Anchoring</span>
+    <span>Slide 1 / 4</span>
+  </div>
+</section>
+
+<section class="slide">
+  <div>
+    <div class="hdr">
+      <span class="tag">EMPIRICAL MULTI-VENDOR INTEROPERABILITY (16 x 8 MATRIX)</span>
+      <span class="meta">7 External Codebases + Triple Engine</span>
+    </div>
+    <h2>Live Mainnet Proofs &amp; Cross-Runtime Divergence Witnesses</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Vector / Proof</th>
+          <th>Umarise / OTS JS</th>
+          <th>EMILIA (-06)*</th>
+          <th>CryptoGeek (-03)*</th>
+          <th>DPS (-08)</th>
+          <th>Ours (draft08 / strict)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>D.5</code> (957289) &amp; Wild Mainnet (<code>960175..968752</code>)</td>
+          <td class="ok">H matched</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid / valid</td>
+        </tr>
+        <tr>
+          <td><code>V07</code> Upstream 2015 P2PKH (<code>OpRIPEMD160</code>)</td>
+          <td>H=358391</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable / <span class="bad">invalid</span></td>
+        </tr>
+        <tr>
+          <td><code>N9</code> 6-Byte LEB128 (<code>e9b6ba808008</code>)</td>
+          <td class="bad">H=957289 (32b&lt;&lt;)</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable</td>
+          <td class="warn">unverifiable / <span class="bad">invalid</span></td>
+        </tr>
+        <tr>
+          <td><code>N10</code> Overlong LEB128 (<code>e9b6ba00</code>)</td>
+          <td>H=957289</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid</td>
+          <td class="ok">valid / <span class="bad">invalid</span></td>
+        </tr>
+        <tr>
+          <td><code>N11</code> Header <code>file_hash_op=0x67</code> (Keccak)</td>
+          <td class="bad">PARSE_ERR</td>
+          <td class="bad">invalid</td>
+          <td class="ok">valid (-03)</td>
+          <td class="bad">invalid</td>
+          <td class="bad">invalid / invalid</td>
+        </tr>
+        <tr>
+          <td><code>N15</code> Trailing Payload (<code>e9b63adeadbeef</code>)</td>
+          <td class="bad">H=957289</td>
+          <td class="bad">invalid</td>
+          <td class="bad">invalid</td>
+          <td class="ok">valid (prefix)</td>
+          <td class="bad">invalid / invalid</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:17.5pt; color:#475569; margin-top:10px;">*Fairness note: <code>CryptoGeekPT</code> (-03) and <code>EMILIA</code> (-06) target earlier draft revisions; differences reflect spec evolution across drafts, not implementation bugs.</p>
+  </div>
+  <div class="ftr">
+    <span>Shady Ismail &middot; Independent Time Anchoring</span>
+    <span>Slide 2 / 4</span>
+  </div>
+</section>
+
+<section class="slide">
+  <div>
+    <div class="hdr">
+      <span class="tag">KEY SPECIFICATION GAPS &amp; Z3 COUNTEREXAMPLES</span>
+      <span class="meta">Sections 3.3, 4.1, 6, 7.1 &amp; Appendix D.5</span>
+    </div>
+    <h2>Non-Normative Implementer Feedback Offered to Editor &amp; WG</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Wire, Stack &amp; Consensus Precision</h3>
+        <ul>
+          <li><strong>JS vs Python LEB128 Split-Brain:</strong> <code>0xe9b6ba808008</code> shifts mod 32 in JS to real Block <code>957,289</code> while Python/Rust read <code>274.8B</code>. Fix: canonical <code>&le; 5</code>-byte <code>u32</code> LEB128.</li>
+          <li><strong>Recursive WASM Stack Guard:</strong> <code>4,096</code>-op linear proof triggers Python <code>RecursionError</code> and overflows <code>1 MB</code> WASM stacks. Fix: iterative work-stack + depth cap.</li>
+          <li><strong>Step 8/9 Ordering &amp; <code>SetCompact</code>:</strong> Filter <code>k &ge; 6</code> <em>before</em> <code>argmin(b.H)</code>; reject negative <code>nBits = 0x1dfbffff</code>; select highest 256-bit <code>ChainWork</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Appendix D.5 MTP &amp; SCITT Header 394</h3>
+        <ul>
+          <li><strong>Appendix D.5 <code>122s</code> MTP Offset:</strong> Draft prints <code>09:26:48Z</code> (inclusive <code>957279..957289</code>); exact <code>BIP-113</code> <code>median(H-11..H-1)</code> is <code>09:24:46Z</code>.</li>
+          <li><strong>Zero-Wait <code>Forward-MTP(H+5)</code>:</strong> Optional <code>median(nTime[H-5..H+5])</code> at exact <code>6</code> confirmations gives consensus non-decreasing (<code>&ge;</code>) bounds.</li>
+          <li><strong>SCITT Receipt Relay (<code>RFC 9942</code>):</strong> Appending receipts to unprotected header <code>394</code> breaks outer <code>SHA-256(COSE_Sign1)</code>; bind deterministic <code>Sig_structure</code> (<code>RFC 9921</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ftr">
+    <span>Shady Ismail &middot; Independent Time Anchoring</span>
+    <span>Slide 3 / 4</span>
+  </div>
+</section>
+
+<section class="slide">
+  <div>
+    <div class="hdr">
+      <span class="tag">CONTRIBUTIONS BACK TO SCITT &amp; NEXT STEPS</span>
+      <span class="meta">Apache-2.0 Open-Source Artifacts</span>
+    </div>
+    <h2>Ready-to-Merge Specification Diff, Vectors &amp; Offline Verifier</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Artifacts Ready for Review</h3>
+        <ul>
+          <li><code>draft09_patch/</code>: Clean 214-line unified diff against <code>-08.txt</code> + hex vectors <code>N9&ndash;N16</code>.</li>
+          <li><code>scitt_time_anchor_py</code> &amp; <code>_rs</code>: Dual CLI verifiers (<code>--mode draft08</code> &amp; <code>--mode strict</code>).</li>
+          <li><code>web/</code>: Zero-network browser verifier (<code>44.7 KB</code> gzipped WASM, <code>0</code> imports, <code>0</code> steady-state heap growth across <code>120,000</code> calls).</li>
+          <li><code>interop_matrix/</code>: Reproducible <code>16 x 8</code> multi-vendor test runner.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Open Questions for WG / Editor</h3>
+        <ul>
+          <li>Should <code>OTS-DESERIALIZE</code> mandate canonical <code>&le; 5</code>-byte LEB128 in the base profile or keep it in a strict profile?</li>
+          <li>Should Section 4.1 Step 8 filter by <code>MIN_CONFIRMATIONS</code> before <code>argmin(b.H)</code> normatively in <code>-09</code>?</li>
+          <li>Should Section 6 standardize deterministic <code>Sig_structure</code> imprint rules so header <code>394</code> receipt relays never break temporal proofs?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ftr">
+    <span>Shady Ismail (audit@titancapitalforensics.com) &middot; Table Champion: J. Fassbender &middot; scitt@ietf.org</span>
+    <span>Slide 4 / 4</span>
+  </div>
+</section>
+
+</body>
+</html>

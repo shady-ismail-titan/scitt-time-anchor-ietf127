@@ -1,0 +1,63 @@
+{
+  "pass": "Stage 3 \u2014 50,000-Vector Triple-Engine Differential Verification (Python == Native Rust == Offline WASM)",
+  "seed": 20261115,
+  "total_vectors_executed": 50000,
+  "engines_compared": [
+    "scitt_time_anchor_py (Python 3 stdlib)",
+    "scitt_time_anchor_rs (Native Rust release binary, #![forbid(unsafe_code)])",
+    "web/scitt_time_anchor.wasm (wasm32-unknown-unknown in Node V8)"
+  ],
+  "wasm_binary_metrics": {
+    "uncompressed_bytes": 114738,
+    "uncompressed_kb": 112.05,
+    "gzipped_bytes": 45822,
+    "gzipped_kb": 44.75
+  },
+  "profile_distribution": {
+    "draft08": 22604,
+    "strict": 27396
+  },
+  "outcome_distribution": {
+    "valid": 13539,
+    "invalid": 23443,
+    "unverifiable": 13018
+  },
+  "families_20": {
+    "F01_valid_mainnet_d5": 2500,
+    "F02_valid_synthetic_heights": 2500,
+    "F03_truncated_ots_cuts": 2500,
+    "F04_bitflip_msg_and_operands": 2500,
+    "F05_noncanonical_leb128_varuints": 2500,
+    "F06_op_hexlify_and_operand_caps": 2500,
+    "F07_midpath_narrow_pipe_opcodes": 2500,
+    "F08_file_hash_op_mismatch": 2500,
+    "F09_pending_uri_and_unknown_attestations": 2500,
+    "F10_claimed_hash_and_artifact_mutations": 2500,
+    "F11_missing_artifact_guard": 2500,
+    "F12_explorer_and_candidate_store_checks": 2500,
+    "F13_confirmations_boundary_k1_to_k12": 2500,
+    "F14_bip113_and_forward_mtp_windows": 2500,
+    "F15_sparse_checkpoint_argmin": 2500,
+    "F16_setcompact_and_chainwork_forks": 2500,
+    "F17_cbor_proof_bundle_determinism": 2500,
+    "F18_scitt_cose_and_multi_receipt_394": 2500,
+    "F19_producer_rfc6962_batch_trees": 2500,
+    "F20_deep_iterative_tree_stress": 2500
+  },
+  "divergences": {
+    "python_vs_rust": 0,
+    "rust_vs_wasm": 0,
+    "python_vs_wasm": 0,
+    "total_divergences": 0
+  },
+  "timings_ms": {
+    "vector_generation_ms": 90.66,
+    "python_parallel_eval_ms": 657.91,
+    "rust_native_cli_eval_ms": 1933.28,
+    "wasm_node_v8_eval_ms": 2432.52,
+    "rust_us_per_vector": 38.67,
+    "wasm_us_per_vector": 48.65,
+    "total_wall_ms": 5476.26
+  },
+  "verdict": "PASS"
+}

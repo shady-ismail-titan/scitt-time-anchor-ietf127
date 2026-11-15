@@ -1,0 +1,1828 @@
+{
+  "fetched_headers": 162,
+  "windows": {
+    "appendix_d3_957289": {
+      "start_height": 957278,
+      "end_height": 957300,
+      "header_count": 23,
+      "total_chainwork_hex": "0xaf06208e904b8ff3195e9",
+      "anchors": {
+        "957289": {
+          "height": 957289,
+          "block_hash": "000000000000000000018e5b8c68a63c45b3eeac3a05ecf621a3b3f7890e3534",
+          "ntime": 1783591379,
+          "rwcp_iso": "2026-07-09T10:02:59Z",
+          "mtp_bip113": 1783589086,
+          "mtp_bip113_iso": "2026-07-09T09:24:46Z",
+          "fmtp_6": 1783593190,
+          "fmtp_6_iso": "2026-07-09T10:33:10Z",
+          "fmtp_11": 1783595033,
+          "fmtp_11_iso": "2026-07-09T11:03:53Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "957278": {
+          "height": 957278,
+          "block_hash": "000000000000000000012c27689b21e2137d33932261f6cdaf635329019f2cc5",
+          "merkle_root_display": "6722b62d63bb1d393a32c6cf3da0a6ebbe8fb13d95e3cc2965f3eaee20509741",
+          "header_hex": "00206720d3bc4269d0c71682c9203d209207c28b5939336936d10100000000000000000041975020eeeaf36529cce3953db18fbeeba6a03dcfc6323a391dbb632db62267b45b4f6a421a0217f4d79c1f",
+          "ntime": 1783585716,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T08:28:36Z"
+        },
+        "957279": {
+          "height": 957279,
+          "block_hash": "000000000000000000011b4888493a4e3cac773ad42f836007278951db356c09",
+          "merkle_root_display": "a0d2c5a6712cfbfa9b9691aed5aefda37b03a7657af1ddeae2d9574a910b61a2",
+          "header_hex": "0060ea20c52c9f01295363afcdf6612293337d13e2219b68272c01000000000000000000a2610b914a57d9e2eaddf17a65a7037ba3fdaed5ae91969bfafb2c71a6c5d2a01d5d4f6a421a0217fe420752",
+          "ntime": 1783586077,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T08:34:37Z"
+        },
+        "957280": {
+          "height": 957280,
+          "block_hash": "000000000000000000001261373891d52c9facacc511b5ca7a7a899466b0742d",
+          "merkle_root_display": "27eb9d7c236a6dd96aa9ef1c7894771d6d1680e14928ceed539b27828484962e",
+          "header_hex": "00c00220096c35db5189270760832fd43a77ac3c4e3a4988481b010000000000000000002e96848482279b53edce2849e180166d1d7794781cefa96ad96d6a237c9deb27df5f4f6a421a0217b52ae003",
+          "ntime": 1783586783,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T08:46:23Z"
+        },
+        "957281": {
+          "height": 957281,
+          "block_hash": "000000000000000000015137f080f2ca0fa0be807f32ca206aac0f810805dfa9",
+          "merkle_root_display": "7c602fd3a7b55d994ea24d9910668067c4e34df7fa09ad66144ff0cfc72794da",
+          "header_hex": "00e069312d74b06694897a7acab511c5acac9f2cd5913837611200000000000000000000da9427c7cff04f1466ad09faf74de3c467806610994da24e995db5a7d32f607c8f624f6a421a02171785c99b",
+          "ntime": 1783587471,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T08:57:51Z"
+        },
+        "957282": {
+          "height": 957282,
+          "block_hash": "000000000000000000011e8f11c5e0333ed259047f7c4db5fe84805de0243000",
+          "merkle_root_display": "8fa4f94516df7627a96e68065003240630462b38d5533eb71a7701836e411804",
+          "header_hex": "04a00520a9df0508810fac6a20ca327f80bea00fcaf280f03751010000000000000000000418416e8301771ab73e53d5382b46300624035006686ea92776df1645f9a48f30674f6a421a0217e996f597",
+          "ntime": 1783588656,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:17:36Z"
+        },
+        "957283": {
+          "height": 957283,
+          "block_hash": "000000000000000000014c8102ad555902c52c801a0fc33bafbce317638c6d67",
+          "merkle_root_display": "74c948f0903806326534825afc035795765b7e2ddc62c4fea2c344658932fc06",
+          "header_hex": "00200e20003024e05d8084feb54d7c7f0459d23e33e0c5118f1e0100000000000000000006fc32896544c3a2fec462dc2d7e5b76955703fc5a82346532063890f048c974de684f6a421a0217620ae90c",
+          "ntime": 1783589086,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:24:46Z"
+        },
+        "957284": {
+          "height": 957284,
+          "block_hash": "000000000000000000001d24a14483899870e878cba6d380b4dc7f89c8fa7ec6",
+          "merkle_root_display": "8a5f597929ebdfd646adba4fd5888751b8fed828728f11e0e427797e1e683cef",
+          "header_hex": "00c00820676d8c6317e3bcaf3bc30f1a802cc5025955ad02814c01000000000000000000ef3c681e7e7927e4e0118f7228d8feb8518788d54fbaad46d6dfeb2979595f8a58694f6a421a02179f973daf",
+          "ntime": 1783589208,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:26:48Z"
+        },
+        "957285": {
+          "height": 957285,
+          "block_hash": "000000000000000000011ada0a2dc0b9f4113b4ac58b52d4b8a84cff3e76dfcf",
+          "merkle_root_display": "008497a1e35fa3d4c135868f95b0bdecd2b8694b581ecf0a0f44ed2f14b10fc4",
+          "header_hex": "00c03e21c67efac8897fdcb480d3a6cb78e87098898344a1241d00000000000000000000c40fb1142fed440f0acf1e584b69b8d2ecbdb0958f8635c1d4a35fe3a19784004c6d4f6a421a021771495f33",
+          "ntime": 1783590220,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:43:40Z"
+        },
+        "957286": {
+          "height": 957286,
+          "block_hash": "00000000000000000001d1342fdb7aca99530415555f8d2634ae67dc501098a3",
+          "merkle_root_display": "d44d4df233cb1130080fc4b929fec16ca3f005c557d330311f6a8775a1972e80",
+          "header_hex": "00000020cfdf763eff4ca8b8d4528bc54a3b11f4b9c02d0ada1a01000000000000000000802e97a175876a1f3130d357c505f0a36cc1fe29b9c40f083011cb33f24d4dd4556d4f6a421a0217482e2cfa",
+          "ntime": 1783590229,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:43:49Z"
+        },
+        "957287": {
+          "height": 957287,
+          "block_hash": "00000000000000000000d240a9190c852d4044894b8da2270e9451c67bd98198",
+          "merkle_root_display": "7137560eb712af3d5bbfe135476e2232963180baebaa917acedc84dd9467c212",
+          "header_hex": "00000820a3981050dc67ae34268d5f5515045399ca7adb2f34d10100000000000000000012c26794dd84dcce7a91aaebba80319632226e4735e1bf5b3daf12b70e5637716d6e4f6a421a0217922c2649",
+          "ntime": 1783590509,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:48:29Z"
+        },
+        "957288": {
+          "height": 957288,
+          "block_hash": "00000000000000000000f94e38afb9bfcfc99d90a5066adf723a06ab122255c3",
+          "merkle_root_display": "d1ebff419f6332533644d1c88f237052213bb40d9960940539df634f9da712d2",
+          "header_hex": "000006209881d97bc651940e27a28d4b8944402d850c19a940d200000000000000000000d212a79d4f63df39059460990db43b215270238fc8d144365332639f41ffebd1dd704f6a421a021754e5c558",
+          "ntime": 1783591133,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T09:58:53Z"
+        },
+        "957289": {
+          "height": 957289,
+          "block_hash": "000000000000000000018e5b8c68a63c45b3eeac3a05ecf621a3b3f7890e3534",
+          "merkle_root_display": "ef433cffccecaee6ac228360bce051519e1f820a2a356ccc4b17d3e09c3c3881",
+          "header_hex": "00000020c3552212ab063a72df6a06a5909dc9cfbfb9af384ef90000000000000000000081383c9ce0d3174bcc6c352a0a821f9e5151e0bc608322ace6aeecccff3c43efd3714f6a421a0217b143d57c",
+          "ntime": 1783591379,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:02:59Z"
+        },
+        "957290": {
+          "height": 957290,
+          "block_hash": "0000000000000000000132b9ec5e3ad6f075772fab6e55946cf08185374397bb",
+          "merkle_root_display": "9580bef9a49a94cb9857eadefffbb58ee0eea871a528bb5aa93dc17a1352a9ae",
+          "header_hex": "00e0ff3f34350e89f7b3a321f6ec053aaceeb3453ca6688c5b8e01000000000000000000aea952137ac13da95abb28a571a8eee08eb5fbffdeea5798cb949aa4f9be8095e6784f6a421a0217ea13a364",
+          "ntime": 1783593190,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:33:10Z"
+        },
+        "957291": {
+          "height": 957291,
+          "block_hash": "00000000000000000001daba40abf09785eeb0c27df6ea026efd976b9a9893a8",
+          "merkle_root_display": "a6593bcd883b09c2ea527bd038cfb32c22a39e2b653fa9486cd644af92f501a5",
+          "header_hex": "04001c24bb9743378581f06c94556eab2f7775f0d63a5eecb93201000000000000000000a501f592af44d66c48a93f652b9ea3222cb3cf38d07b52eac2093b88cd3b59a65a794f6a421a021796bccfc7",
+          "ntime": 1783593306,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:35:06Z"
+        },
+        "957292": {
+          "height": 957292,
+          "block_hash": "000000000000000000018c9178860123d6a0807d259caca21fd7608c1e272034",
+          "merkle_root_display": "a6c18ab8545b24c519e6267f35bc842fe9f020e894c6c862bf03d20eb8cc6476",
+          "header_hex": "00800720a893989a6b97fd6e02eaf67dc2b0ee8597f0ab40bada010000000000000000007664ccb80ed203bf62c8c694e820f0e92f84bc357f26e619c5245b54b88ac1a6fd7b4f6a421a021750038548",
+          "ntime": 1783593981,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:46:21Z"
+        },
+        "957293": {
+          "height": 957293,
+          "block_hash": "00000000000000000000dd7a5d1ca0d7656463b16a5086e2a712368bf31c8b2e",
+          "merkle_root_display": "cff5647abfaad801b07edb365befa780526c7de50126fff4cfd733adce3e14d1",
+          "header_hex": "00e0ff3f3420271e8c60d71fa2ac9c257d80a0d623018678918c01000000000000000000d1143ecead33d7cff4ff2601e57d6c5280a7ef5b36db7eb001d8aabf7a64f5cf3f7c4f6a421a02176eba1880",
+          "ntime": 1783594047,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:47:27Z"
+        },
+        "957294": {
+          "height": 957294,
+          "block_hash": "00000000000000000001cc9bf2b51636c106a3174a39518447c0d0cfa87437f2",
+          "merkle_root_display": "500969095ff3c4b6be1e9973e3e59a77f560d4fb649bbf945775fb7567a06ade",
+          "header_hex": "00c001202e8b1cf38b3612a7e286506ab1636465d7a01c5d7add00000000000000000000de6aa06775fb755794bf9b64fbd460f5779ae5e373991ebeb6c4f35f096909506d7c4f6a421a021715114b9c",
+          "ntime": 1783594093,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T10:48:13Z"
+        },
+        "957295": {
+          "height": 957295,
+          "block_hash": "00000000000000000001ef542f675ff62148f6afc6619699d18e52cf679ba8fb",
+          "merkle_root_display": "491c4c17be39acc471aa58fe5bed02635d0fd60520e123ed402a9faa3dd2ebd0",
+          "header_hex": "0000003ef23774a8cfd0c0478451394a17a306c13616b5f29bcc01000000000000000000d0ebd23daa9f2a40ed23e12005d60f5d6302ed5bfe58aa71c4ac39be174c1c4919804f6a421a02173cd3d548",
+          "ntime": 1783595033,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:03:53Z"
+        },
+        "957296": {
+          "height": 957296,
+          "block_hash": "00000000000000000000af4b7d18f97a9dc342569e38cb72290e9f9ecede2b33",
+          "merkle_root_display": "c63b64fd6fd708e4607bbd3b1f8fecd3bb4fa0cd46c3784560c21815af2c2117",
+          "header_hex": "0020d620fba89b67cf528ed1999661c6aff64821f65f672f54ef0100000000000000000017212caf1518c2604578c346cda04fbbd3ec8f1f3bbd7b60e408d76ffd643bc6f2804f6a421a021789d76b3a",
+          "ntime": 1783595250,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:07:30Z"
+        },
+        "957297": {
+          "height": 957297,
+          "block_hash": "00000000000000000000fe7d8a0a227178febb999bde0983269a4856292597b0",
+          "merkle_root_display": "263dd419d0ee84f62dd1ca6bf04ac1228ac6509a9391cb21726a2c8da0a9fc14",
+          "header_hex": "00000020332bdece9e9f0e2972cb389e5642c39d7af9187d4baf0000000000000000000014fca9a08d2c6a7221cb91939a50c68a22c14af06bcad12df684eed019d43d268f834f6a421a021790109293",
+          "ntime": 1783595919,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:18:39Z"
+        },
+        "957298": {
+          "height": 957298,
+          "block_hash": "0000000000000000000054717819ca45f53fe220349c66f4de375ce412e3e0c9",
+          "merkle_root_display": "459916cfc547badb1c732dbeca53a10edd0de4b35acd37a11aca91d75310f5c7",
+          "header_hex": "10400420b097252956489a268309de9b99bbfe7871220a8a7dfe00000000000000000000c7f51053d791ca1aa137cd5ab3e40ddd0ea153cabe2d731cdbba47c5cf169945ed834f6a421a02171a011dcd",
+          "ntime": 1783596013,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:20:13Z"
+        },
+        "957299": {
+          "height": 957299,
+          "block_hash": "00000000000000000000a4e356da32fa562086fff0bb8602a2c92c0eb4cfa121",
+          "merkle_root_display": "ae2e28004c4c3529f543d08d5d6e473c450042aa9cd2d13d6e3a32b083e08b75",
+          "header_hex": "00000520c9e0e312e45c37def4669c3420e23ff545ca1978715400000000000000000000758be083b0323a6e3dd1d29caa4200453c476e5d8dd043f529354c4c00282eae3f844f6a421a0217fcde7e2d",
+          "ntime": 1783596095,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:21:35Z"
+        },
+        "957300": {
+          "height": 957300,
+          "block_hash": "00000000000000000000dd0e9ef3acf5530665e884f37d5a10cf7ab7bd8adb79",
+          "merkle_root_display": "1f550eca249559a4f14aa4b0c393e098c091bb92df78300f8070e3dc713c86cf",
+          "header_hex": "0000002821a1cfb40e2cc9a20286bbf0ff862056fa32da56e3a400000000000000000000cf863c71dce370800f3078df92bb91c098e093c3b0a44af1a4599524ca0e551f0b874f6a421a02175cdc140c",
+          "ntime": 1783596811,
+          "nbits_hex": "0x17021a42",
+          "iso_utc": "2026-07-09T11:33:31Z"
+        }
+      }
+    },
+    "ots_js_358391": {
+      "start_height": 358380,
+      "end_height": 358402,
+      "header_count": 23,
+      "total_chainwork_hex": "0x1055f89e1ad8dab9e14",
+      "anchors": {
+        "358391": {
+          "height": 358391,
+          "block_hash": "000000000000000003e892881a8cdcdc117c06d444057c98b6f04a9ee75a2319",
+          "ntime": 1432827678,
+          "rwcp_iso": "2015-05-28T15:41:18Z",
+          "mtp_bip113": 1432823346,
+          "mtp_bip113_iso": "2015-05-28T14:29:06Z",
+          "fmtp_6": 1432827773,
+          "fmtp_6_iso": "2015-05-28T15:42:53Z",
+          "fmtp_11": 1432829553,
+          "fmtp_11_iso": "2015-05-28T16:12:33Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "358380": {
+          "height": 358380,
+          "block_hash": "00000000000000000703228ad0747d7c9c3d778a2ed12866eb68b20fb9abaa35",
+          "merkle_root_display": "f02f90be9c90063bbbd7a1d04dd1ad6bca19be7506600386caa8006377934ca9",
+          "header_hex": "03000000324b59a2159ba3b50298482cb9fe90f0b29e18593b7699050000000000000000a94c93776300a8ca8603600675be19ca6badd14dd0a1d7bb3b06909cbe902ff0021b6755f5861618e9e45119",
+          "ntime": 1432820482,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T13:41:22Z"
+        },
+        "358381": {
+          "height": 358381,
+          "block_hash": "00000000000000000e6dbfdaa740c67c7f000297038c7ebcae6854d6b27ba9d8",
+          "merkle_root_display": "587a5d2b72d33afc025c37c4f914d8bd9a32f9972d6a44fed609dee95dd60b6b",
+          "header_hex": "0200000035aaabb90fb268eb6628d12e8a773d9c7c7d74d08a22030700000000000000006b0bd65de9de09d6fe446a2d97f9329abdd814f9c4375c02fc3ad3722b5d7a586a1b6755f5861618d8c30519",
+          "ntime": 1432820586,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T13:43:06Z"
+        },
+        "358382": {
+          "height": 358382,
+          "block_hash": "000000000000000015f1a48c405dd46dc1385c8c1671d1cd2ccd025a925b1b05",
+          "merkle_root_display": "21169aace99236fe6ed90ad7cef36302c4a51895447fa34b8f06e01fbc999327",
+          "header_hex": "03000000d8a97bb2d65468aebc7e8c039702007f7cc640a7dabf6d0e0000000000000000279399bc1fe0068f4ba37f449518a5c40263f3ced70ad96efe3692e9ac9a1621331c6755f5861618a88db8a7",
+          "ntime": 1432820787,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T13:46:27Z"
+        },
+        "358383": {
+          "height": 358383,
+          "block_hash": "00000000000000000125b67737acfba825b4ad171eceb53a206488a184e82386",
+          "merkle_root_display": "c7d6186930bc06a44a064fe1e89c3e92677f17b2cb977abc4830acb5e3e3593c",
+          "header_hex": "02000000051b5b925a02cd2ccdd171168c5c38c16dd45d408ca4f11500000000000000003c59e3e3b5ac3048bc7a97cbb2177f67923e9ce8e14f064aa406bc306918d6c79e1e6755f5861618ed7e7e87",
+          "ntime": 1432821406,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T13:56:46Z"
+        },
+        "358384": {
+          "height": 358384,
+          "block_hash": "000000000000000013e7382439d92909731b583672b49ee40985d52267fe36f4",
+          "merkle_root_display": "3cf93aeaf8a1308a30f16faf0a872fe217d6bd7a38588436b1f1de5e75eff31a",
+          "header_hex": "030000008623e884a18864203ab5ce1e17adb425a8fbac3777b6250100000000000000001af3ef755edef1b1368458387abdd617e22f870aaf6ff1308a30a1f8ea3af93c89236755f5861618ef6ee36a",
+          "ntime": 1432822665,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T14:17:45Z"
+        },
+        "358385": {
+          "height": 358385,
+          "block_hash": "000000000000000011a0a62e018e03eab3e535adb3d66349229bf87cc43d2241",
+          "merkle_root_display": "11a573261e15d4f86d8194af0cc80f6a0cd10adefd969f5fc7cfc77ce894071f",
+          "header_hex": "03000000f436fe6722d58509e49eb47236581b730929d9392438e71300000000000000001f0794e87cc7cfc75f9f96fdde0ad10c6a0fc80caf94816df8d4151e2673a51132266755f5861618c6f950a3",
+          "ntime": 1432823346,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T14:29:06Z"
+        },
+        "358386": {
+          "height": 358386,
+          "block_hash": "0000000000000000016adfc23ce2ed2172c6dd55ab858326609118d6d1503082",
+          "merkle_root_display": "18b61a59e370307ce9e96861faccf5174ac56b3dca6d6d26e3fbc4d490759771",
+          "header_hex": "0300000041223dc47cf89b224963d6b3ad35e5b3ea038e012ea6a011000000000000000071977590d4c4fbe3266d6dca3d6bc54a17f5ccfa6168e9e97c3070e3591ab61833296755f58616185c5e2741",
+          "ntime": 1432824115,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T14:41:55Z"
+        },
+        "358387": {
+          "height": 358387,
+          "block_hash": "00000000000000000f4b65e2b080a2dd75acaf1cf3aeac3955aa3bf0172185e2",
+          "merkle_root_display": "8f093a181e1b8172bb6adc1962fd0d2150be22a158dafdb8dfc601fe4a773c12",
+          "header_hex": "03000000823050d1d6189160268385ab55ddc67221ede23cc2df6a010000000000000000123c774afe01c6dfb8fdda58a122be50210dfd6219dc6abb72811b1e183a098f492b6755f586161803e36777",
+          "ntime": 1432824649,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T14:50:49Z"
+        },
+        "358388": {
+          "height": 358388,
+          "block_hash": "00000000000000000a153ea9516616e928f36cc7d8ba5cb7607d7debc2cb85e8",
+          "merkle_root_display": "794393b68c072068c58a55f9b307023fcf52799ea589abcc24f8e99deb6fa194",
+          "header_hex": "02000000e2852117f03baa5539acaef31cafac75dda280b0e2654b0f000000000000000094a16feb9de9f824ccab89a59e7952cf3f0207b3f9558ac56820078cb693437974306755f586161885ef8487",
+          "ntime": 1432825972,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:12:52Z"
+        },
+        "358389": {
+          "height": 358389,
+          "block_hash": "000000000000000005d88f10953f8d34321d56089f2d5df5a4a0ed6656d4441e",
+          "merkle_root_display": "2d08718d40f0ca0928ff935b9148290689969ab154de1856d0210faaee3670e9",
+          "header_hex": "02000000e885cbc2eb7d7d60b75cbad8c76cf328e9166651a93e150a0000000000000000e97036eeaa0f21d05618de54b19a9689062948915b93ff2809caf0408d71082d81316755f58616187dea22a3",
+          "ntime": 1432826241,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:17:21Z"
+        },
+        "358390": {
+          "height": 358390,
+          "block_hash": "0000000000000000040238cb61fda1452649edc9d18f435f7e1b285a589463b9",
+          "merkle_root_display": "67fbeff24e4ee35ef01a1822728415cfc84b640186576ef55c8cee5c1699781a",
+          "header_hex": "020000001e44d45666eda0a4f55d2d9f08561d32348d3f95108fd80500000000000000001a7899165cee8c5cf56e578601644bc8cf15847222181af05ee34e4ef2effb67d0336755f586161838f4d6db",
+          "ntime": 1432826832,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:27:12Z"
+        },
+        "358391": {
+          "height": 358391,
+          "block_hash": "000000000000000003e892881a8cdcdc117c06d444057c98b6f04a9ee75a2319",
+          "merkle_root_display": "8a1b66ecb7cbd07d8139a7e7d7f2c41aab1f5009b8364aaf61d03ad245e47e00",
+          "header_hex": "02000000b96394585a281b7e5f438fd1c9ed492645a1fd61cb3802040000000000000000007ee445d23ad061af4a36b809501fab1ac4f2d7e7a739817dd0cbb7ec661b8a1e376755f58616186272def6",
+          "ntime": 1432827678,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:41:18Z"
+        },
+        "358392": {
+          "height": 358392,
+          "block_hash": "0000000000000000021ffe0d99ff9e2f628a763bf7cdd53b68c13c61789e7a43",
+          "merkle_root_display": "0de5975b7a2fc1060591512cad7210fdf24e973b0170c55c20e4f6790cdadea3",
+          "header_hex": "0300000019235ae79e4af0b6987c0544d4067c11dcdc8c1a8892e8030000000000000000a3deda0c79f6e4205cc570013b974ef2fd1072ad2c51910506c12f7a5b97e50d7d376755f586161847cef7b4",
+          "ntime": 1432827773,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:42:53Z"
+        },
+        "358393": {
+          "height": 358393,
+          "block_hash": "0000000000000000104c2a24bcae7ce3ae50791bb0f1e2e1eff3add4cc8f48a3",
+          "merkle_root_display": "6cc5962b2465935c3969c9339ebc3ade265fd2ebd5ad6f869880bdcfa9a29093",
+          "header_hex": "03000000437a9e78613cc1683bd5cdf73b768a622f9eff990dfe1f0200000000000000009390a2a9cfbd8098866fadd5ebd25f26de3abc9e33c969395c9365242b96c56ca1386755f58616189c466c1c",
+          "ntime": 1432828065,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:47:45Z"
+        },
+        "358394": {
+          "height": 358394,
+          "block_hash": "000000000000000001bda4548c4398eb89f45d21ab1a5419869fc2670e73478e",
+          "merkle_root_display": "6d17f88c7ee18f975ac77ac53e00a6ac94abf6f7e3be3d9a72cc6942a6277623",
+          "header_hex": "02000000a3488fccd4adf3efe1e2f1b01b7950aee37caebc242a4c100000000000000000237627a64269cc729a3dbee3f7f6ab94aca6003ec57ac75a978fe17e8cf8176d7d3b6755f586161878f5e507",
+          "ntime": 1432828797,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T15:59:57Z"
+        },
+        "358395": {
+          "height": 358395,
+          "block_hash": "000000000000000011fdff681e71e65cf1c96c4417346cf22db5548bbb4a3dce",
+          "merkle_root_display": "500c90f5b3e33c4461b3495414e21477d0dc4a49eeffb3f630d04838a460dafb",
+          "header_hex": "030000008e47730e67c29f8619541aab215df489eb98438c54a4bd010000000000000000fbda60a43848d030f6b3ffee494adcd07714e2145449b361443ce3b3f5900c50e13b6755f5861618a1e95274",
+          "ntime": 1432828897,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:01:37Z"
+        },
+        "358396": {
+          "height": 358396,
+          "block_hash": "00000000000000000c52ac4124e8220d889cafb4e0f276572bd5dec989f13ef5",
+          "merkle_root_display": "384bed6a812fb0c74b74df4fbebd68cfc3d7c55efd7c400809504e6faa6869ae",
+          "header_hex": "03000000ce3d4abb8b54b52df26c3417446cc9f15ce6711e68fffd110000000000000000ae6968aa6f4e500908407cfd5ec5d7c3cf68bdbe4fdf744bc7b02f816aed4b38533e6755f5861618d1d57e73",
+          "ntime": 1432829523,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:12:03Z"
+        },
+        "358397": {
+          "height": 358397,
+          "block_hash": "000000000000000004182838382745ffb127cac519dcf181e27eb5ffc43311bc",
+          "merkle_root_display": "406d145d2c05eac79b37f7a11104ca4e1d2770e3685b6907da2e7c6290a528b2",
+          "header_hex": "02000000f53ef189c9ded52b5776f2e0b4af9c880d22e82441ac520c0000000000000000b228a590627c2eda07695b68e370271d4eca0411a1f7379bc7ea052c5d146d40713e6755f5861618fd12caa8",
+          "ntime": 1432829553,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:12:33Z"
+        },
+        "358398": {
+          "height": 358398,
+          "block_hash": "00000000000000000e6c6aaf4fd9deff80ea56d5e8efe74b2825e84490b369e5",
+          "merkle_root_display": "e2958f716cb5fb333abaa15b3fb68c9a36b232069137049491d516f5c4391729",
+          "header_hex": "03000000bc1133c4ffb57ee281f1dc19c5ca27b1ff452738382818040000000000000000291739c4f516d591940437910632b2369a8cb63f5ba1ba3a33fbb56c718f95e2ed3e6755f5861618d251134d",
+          "ntime": 1432829677,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:14:37Z"
+        },
+        "358399": {
+          "height": 358399,
+          "block_hash": "000000000000000015be8814a22d364e4f929f15c58c3ed40367aef06e5d043d",
+          "merkle_root_display": "b167393064a5c2c485c942a39ceae9c8d9dc04f9f7ecd307232f366e8c7e40d4",
+          "header_hex": "03000000e569b39044e825284be7efe8d556ea80ffded94faf6a6c0e0000000000000000d4407e8c6e362f2307d3ecf7f904dcd9c8e9ea9ca342c985c4c2a564303967b1fd406755f58616187ba4f4e7",
+          "ntime": 1432830205,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:23:25Z"
+        },
+        "358400": {
+          "height": 358400,
+          "block_hash": "000000000000000005fb51818f3dbe377287440895b31af0c01f7dadcc4ac412",
+          "merkle_root_display": "86d66385a984cd5d7fb36f6aa653068425eb19b5eed5b58c640c27e2ed36606a",
+          "header_hex": "020000003d045d6ef0ae6703d43e8cc5159f924f4e362da21488be1500000000000000006a6036ede2270c648cb5d5eeb519eb25840653a66a6fb37f5dcd84a98563d6862a426755f5861618aada4dcd",
+          "ntime": 1432830506,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:28:26Z"
+        },
+        "358401": {
+          "height": 358401,
+          "block_hash": "00000000000000000829e286c712448f6a45edbf5899b34e5f2c712523c470fb",
+          "merkle_root_display": "9ac6ca9fce4bd67456915d06d040e83760bd0a241679150b9f5fe9275913a40d",
+          "header_hex": "0200000012c44accad7d1fc0f01ab3950844877237be3d8f8151fb0500000000000000000da4135927e95f9f0b157916240abd6037e840d0065d915674d64bce9fcac69aab446755f58616184e8a3fb6",
+          "ntime": 1432831147,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:39:07Z"
+        },
+        "358402": {
+          "height": 358402,
+          "block_hash": "0000000000000000016dad6e03a683f59837984ba1426f28bcaaa947436b620c",
+          "merkle_root_display": "6b756ea9f5edd75e355fca32757d2607a6b4422b5eb94d643118248eeba6d62f",
+          "header_hex": "03000000fb70c42325712c5f4eb39958bfed456a8f4412c786e2290800000000000000002fd6a6eb8e241831644db95e2b42b4a607267d7532ca5f355ed7edf5a96e756b03466755f5861618ca7b0003",
+          "ntime": 1432831491,
+          "nbits_hex": "0x181686f5",
+          "iso_utc": "2015-05-28T16:44:51Z"
+        }
+      }
+    },
+    "cryptogeek_960175": {
+      "start_height": 960164,
+      "end_height": 960186,
+      "header_count": 23,
+      "total_chainwork_hex": "0xa509943da303257450b11",
+      "anchors": {
+        "960175": {
+          "height": 960175,
+          "block_hash": "00000000000000000000023d020a40e9159a9cab38ca4e619f024d8180de2e6e",
+          "ntime": 1785370575,
+          "rwcp_iso": "2026-07-30T00:16:15Z",
+          "mtp_bip113": 1785369145,
+          "mtp_bip113_iso": "2026-07-29T23:52:25Z",
+          "fmtp_6": 1785370759,
+          "fmtp_6_iso": "2026-07-30T00:19:19Z",
+          "fmtp_11": 1785372800,
+          "fmtp_11_iso": "2026-07-30T00:53:20Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "960164": {
+          "height": 960164,
+          "block_hash": "00000000000000000001ca281126c35aa4b98c8811a2d20dbae5d190b283e1fe",
+          "merkle_root_display": "5d94499dc26c5bd643de841f2019e6ea6842c66290020734b0b476a580accb28",
+          "header_hex": "00006c2235ade56a30b832a1d86a389853d9d7ef251dcd31d5de0000000000000000000028cbac80a576b4b03407029062c64268eae619201f84de43d65b6cc29d49945d598b6a6ad43a02178216ff0c",
+          "ntime": 1785367385,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:23:05Z"
+        },
+        "960165": {
+          "height": 960165,
+          "block_hash": "00000000000000000000cb37b389bb46bec984daf8042b8fc836e56ee015477b",
+          "merkle_root_display": "1693a496167a70035c0cad4a7507ea28947191357f79df235e44956dde9346c6",
+          "header_hex": "0060c924fee183b290d1e5ba0dd2a211888cb9a45ac3261128ca01000000000000000000c64693de6d95445e23df797f3591719428ea07754aad0c5c03707a1696a49316e48c6a6ad43a02172c70405e",
+          "ntime": 1785367780,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:29:40Z"
+        },
+        "960166": {
+          "height": 960166,
+          "block_hash": "000000000000000000019bb526d4996a8b9e02fe306af51c54fe6bcd2157ef89",
+          "merkle_root_display": "e9fa19cf69000a488ae881198cd4eb8bbbb767d58146234ff5bf32da1405ed35",
+          "header_hex": "00c09c217b4715e06ee536c88f2b04f8da84c9be46bb89b337cb0000000000000000000035ed0514da32bff54f234681d567b7bb8bebd48c1981e88a480a0069cf19fae9318f6a6ad43a0217578cf0e8",
+          "ntime": 1785368369,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:39:29Z"
+        },
+        "960167": {
+          "height": 960167,
+          "block_hash": "00000000000000000001a07a69638526ab5b1cae0127c828175e458347673db7",
+          "merkle_root_display": "157aeb856fb806d12ac51f021601cc2b5f669754be72b0b2225795351bdbc51c",
+          "header_hex": "00c00f2089ef5721cd6bfe541cf56a30fe029e8b6a99d426b59b010000000000000000001cc5db1b35955722b2b072be5497665f2bcc0116021fc52ad106b86f85eb7a15ea8f6a6ad43a021726299c25",
+          "ntime": 1785368554,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:42:34Z"
+        },
+        "960168": {
+          "height": 960168,
+          "block_hash": "000000000000000000009aade95514ffe705e951fcd227fcbf0263ee98add928",
+          "merkle_root_display": "5e444442b92f9c66f4f47d8c19cb15fcb6b967e83605dd6bfb1861880a43efc7",
+          "header_hex": "00400a20b73d674783455e1728c82701ae1c5bab268563697aa001000000000000000000c7ef430a886118fb6bdd0536e867b9b6fc15cb198c7df4f4669c2fb94244445ebc916a6ad43a021757775d4f",
+          "ntime": 1785369020,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:50:20Z"
+        },
+        "960169": {
+          "height": 960169,
+          "block_hash": "00000000000000000000c45f949437f1ae8583ddf2b3a2d4e90b62564844ed97",
+          "merkle_root_display": "5627e55c5267ed94f718f7b11fa1d87b05b5a52c765ff8d5996d89eb5dbd3453",
+          "header_hex": "00e0012028d9ad98ee6302bffc27d2fc51e905e7ff1455e9ad9a000000000000000000005334bd5deb896d99d5f85f762ca5b5057bd8a11fb1f718f794ed67525ce5275639926a6ad43a021742a4ad22",
+          "ntime": 1785369145,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:52:25Z"
+        },
+        "960170": {
+          "height": 960170,
+          "block_hash": "00000000000000000001082cf1a484170fb0e4c728ddd803a9b00037f34404a9",
+          "merkle_root_display": "c87816590561a886e4b144cc24beac52eb4c84db9eb6f5e2c50ea2b1d0f7277a",
+          "header_hex": "00e0982497ed444856620be9d4a2b3f2dd8385aef13794945fc4000000000000000000007a27f7d0b1a20ec5e2f5b69edb844ceb52acbe24cc44b1e486a86105591678c846926a6ad43a02176d3f1083",
+          "ntime": 1785369158,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:52:38Z"
+        },
+        "960171": {
+          "height": 960171,
+          "block_hash": "000000000000000000020ad2e0b1390545b0425cde9de3948b728c710df0fd9e",
+          "merkle_root_display": "5f456abe89985b3e53618b828b6dff2eb718c3cf281443b25e8449a395928f06",
+          "header_hex": "00800420a90444f33700b0a903d8dd28c7e4b00f1784a4f12c0801000000000000000000068f9295a349845eb2431428cfc318b72eff6d8b828b61533e5b9889be6a455f69926a6ad43a02176536c20e",
+          "ntime": 1785369193,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-29T23:53:13Z"
+        },
+        "960172": {
+          "height": 960172,
+          "block_hash": "000000000000000000013cd07c5f734bf1d9f350e38c0ee9dc0ad7fd987d49cf",
+          "merkle_root_display": "0c0259e88bb93715fab8107d6732f1e00a4ef046ff7f3e90ff1399f98541f0ff",
+          "header_hex": "00e0ff3f9efdf00d718c728b94e39dde5c42b0450539b1e0d20a02000000000000000000fff04185f99913ff903e7fff46f04e0ae0f132677d10b8fa1537b98be859020c3f946a6ad43a021759b8976c",
+          "ntime": 1785369663,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:01:03Z"
+        },
+        "960173": {
+          "height": 960173,
+          "block_hash": "000000000000000000009314676e9628f2b97f3b9f40d31c53eaa76cf63b27c9",
+          "merkle_root_display": "79d8d39871330725f5dfe1123b6b58aa69065750eff0f4e2cdf54bfdc9023c3e",
+          "header_hex": "0000002ecf497d98fdd70adce90e8ce350f3d9f14b735f7cd03c010000000000000000003e3c02c9fd4bf5cde2f4f0ef50570669aa586b3b12e1dff52507337198d3d879bc966a6ad43a0217d2822239",
+          "ntime": 1785370300,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:11:40Z"
+        },
+        "960174": {
+          "height": 960174,
+          "block_hash": "00000000000000000001307107f540d5d52a5435008e388797bcd79a95ad0434",
+          "merkle_root_display": "774ef946a66e944de3750a448a00cd220d08988214cd59eaf430c24c83815cad",
+          "header_hex": "00000522c9273bf66ca7ea531cd3409f3b7fb9f228966e67149300000000000000000000ad5c81834cc230f4ea59cd148298080d22cd008a440a75e34d946ea646f94e7791976a6ad43a0217899d978e",
+          "ntime": 1785370513,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:15:13Z"
+        },
+        "960175": {
+          "height": 960175,
+          "block_hash": "00000000000000000000023d020a40e9159a9cab38ca4e619f024d8180de2e6e",
+          "merkle_root_display": "cf9cae45c2ad625d176b11c219dad2abf1d36162c0f192fe967548d71fdd8250",
+          "header_hex": "008003203404ad959ad7bc9787388e0035542ad5d540f5077130010000000000000000005082dd1fd7487596fe92f1c06261d3f1abd2da19c2116b175d62adc245ae9ccfcf976a6ad43a0217eafb7678",
+          "ntime": 1785370575,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:16:15Z"
+        },
+        "960176": {
+          "height": 960176,
+          "block_hash": "000000000000000000014c1cd5c016c96fbab26ce6d7c4555f4682e2ddf509b7",
+          "merkle_root_display": "493a54284ed6d3ec489ad59a0febcb9a108d72f3e0114a54b62e893bb3a69f42",
+          "header_hex": "00e0ff3f6e2ede80814d029f614eca38ab9c9a15e9400a023d0200000000000000000000429fa6b33b892eb6544a11e0f3728d109acbeb0f9ad59a48ecd3d64e28543a4987986a6ad43a02179c1c0930",
+          "ntime": 1785370759,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:19:19Z"
+        },
+        "960177": {
+          "height": 960177,
+          "block_hash": "000000000000000000011eeb223de5cf5a5afac0a7bbb71834a65ac41b3d174b",
+          "merkle_root_display": "293b60d7123a285256d9dc999fbc79363694d1c8070681f3d3cda15b9a0537eb",
+          "header_hex": "00a00820b709f5dde282465f55c4d7e66cb2ba6fc916c0d51c4c01000000000000000000eb37059a5ba1cdd3f3810607c8d194363679bc9f99dcd95652283a12d7603b29ed986a6ad43a02174b733dd8",
+          "ntime": 1785370861,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:21:01Z"
+        },
+        "960178": {
+          "height": 960178,
+          "block_hash": "000000000000000000010535c39b9d9811485c2c7a639e4ddd869bc0bd33ec30",
+          "merkle_root_display": "b7d3fd3486b229c6caba1c8f5d6ddf2bbf123a4e72ad74ff80c15c3da2f645f7",
+          "header_hex": "0000ff3f4b173d1bc45aa63418b7bba7c0fa5a5acfe53d22eb1e01000000000000000000f745f6a23d5cc180ff74ad724e3a12bf2bdf6d5d8f1cbacac629b28634fdd3b71c9c6a6ad43a02174c304983",
+          "ntime": 1785371676,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:34:36Z"
+        },
+        "960179": {
+          "height": 960179,
+          "block_hash": "00000000000000000000b6c7e7dc59f9ab6b15efc999b8a4b6924ec0fa8361fb",
+          "merkle_root_display": "3c11d02afe2389d1e1f827cfacbada7bf1950ac885abd54349b5424da7b6aa8c",
+          "header_hex": "0000002830ec33bdc09b86dd4d9e637a2c5c4811989d9bc33505010000000000000000008caab6a74d42b54943d5ab85c80a95f17bdabaaccf27f8e1d18923fe2ad0113c2f9d6a6ad43a0217a53735c3",
+          "ntime": 1785371951,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:39:11Z"
+        },
+        "960180": {
+          "height": 960180,
+          "block_hash": "00000000000000000001bb5454b2ff5a4c954adad88e748cef281da1af9d482e",
+          "merkle_root_display": "0fd1e50f43ac23c4c7386c4a23d31dc15c5d69c8d3392f395c1d525b6e55aead",
+          "header_hex": "00a04c25fb6183fac04e92b6a4b899c9ef156babf959dce7c7b600000000000000000000adae556e5b521d5c392f39d3c8695d5cc11dd3234a6c38c7c423ac430fe5d10f2b9f6a6ad43a0217fd964416",
+          "ntime": 1785372459,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:47:39Z"
+        },
+        "960181": {
+          "height": 960181,
+          "block_hash": "00000000000000000000f1aac7b8c6e3c17a50c3fe35a8992f8f82b84d814079",
+          "merkle_root_display": "e1ee2e395223dc60d9ceb9fb8fecbb61fdd140052f2211b7b8fb8f4843eef9e3",
+          "header_hex": "00606b202e489dafa11d28ef8c748ed8da4a954c5affb25454bb01000000000000000000e3f9ee43488ffbb8b711222f0540d1fd61bbec8ffbb9ced960dc2352392eeee180a06a6ad43a02170208ea28",
+          "ntime": 1785372800,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T00:53:20Z"
+        },
+        "960182": {
+          "height": 960182,
+          "block_hash": "00000000000000000001259cf489d98d5b73f432a6faf02a8c9443701a4aa8f4",
+          "merkle_root_display": "87ae9c7a4a6aa59e06e4bec9cfc41fd48ce8f5020f5115d2a7eb0b84166098a4",
+          "header_hex": "00a00b207940814db8828f2f99a835fec3507ac1e3c6b8c7aaf100000000000000000000a4986016840beba7d215510f02f5e88cd41fc4cfc9bee4069ea56a4a7a9cae8715a26a6ad43a02177d018b27",
+          "ntime": 1785373205,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T01:00:05Z"
+        },
+        "960183": {
+          "height": 960183,
+          "block_hash": "000000000000000000008b7019fa39f5bec3a5d7adda762a93c8a9ea89620bad",
+          "merkle_root_display": "b5dccd1ba3b3c16bf73281845cb69d00207cdfdbd427aae6482168fcb27d7072",
+          "header_hex": "00e04325f4a84a1a7043948c2af0faa632f4735b8dd989f49c250100000000000000000072707db2fc682148e6aa27d4dbdf7c20009db65c848132f76bc1b3a31bcddcb57ca46a6ad43a021777dae935",
+          "ntime": 1785373820,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T01:10:20Z"
+        },
+        "960184": {
+          "height": 960184,
+          "block_hash": "0000000000000000000160d2e0b5aea497c51d8a70fd4aa86a4e6c116884c164",
+          "merkle_root_display": "bb1f0e7445bedca76b3f6e9ca789b7f0245c578b6b46211cc03dea6c5c962cdd",
+          "header_hex": "00e0ff3fad0b6289eaa9c8932a76daadd7a5c3bef539fa19708b00000000000000000000dd2c965c6cea3dc01c21466b8b575c24f0b789a79c6e3f6ba7dcbe45740e1fbb9ea86a6ad43a02173bd6dce6",
+          "ntime": 1785374878,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T01:27:58Z"
+        },
+        "960185": {
+          "height": 960185,
+          "block_hash": "00000000000000000000197fc747ebee54c64dd263e9e00c4e88902165085e57",
+          "merkle_root_display": "1884aaea80e0c580875825b8731920b253480da33e31805212ebc463a22b13d0",
+          "header_hex": "0000022064c18468116c4e6aa84afd708a1dc597a4aeb5e0d26001000000000000000000d0132ba263c4eb125280313ea30d4853b2201973b825588780c5e080eaaa8418c0a96a6ad43a0217d3de833b",
+          "ntime": 1785375168,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T01:32:48Z"
+        },
+        "960186": {
+          "height": 960186,
+          "block_hash": "000000000000000000017a92800006472760989c094bfeb21eb36dfad6572ecb",
+          "merkle_root_display": "17bf44a6a560b312795efbaee6b686a19068e0f7e83856c5ae4dba8688af8d06",
+          "header_hex": "00c00e25575e08652190884e0ce0e963d24dc654eeeb47c77f1900000000000000000000068daf8886ba4daec55638e8f7e06890a186b6e6aefb5e7912b360a5a644bf1704aa6a6ad43a0217693c1a54",
+          "ntime": 1785375236,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-30T01:33:56Z"
+        }
+      }
+    },
+    "cryptogeek_960468": {
+      "start_height": 960457,
+      "end_height": 960479,
+      "header_count": 23,
+      "total_chainwork_hex": "0xa509943da303257450b11",
+      "anchors": {
+        "960468": {
+          "height": 960468,
+          "block_hash": "00000000000000000000796be9950d24018a7e3327f438c39a88b344ce6cc43c",
+          "ntime": 1785533157,
+          "rwcp_iso": "2026-07-31T21:25:57Z",
+          "mtp_bip113": 1785530546,
+          "mtp_bip113_iso": "2026-07-31T20:42:26Z",
+          "fmtp_6": 1785534431,
+          "fmtp_6_iso": "2026-07-31T21:47:11Z",
+          "fmtp_11": 1785539683,
+          "fmtp_11_iso": "2026-07-31T23:14:43Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "960457": {
+          "height": 960457,
+          "block_hash": "000000000000000000004b7cf2f187ca7c13695ce3de8ec1c34ef9ea9b1f4ac8",
+          "merkle_root_display": "0cf2337aec758a7be7d1622f01ef300dc2f30af4e35929b6acae54ea7e3d6255",
+          "header_hex": "00a01d35b2412a26ceed910b68ce3de472bcb9c5ac823bc5eec30000000000000000000055623d7eea54aeacb62959e3f40af3c20d30ef012f62d1e77b8a75ec7a33f20c75006d6ad43a02175f0e960c",
+          "ntime": 1785528437,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:07:17Z"
+        },
+        "960458": {
+          "height": 960458,
+          "block_hash": "00000000000000000000aed213ff3b215e99d0f97d899b143c302403f00162b9",
+          "merkle_root_display": "4553df11e0f654429af4293cfb2ac072cd1419e5e493e547c74c565bea6a61c4",
+          "header_hex": "0000002ac84a1f9beaf94ec3c18edee35c69137cca87f1f27c4b00000000000000000000c4616aea5b564cc747e593e4e51914cd72c02afb3c29f49a4254f6e011df5345b7026d6ad43a02177838ef4f",
+          "ntime": 1785529015,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:16:55Z"
+        },
+        "960459": {
+          "height": 960459,
+          "block_hash": "0000000000000000000017f8af011282c7524de8d61a10c41a66d826726603fc",
+          "merkle_root_display": "b1ae8ff86cb8b45f0b2227b7a02d7c92ab6aff6bbe54329e4bf8118b785a50b8",
+          "header_hex": "00000020b96201f00324303c149b897df9d0995e213bff13d2ae00000000000000000000b8505a788b11f84b9e3254be6bff6aab927c2da0b727220b5fb4b86cf88faeb116046d6ad43a0217e349c39e",
+          "ntime": 1785529366,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:22:46Z"
+        },
+        "960460": {
+          "height": 960460,
+          "block_hash": "00000000000000000000afa7827511f380aa86ba65a5bcdc848dab28314be885",
+          "merkle_root_display": "8977d9409c292c3a774b13b561c719ed9bbb2efe9c29752a36c1c77874443aae",
+          "header_hex": "00800320fc03667226d8661ac4101ad6e84d52c7821201aff81700000000000000000000ae3a447478c7c1362a75299cfe2ebb9bed19c761b5134b773a2c299c40d97789a3056d6ad43a0217b8eed273",
+          "ntime": 1785529763,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:29:23Z"
+        },
+        "960461": {
+          "height": 960461,
+          "block_hash": "00000000000000000001bba6bbdff55f69eff5285800c0858830b48d3856d204",
+          "merkle_root_display": "e7e11eb33e31ad88c2e77b191d54ad493ac9020afa1a6e6178ecb2a78faa0a24",
+          "header_hex": "00c0542785e84b3128ab8d84dcbca565ba86aa80f3117582a7af00000000000000000000240aaa8fa7b2ec78616e1afa0a02c93a49ad541d197be7c288ad313eb31ee1e7ad056d6ad43a02178a4ca7b8",
+          "ntime": 1785529773,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:29:33Z"
+        },
+        "960462": {
+          "height": 960462,
+          "block_hash": "00000000000000000000c49e18162d06e5e255b219a9ca997f2d13518e14ff22",
+          "merkle_root_display": "04b9874c559391709d90224d2385c2ef69a422860ca4424ecca17a28c4a9191c",
+          "header_hex": "00e0102204d256388db4308885c0005828f5ef695ff5dfbba6bb010000000000000000001c19a9c4287aa1cc4e42a40c8622a469efc285234d22909d709193554c87b904b2086d6ad43a0217a5e9003d",
+          "ntime": 1785530546,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:42:26Z"
+        },
+        "960463": {
+          "height": 960463,
+          "block_hash": "00000000000000000002231d85119a06250f337337395ac9d33469175de00a28",
+          "merkle_root_display": "34dbf60dfcdcc1e3eecaee8cfda1b352334a0f749d65d587c9e20c8e50f9bd0a",
+          "header_hex": "00404d2422ff148e51132d7f99caa919b255e2e5062d16189ec4000000000000000000000abdf9508e0ce2c987d5659d740f4a3352b3a1fd8ceecaeee3c1dcfc0df6db34bb086d6ad43a0217970118cb",
+          "ntime": 1785530555,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:42:35Z"
+        },
+        "960464": {
+          "height": 960464,
+          "block_hash": "00000000000000000001a98c2e1958f737e334fd3d0cee075e7450407f2ce4fd",
+          "merkle_root_display": "7a1db5ff0756731d30159101118cec032dffb0d3fd6f08070978482979a79062",
+          "header_hex": "00c0162d280ae05d176934d3c95a393773330f25069a11851d23020000000000000000006290a7792948780907086ffdd3b0ff2d03ec8c11019115301d735607ffb51d7a170b6d6ad43a0217480207f4",
+          "ntime": 1785531159,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:52:39Z"
+        },
+        "960465": {
+          "height": 960465,
+          "block_hash": "000000000000000000015de5de25e12b0f5237fbe3988aa7316aef317530cac9",
+          "merkle_root_display": "c3b18f905f85c70908b5c364013a67ddf52d3fc2715aecf64b89c9169a81d664",
+          "header_hex": "00a01320fde42c7f4050745e07ee0c3dfd34e337f758192e8ca90100000000000000000064d6819a16c9894bf6ec5a71c23f2df5dd673a0164c3b50809c7855f908fb1c3310b6d6ad43a0217a51c30d9",
+          "ntime": 1785531185,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T20:53:05Z"
+        },
+        "960466": {
+          "height": 960466,
+          "block_hash": "00000000000000000000ff01defb6ea3c6aaaf7f1d7cba148fc4c5604bc90115",
+          "merkle_root_display": "4f1dc1aa0feb0e403615ca47ee7cc890f31e6f3085f12bee3abb288dd01792c7",
+          "header_hex": "00604e22c9ca307531ef6a31a78a98e3fb37520f2be125dee55d01000000000000000000c79217d08d28bb3aee2bf185306f1ef390c87cee47ca1536400eeb0faac11d4fe50f6d6ad43a0217be9832f7",
+          "ntime": 1785532389,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T21:13:09Z"
+        },
+        "960467": {
+          "height": 960467,
+          "block_hash": "000000000000000000005e7543b3e184fe78ce515a3e895b78206160da4bea80",
+          "merkle_root_display": "2e89f75468fac6e6dfbcf0293f1ff51d077644b1220789fa9322f67e016415dc",
+          "header_hex": "0000ff3f1501c94b60c5c48f14ba7c1d7fafaac6a36efbde01ff00000000000000000000dc1564017ef62293fa890722b14476071df51f3f29f0bcdfe6c6fa6854f7892ebf116d6ad43a02173898e4b6",
+          "ntime": 1785532863,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T21:21:03Z"
+        },
+        "960468": {
+          "height": 960468,
+          "block_hash": "00000000000000000000796be9950d24018a7e3327f438c39a88b344ce6cc43c",
+          "merkle_root_display": "ef3daa3d6429f72ef787192ce62d31900529e6aa6d426728462c37ccef82db83",
+          "header_hex": "00c00a2580ea4bda606120785b893e5a51ce78fe84e1b343755e0000000000000000000083db82efcc372c462867426daae6290590312de62c1987f72ef729643daa3defe5126d6ad43a0217920dcf11",
+          "ntime": 1785533157,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T21:25:57Z"
+        },
+        "960469": {
+          "height": 960469,
+          "block_hash": "000000000000000000000bbdc757862c642be4fbad05de69dc78795cad0d148d",
+          "merkle_root_display": "6518a4cd456b646d6a1e48d47586bc131cb6b617a53d6d7d36021db5ffe8fc5c",
+          "header_hex": "0080ba213cc46cce44b3889ac338f427337e8a01240d95e96b79000000000000000000005cfce8ffb51d02367d6d3da517b6b61c13bc8675d4481e6a6d646b45cda41865df176d6ad43a021764a7eb05",
+          "ntime": 1785534431,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T21:47:11Z"
+        },
+        "960470": {
+          "height": 960470,
+          "block_hash": "000000000000000000000235f3d8658f34505ab12fa76195aa61dc19fcfcc57c",
+          "merkle_root_display": "5bbc218150c9fef7525e885b7bd2ee8645dae6cb1de2598db3dc55e9b7940a1b",
+          "header_hex": "006009208d140dad5c7978dc69de05adfbe42b642c8657c7bd0b000000000000000000001b0a94b7e955dcb38d59e21dcbe6da4586eed27b5b885e52f7fec9508121bc5b75196d6ad43a02171b851c28",
+          "ntime": 1785534837,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T21:53:57Z"
+        },
+        "960471": {
+          "height": 960471,
+          "block_hash": "0000000000000000000014681ff530ede39b965b97bff82db42c4954cc57114c",
+          "merkle_root_display": "8fffb78dd224a6ec4cb1ed951772e2b9a62df6ce5c8b1bb277f64e763e6b9fc4",
+          "header_hex": "00e000207cc5fcfc19dc61aa9561a72fb15a50348f65d8f3350200000000000000000000c49f6b3e764ef677b21b8b5ccef62da6b9e2721795edb14ceca624d28db7ff8fcd206d6ad43a02177248d640",
+          "ntime": 1785536717,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T22:25:17Z"
+        },
+        "960472": {
+          "height": 960472,
+          "block_hash": "00000000000000000001120240cfe46df025388946b55b785452f8ed3b8255ca",
+          "merkle_root_display": "a681c5463881fa530c65468529ec68d75065577862af2d34bf5443cf9f3c6357",
+          "header_hex": "008017264c1157cc54492cb42df8bf975b969be3ed30f51f68140000000000000000000057633c9fcf4354bf342daf6278576550d768ec298546650c53fa813846c581a69e1f6d6ad43a02173030ad8f",
+          "ntime": 1785536414,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T22:20:14Z"
+        },
+        "960473": {
+          "height": 960473,
+          "block_hash": "000000000000000000015b9097730e1e040a03e0f0a04fdc84667f84fe717005",
+          "merkle_root_display": "d04f7b322f84cdc2ef96fc0c20d075428da1c2ee08b6de8ea598973eaa31a8f1",
+          "header_hex": "00e00120ca55823bedf85254785bb546893825f06de4cf40021201000000000000000000f1a831aa3e9798a58edeb608eec2a18d4275d0200cfc96efc2cd842f327b4fd060216d6ad43a0217677be7c4",
+          "ntime": 1785536864,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T22:27:44Z"
+        },
+        "960474": {
+          "height": 960474,
+          "block_hash": "0000000000000000000106bceecc2911502ed1ee6ae536506e0de1da8ac52d2f",
+          "merkle_root_display": "5fb68afc9e52a20c84177ab704edb2f9fcdc3ca62c6298be47ad1a59a505476a",
+          "header_hex": "00200820057071fe847f6684dc4fa0f0e0030a041e0e7397905b010000000000000000006a4705a5591aad47be98622ca63cdcfcf9b2ed04b77a17840ca2529efc8ab65f632c6d6ad43a02172b01b6a6",
+          "ntime": 1785539683,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:14:43Z"
+        },
+        "960475": {
+          "height": 960475,
+          "block_hash": "000000000000000000003a046ac70cc906ffb94af8f35a21a134876c6306e785",
+          "merkle_root_display": "cd43a993012a0c6802f74ae66beeb08796fcc94058acc2c565583f90483f3d82",
+          "header_hex": "002014392f2dc58adae10d6e5036e56aeed12e501129cceebc0601000000000000000000823d3f48903f5865c5c2ac5840c9fc9687b0ee6be64af702680c2a0193a943cdfc2c6d6ad43a0217cc8f405d",
+          "ntime": 1785539836,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:17:16Z"
+        },
+        "960476": {
+          "height": 960476,
+          "block_hash": "000000000000000000004b80b91da7507d0b7ee700235e771556436c1e7ba2c4",
+          "merkle_root_display": "05a31a858c99c688b16773cdb74837aa6286ab89cdb9e59d95f85a98e623c7f4",
+          "header_hex": "0000002885e706636c8734a1215af3f84ab9ff06c90cc76a043a00000000000000000000f4c723e6985af8959de5b9cd89ab8662aa3748b7cd7367b188c6998c851aa305112e6d6ad43a0217d5330792",
+          "ntime": 1785540113,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:21:53Z"
+        },
+        "960477": {
+          "height": 960477,
+          "block_hash": "00000000000000000001809376576a9fc2f2f65953aa43ab76468e35a5f3d548",
+          "merkle_root_display": "b92406c59dd64a2ceb18ffbc5c98a7b2f0dc4fd955757663d123419decae4357",
+          "header_hex": "00a02c30c4a27b1e6c435615775e2300e77e0b7d50a71db9804b000000000000000000005743aeec9d4123d163767555d94fdcf0b2a7985cbcff18eb2c4ad69dc50624b9542e6d6ad43a02174d201914",
+          "ntime": 1785540180,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:23:00Z"
+        },
+        "960478": {
+          "height": 960478,
+          "block_hash": "00000000000000000001f0ae4466614a33a311e4991f541485eb99818455a80c",
+          "merkle_root_display": "e3b9e2de7d9779c47bc869ee4a5928259c988fc2ba4d152e53b306ada49e7063",
+          "header_hex": "10e0ff3f48d5f3a5358e4676ab43aa5359f6f2c29f6a577693800100000000000000000063709ea4ad06b3532e154dbac28f989c2528594aee69c87bc479977ddee2b9e31e306d6ad43a0217e836608d",
+          "ntime": 1785540638,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:30:38Z"
+        },
+        "960479": {
+          "height": 960479,
+          "block_hash": "00000000000000000000f306c87da46085e0a27080fa17600b90af554fd4f845",
+          "merkle_root_display": "a5cc11e0f3601f055718efbae85f42c8fd2c7166e2ce8983da588658d1f78261",
+          "header_hex": "000000220ca855848199eb8514541f99e411a3334a616644aef0010000000000000000006182f7d1588658da8389cee266712cfdc8425fe8baef1857051f60f3e011cca5de326d6ad43a0217c53958dc",
+          "ntime": 1785541342,
+          "nbits_hex": "0x17023ad4",
+          "iso_utc": "2026-07-31T23:42:22Z"
+        }
+      }
+    },
+    "crosscheck_emilia_968588_968635": {
+      "start_height": 968577,
+      "end_height": 968646,
+      "header_count": 70,
+      "total_chainwork_hex": "0x21040f0e5d7e9baa22fca4",
+      "anchors": {
+        "968588": {
+          "height": 968588,
+          "block_hash": "000000000000000000000645853be94e21ff82323d1e4e5deacea3966dc62373",
+          "ntime": 1790370293,
+          "rwcp_iso": "2026-09-25T21:04:53Z",
+          "mtp_bip113": 1790366698,
+          "mtp_bip113_iso": "2026-09-25T20:04:58Z",
+          "fmtp_6": 1790370633,
+          "fmtp_6_iso": "2026-09-25T21:10:33Z",
+          "fmtp_11": 1790377922,
+          "fmtp_11_iso": "2026-09-25T23:12:02Z",
+          "confirmations_draft08": 59,
+          "confirmations_hardened20": 58
+        },
+        "968635": {
+          "height": 968635,
+          "block_hash": "00000000000000000000836dfab1879244485960e1ee0a506461ad5a93560ed2",
+          "ntime": 1790395667,
+          "rwcp_iso": "2026-09-26T04:07:47Z",
+          "mtp_bip113": 1790392164,
+          "mtp_bip113_iso": "2026-09-26T03:09:24Z",
+          "fmtp_6": 1790396046,
+          "fmtp_6_iso": "2026-09-26T04:14:06Z",
+          "fmtp_11": 1790397959,
+          "fmtp_11_iso": "2026-09-26T04:45:59Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "968577": {
+          "height": 968577,
+          "block_hash": "00000000000000000001b69c7b2ca49a40d15799cd876a2c68c01379f60e52e3",
+          "merkle_root_display": "707a0a6be12c023283bfd865adbfc2930bbcaeeca3b367398c1d87c894b9ff24",
+          "header_hex": "00e0ff3f85b5e94b487da078e76ea3cd6a1031f67c57e53da6420100000000000000000024ffb994c8871d8c3967b3a3ecaebc0b93c2bfad65d8bf8332022ce16b0a7a7052c3b66ac51e0217cba35307",
+          "ntime": 1790362450,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T18:54:10Z"
+        },
+        "968578": {
+          "height": 968578,
+          "block_hash": "00000000000000000001f747697b323bd3f51aa1fe77970cd6227f2a96fee313",
+          "merkle_root_display": "ffe5dc9a845d3c97cdd7764cac608d7a15db41299f82edcc006f77aff3f72891",
+          "header_hex": "00000820e3520ef67913c0682c6a87cd9957d1409aa42c7b9cb6010000000000000000009128f7f3af776f00cced829f2941db157a8d60ac4c76d7cd973c5d849adce5ff1fc6b66ac51e02175a646a3d",
+          "ntime": 1790363167,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T19:06:07Z"
+        },
+        "968579": {
+          "height": 968579,
+          "block_hash": "00000000000000000000d7893e92be61b02e387ca40b665a65c1b1b2596dce74",
+          "merkle_root_display": "33c848f36145657208ac36906718cfbcc9c24ffab09100f588f0c2c40b2b7f7c",
+          "header_hex": "00800a2013e3fe962a7f22d60c9777fea11af5d33b327b6947f7010000000000000000007c7f2b0bc4c2f088f50091b0fa4fc2c9bccf18679036ac0872654561f348c8335bcbb66ac51e0217c4f0d5ea",
+          "ntime": 1790364507,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T19:28:27Z"
+        },
+        "968580": {
+          "height": 968580,
+          "block_hash": "000000000000000000014dafc0fc7b62873a751d28a8d61e84fbd15ce9970dd0",
+          "merkle_root_display": "e07bc128fa4f6f7572733c45040aaca89db6d5ff7ac08d1fde8f26b9b14ea47a",
+          "header_hex": "0060052074ce6d59b2b1c1655a660ba47c382eb061be923e89d7000000000000000000007aa44eb1b9268fde1f8dc07affd5b69da8ac0a04453c7372756f4ffa28c17be0b2cdb66ac51e021728d82513",
+          "ntime": 1790365106,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T19:38:26Z"
+        },
+        "968581": {
+          "height": 968581,
+          "block_hash": "000000000000000000014eae325c224b29550fc9623077e4416244da3bc123dc",
+          "merkle_root_display": "b792f8faab978ce7bec30875baca65c64684108ff08feabf26ff330b9a09a61d",
+          "header_hex": "00e0ff3fd00d97e95cd1fb841ed6a8281d753a87627bfcc0af4d010000000000000000001da6099a0b33ff26bfea8ff08f108446c665caba7508c3bee78c97abfaf892b724cfb66ac51e02177a4dfd85",
+          "ntime": 1790365476,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T19:44:36Z"
+        },
+        "968582": {
+          "height": 968582,
+          "block_hash": "000000000000000000001fd42c1b52b7bb39731ac9ba39dfa32de9a08360bb32",
+          "merkle_root_display": "527462df35d2fb19b98157d53bd1204e6cea549c8cbd5517d9f8f94c27e53577",
+          "header_hex": "0000002edc23c13bda446241e4773062c90f55294b225c32ae4e010000000000000000007735e5274cf9f8d91755bd8c9c54ea6c4e20d13bd55781b919fbd235df627452ead3b66ac51e021799efe7cb",
+          "ntime": 1790366698,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T20:04:58Z"
+        },
+        "968583": {
+          "height": 968583,
+          "block_hash": "0000000000000000000044cab3cf92869e0d3f48bd8ea0913b587a88668b04dd",
+          "merkle_root_display": "8f86db1df2fb9cf950d7bfd2df97811e541f28e8b34a78c0a461a5aa44655707",
+          "header_hex": "0000ba2132bb6083a0e92da3df39bac91a7339bbb7521b2cd41f0000000000000000000007576544aaa561a4c0784ab3e8281f541e8197dfd2bfd750f99cfbf21ddb868f04d6b66ac51e0217760d231f",
+          "ntime": 1790367236,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T20:13:56Z"
+        },
+        "968584": {
+          "height": 968584,
+          "block_hash": "00000000000000000001bf11d663311894bde794d7afdb1e98648d8aa22dc617",
+          "merkle_root_display": "983054b1af1ca465c40486cbedf67a915cf95c6f7a7d9cae09e9334ba04b7490",
+          "header_hex": "00c04726dd048b66887a583b91a08ebd483f0d9e8692cfb3ca440000000000000000000090744ba04b33e909ae9c7d7a6f5cf95c917af6edcb8604c465a41cafb154309840d9b66ac51e021706a0a4e8",
+          "ntime": 1790368064,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T20:27:44Z"
+        },
+        "968585": {
+          "height": 968585,
+          "block_hash": "00000000000000000001e0386209ef040542ee0e275eb387af49d7965a753fbc",
+          "merkle_root_display": "a79e575cf46a6c75cd7a34b5919a42719bff0b719257e4ba63ba88a7d0d60705",
+          "header_hex": "0000002617c62da28a8d64981edbafd794e7bd94183163d611bf010000000000000000000507d6d0a788ba63bae45792710bff9b71429a91b5347acd756c6af45c579ea756dcb66ac51e02176e81da13",
+          "ntime": 1790368854,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T20:40:54Z"
+        },
+        "968586": {
+          "height": 968586,
+          "block_hash": "00000000000000000001173d83809633e74cc7da3b3830595e497cc7f9e374c7",
+          "merkle_root_display": "600c78b07a3235f45263cee88da3e805ec1413680205867db25c89d92f19c0f5",
+          "header_hex": "00000420bc3f755a96d749af87b35e270eee420504ef096238e001000000000000000000f5c0192fd9895cb27d860502681314ec05e8a38de8ce6352f435327ab0780c6046e0b66ac51e02170a87d3f2",
+          "ntime": 1790369862,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T20:57:42Z"
+        },
+        "968587": {
+          "height": 968587,
+          "block_hash": "000000000000000000021dc96bb861f560f00aacf894ff8635ae70768f9081c2",
+          "merkle_root_display": "af378da879f9c8fe24013eaa56364ec008d61b015f79151bc86b39797479b466",
+          "header_hex": "00800020c774e3f9c77c495e5930383bdac74ce7339680833d170100000000000000000066b4797479396bc81b15795f011bd608c04e3656aa3e0124fec8f979a88d37af84e1b66ac51e021764bd26d4",
+          "ntime": 1790370180,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T21:03:00Z"
+        },
+        "968588": {
+          "height": 968588,
+          "block_hash": "000000000000000000000645853be94e21ff82323d1e4e5deacea3966dc62373",
+          "merkle_root_display": "db31df815037c0e8e7d97a81d00469424068dbf832117afea3c109a5c149bd08",
+          "header_hex": "00006020c281908f7670ae3586ff94f8ac0af060f561b86bc91d0200000000000000000008bd49c1a509c1a3fe7a1132f8db6840426904d0817ad9e7e8c0375081df31dbf5e1b66ac51e0217309aad10",
+          "ntime": 1790370293,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T21:04:53Z"
+        },
+        "968589": {
+          "height": 968589,
+          "block_hash": "0000000000000000000109f0a049ab71e2c4af5cf8d6ffa4e088cfa97810a2b1",
+          "merkle_root_display": "144d332e0982594233c6363629e58cb6e0224b3ac434cb7f31fd818b223fb1aa",
+          "header_hex": "00a017267323c66d96a3ceea5d4e1e3d3282ff214ee93b85450600000000000000000000aab13f228b81fd317fcb34c43a4b22e0b68ce5293636c633425982092e334d1449e3b66ac51e02176b2e74c7",
+          "ntime": 1790370633,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T21:10:33Z"
+        },
+        "968590": {
+          "height": 968590,
+          "block_hash": "00000000000000000000bdbe1462bdd4dacf626658e9d491bc635b94a89cf113",
+          "merkle_root_display": "ef73cd29009b6eaf1943cae969b90d94e54a99f505f31d567abf8091594b816f",
+          "header_hex": "00201e21b1a21078a9cf88e0a4ffd6f85cafc4e271ab49a0f009010000000000000000006f814b599180bf7a561df305f5994ae5940db969e9ca4319af6e9b0029cd73ef60efb66ac51e0217c601e6c6",
+          "ntime": 1790373728,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T22:02:08Z"
+        },
+        "968591": {
+          "height": 968591,
+          "block_hash": "000000000000000000000f7c9c1185149899f6565d07b116fdb204273f206333",
+          "merkle_root_display": "1880c3df8c21dbc34cb6edb4b36c95ba79fc43ee34c6d5915d30baa1719dfc17",
+          "header_hex": "0000002013f19ca8945b63bc91d4e9586662cfdad4bd6214bebd0000000000000000000017fc9d71a1ba305d91d5c634ee43fc79ba956cb3b4edb64cc3db218cdfc3801811f4b66ac51e0217d9f162ee",
+          "ntime": 1790374929,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T22:22:09Z"
+        },
+        "968592": {
+          "height": 968592,
+          "block_hash": "000000000000000000015d936e03441c33eb58fdf696fdc83cd3916c4589aa45",
+          "merkle_root_display": "8c56511224111a36ecf9312f1d997051dc0b9de9855c1f703bc52977bf9fb2b4",
+          "header_hex": "000000383363203f2704b2fd16b1075d56f699981485119c7c0f00000000000000000000b4b29fbf7729c53b701f5c85e99d0bdc5170991d2f31f9ec361a11241251568c22fdb66ac51e0217f891b2b8",
+          "ntime": 1790377250,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:00:50Z"
+        },
+        "968593": {
+          "height": 968593,
+          "block_hash": "00000000000000000000f7973bdb26342859bf8c56b6b778e4c48e7271d31a57",
+          "merkle_root_display": "bc84a4a0150265edea38da55e42922db6a44dd00a2b8f6e202ba0373a788e992",
+          "header_hex": "0080002045aa89456c91d33cc8fd96f6fd58eb331c44036e935d0100000000000000000092e988a77303ba02e2f6b8a200dd446adb2229e455da38eaed650215a0a484bcfdfdb66ac51e0217ac1e9fea",
+          "ntime": 1790377469,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:04:29Z"
+        },
+        "968594": {
+          "height": 968594,
+          "block_hash": "000000000000000000009e223579b4c9f3ae1886615ac30fd22020c46474b55f",
+          "merkle_root_display": "410543f3420f34d1740c4adebccecae08076f5024f36f34b1eb9a0a3617fe79a",
+          "header_hex": "00000026571ad371728ec4e478b7b6568cbf59283426db3b97f7000000000000000000009ae77f61a3a0b91e4bf3364f02f57680e0cacebcde4a0c74d1340f42f3430541c2ffb66ac51e0217ad9a4ed1",
+          "ntime": 1790377922,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:12:02Z"
+        },
+        "968595": {
+          "height": 968595,
+          "block_hash": "0000000000000000000057466ecc1c93e82ed1b745381eaf0771c23aecd51add",
+          "merkle_root_display": "db4e7b2ce00f5ca93d14e6f9b35b80eea333eae705a9d9f890e8df39e936740f",
+          "header_hex": "00a009205fb57464c42020d20fc35a618618aef3c9b47935229e000000000000000000000f7436e939dfe890f8d9a905e7ea33a3ee805bb3f9e6143da95c0fe02c7b4edb6802b76ac51e02178f8ce6d8",
+          "ntime": 1790378600,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:23:20Z"
+        },
+        "968596": {
+          "height": 968596,
+          "block_hash": "00000000000000000001b2faf0887532edf974bef7a9e47d709068c40627797a",
+          "merkle_root_display": "82060e1f308d8eb996178e52d0bab7ac82415b0c6223ae35fc71b65402a3bad3",
+          "header_hex": "00602721dd1ad5ec3ac27107af1e3845b7d12ee8931ccc6e465700000000000000000000d3baa30254b671fc35ae23620c5b4182acb7bad0528e1796b98e8d301f0e0682c103b76ac51e0217ce17de40",
+          "ntime": 1790378945,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:29:05Z"
+        },
+        "968597": {
+          "height": 968597,
+          "block_hash": "0000000000000000000206f490aa38a1ce3c4ae638cd8b875e75408a534142cc",
+          "merkle_root_display": "d48ef38ddb9d2f0ba58cb7831206b00524c6444a47d7e4c7cb4e56dbf0ce2e04",
+          "header_hex": "00c005207a792706c46890707de4a9f7be74f9ed327588f0fab201000000000000000000042ecef0db564ecbc7e4d7474a44c62405b0061283b78ca50b2f9ddb8df38ed41a04b76ac51e02170d90ad9f",
+          "ntime": 1790379034,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:30:34Z"
+        },
+        "968598": {
+          "height": 968598,
+          "block_hash": "000000000000000000001f190b972de4cd74de48194e149ed4c3242ff95a2109",
+          "merkle_root_display": "4a5d9b64089a86aede89a72928b11c33e03cf359f779d45573c571dc3fee5ffd",
+          "header_hex": "00600220cc4241538a40755e878bcd38e64a3ccea138aa90f40602000000000000000000fd5fee3fdc71c57355d479f759f33ce0331cb12829a789deae869a08649b5d4aa404b76ac51e021793e2e9c6",
+          "ntime": 1790379172,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:32:52Z"
+        },
+        "968599": {
+          "height": 968599,
+          "block_hash": "00000000000000000000d5669c3e3c90cbe11a50f33f99d69cd2d79c4cfe4c4e",
+          "merkle_root_display": "ece85080e5278bc3add1fa9b6cd1c966caf20cdeb27942ad94c34e7d977cff0e",
+          "header_hex": "00e0002009215af92f24c3d49e144e1948de74cde42d970b191f000000000000000000000eff7c977d4ec394ad4279b2de0cf2ca66c9d16c9bfad1adc38b27e58050e8ec0f07b76ac51e0217422c10bb",
+          "ntime": 1790379791,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:43:11Z"
+        },
+        "968600": {
+          "height": 968600,
+          "block_hash": "000000000000000000002e7df61ce2c315272bd7c3fec6ad29b0c441a903d1e7",
+          "merkle_root_display": "3c4e94653c3643898cb9f99f097d4d9be854e0451ac52e30cae11b7702de1464",
+          "header_hex": "00e000204e4cfe4c9cd7d29cd6993ff3501ae1cb903c3e9c66d5000000000000000000006414de02771be1ca302ec51a45e054e89b4d7d099ff9b98c8943363c65944e3cae05b76ac51e0217c115da7f",
+          "ntime": 1790379438,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:37:18Z"
+        },
+        "968601": {
+          "height": 968601,
+          "block_hash": "00000000000000000001b9d97c11c481c503fd2e91ebd7ba72f14f9c1e9ca8e3",
+          "merkle_root_display": "a8a1a20fabaa6666fd370d4d89499fc036556c95b56a3875ab9f362f9777e92b",
+          "header_hex": "00406024e7d103a941c4b029adc6fec3d72b2715c3e21cf67d2e000000000000000000002be977972f369fab75386ab5956c5536c09f49894d0d37fd6666aaab0fa2a1a8af05b76ac51e0217084a7219",
+          "ntime": 1790379439,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:37:19Z"
+        },
+        "968602": {
+          "height": 968602,
+          "block_hash": "0000000000000000000206860322d9b29efdc0a5ea0a4ff8291d3c4e8a3bbce2",
+          "merkle_root_display": "b7149d3edc902e30f485edf1002ed0ed84787fbd523cd7eccdb9efe04513abbb",
+          "header_hex": "00a0db26e3a89c1e9c4ff172bad7eb912efd03c581c4117cd9b901000000000000000000bbab1345e0efb9cdecd73c52bd7f7884edd02e00f1ed85f4302e90dc3e9d14b70b06b76ac51e02175ab75ec1",
+          "ntime": 1790379531,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:38:51Z"
+        },
+        "968603": {
+          "height": 968603,
+          "block_hash": "00000000000000000000f178fde6c1587bca5d01cdfbd3658819fc046664b2b4",
+          "merkle_root_display": "41d4f350f8f1115782119c93241a07f20d2e3c08c5bb262de45e2be5871012be",
+          "header_hex": "00009a28e2bc3b8a4e3c1d29f84f0aeaa5c0fd9eb2d92203860602000000000000000000be121087e52b5ee42d26bbc5083c2e0df2071a24939c11825711f1f850f3d4417107b76ac51e021762a8593c",
+          "ntime": 1790379889,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:44:49Z"
+        },
+        "968604": {
+          "height": 968604,
+          "block_hash": "00000000000000000001c47765263efcba63ae2cbe576537f44ef56f7b3934db",
+          "merkle_root_display": "7aa311eb31281f20dacc4220af85f0b97c53dab512b009187aa75946a79593c4",
+          "header_hex": "00600820b4b2646604fc198865d3fbcd015dca7b58c1e6fd78f100000000000000000000c49395a74659a77a1809b012b5da537cb9f085af2042ccda201f2831eb11a37a7608b76ac51e021744cd9337",
+          "ntime": 1790380150,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-25T23:49:10Z"
+        },
+        "968605": {
+          "height": 968605,
+          "block_hash": "00000000000000000000fe829be11d2f3894a2e45f8db0f12ea3b8b69ff41ae7",
+          "merkle_root_display": "9fbde0202551b3c3ffd4744af42f681801fe130d60883cc802e5304414b74a2a",
+          "header_hex": "00e09e27db34397b6ff54ef4376557be2cae63bafc3e266577c4010000000000000000002a4ab7144430e502c83c88600d13fe0118682ff44a74d4ffc3b3512520e0bd9f5f0db76ac51e02178659ee8f",
+          "ntime": 1790381407,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:10:07Z"
+        },
+        "968606": {
+          "height": 968606,
+          "block_hash": "00000000000000000001c79c0b12a67de4a16ab026929686c25de9ea8acfe2db",
+          "merkle_root_display": "f4a5b6d6260917cfb20abc7eb3ec9a417076c5231de4dc3da32237402be011ca",
+          "header_hex": "00607125e71af49fb6b8a32ef1b08d5fe4a294382f1de19b82fe00000000000000000000ca11e02b403722a33ddce41d23c57670419aecb37ebc0ab2cf170926d6b6a5f4920eb76ac51e02178e4945e9",
+          "ntime": 1790381714,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:15:14Z"
+        },
+        "968607": {
+          "height": 968607,
+          "block_hash": "0000000000000000000170d7ca580d5d311912298287d5faab9545a5d22970ef",
+          "merkle_root_display": "45b21e2279402a9fe0cb292977c35a3ab08bbcc9e27aac9abca4bb6f21b02685",
+          "header_hex": "00e00020dbe2cf8aeae95dc286969226b06aa1e47da6120b9cc7010000000000000000008526b0216fbba4bc9aac7ae2c9bc8bb03a5ac3772929cbe09f2a4079221eb245e70fb76ac51e0217561502f2",
+          "ntime": 1790382055,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:20:55Z"
+        },
+        "968608": {
+          "height": 968608,
+          "block_hash": "000000000000000000021c337a3b08f32f6699df7b57bb072930514fd9733655",
+          "merkle_root_display": "74ea49b8f0d8c6614997b551f782787522fa2539f19e1f1e5bf834f3c0e6bca2",
+          "header_hex": "00000020ef7029d2a54595abfad58782291219315d0d58cad77001000000000000000000a2bce6c0f334f85b1e1f9ef13925fa22757882f751b5974961c6d8f0b849ea746b10b76ac51e021717a57804",
+          "ntime": 1790382187,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:23:07Z"
+        },
+        "968609": {
+          "height": 968609,
+          "block_hash": "000000000000000000008b248b3a14250f301eaece4490bc59c9d0f32cf7cd74",
+          "merkle_root_display": "c11b3bd6cc4b5ec25cef7427ab7c366c44afb5ea24135a7fd66ef2e0956c4512",
+          "header_hex": "00600f25553673d94f51302907bb577bdf99662ff3083b7a331c0200000000000000000012456c95e0f26ed67f5a1324eab5af446c367cab2774ef5cc25e4bccd63b1bc14613b76ac51e02171c545763",
+          "ntime": 1790382918,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:35:18Z"
+        },
+        "968610": {
+          "height": 968610,
+          "block_hash": "0000000000000000000075dcebb46d61c09c92dc5253eb8121aee1a25e18d5e8",
+          "merkle_root_display": "221d03d0dfd2f85c6193babf6a6414d108fd681575b3467ff9d3f2d12d622a88",
+          "header_hex": "0000ff3f74cdf72cf3d0c959bc9044ceae1e300f25143a8b248b00000000000000000000882a622dd1f2d3f97f46b3751568fd08d114646abfba93615cf8d2dfd0031d222a15b76ac51e0217fcd35247",
+          "ntime": 1790383402,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T00:43:22Z"
+        },
+        "968611": {
+          "height": 968611,
+          "block_hash": "000000000000000000008c82d6e3a8655e795a4857f2bf1d72cef89c68a030ba",
+          "merkle_root_display": "4018b690c65d9de658c2f88ab29a890e1f390ecd92e3dfe42dc2c58e7365c8f3",
+          "header_hex": "00e00220e8d5185ea2e1ae2181eb5352dc929cc0616db4ebdc7500000000000000000000f3c865738ec5c22de4dfe392cd0e391f0e899ab28af8c258e69d5dc690b61840e91ab76ac51e02176b015d11",
+          "ntime": 1790384873,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:07:53Z"
+        },
+        "968612": {
+          "height": 968612,
+          "block_hash": "0000000000000000000204fa43328d9057384b6ea7e499dfa4e32cf39a253092",
+          "merkle_root_display": "47b8dbff737f0525558800d7bf36161d30a31949810f884b858ff8034f6b2bb0",
+          "header_hex": "0060cb27ba30a0689cf8ce721dbff257485a795e65a8e3d6828c00000000000000000000b02b6b4f03f88f854b880f814919a3301d1636bfd700885525057f73ffdbb8473e1db76ac51e02178a48fcdb",
+          "ntime": 1790385470,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:17:50Z"
+        },
+        "968613": {
+          "height": 968613,
+          "block_hash": "0000000000000000000153339e7bc48ec4e7930928c0aea393b2451a6485f6e1",
+          "merkle_root_display": "9ec2fa8df41f908c097f736713f82a66a18634d911552f2285bc2d88ccde13f3",
+          "header_hex": "000000209230259af32ce3a4df99e4a76e4b3857908d3243fa0402000000000000000000f313decc882dbc85222f5511d93486a1662af81367737f098c901ff48dfac29e0e1eb76ac51e0217f8fc3994",
+          "ntime": 1790385678,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:21:18Z"
+        },
+        "968614": {
+          "height": 968614,
+          "block_hash": "000000000000000000016dc32182efa11bc3745f209a604b7bc6f417cf1d9afa",
+          "merkle_root_display": "e5f7a57b1b1e13956ecaa22b1c8eb0c6cc3af3889574e9bf5267daf305874f4a",
+          "header_hex": "00a07422e1f685641a45b293a3aec0280993e7c48ec47b9e3353010000000000000000004a4f8705f3da6752bfe9749588f33accc6b08e1c2ba2ca6e95131e1b7ba5f7e5ef1db76ac51e02175a957a29",
+          "ntime": 1790385647,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:20:47Z"
+        },
+        "968615": {
+          "height": 968615,
+          "block_hash": "00000000000000000000ef3a764e0b9f64eaa5e62260da23b076ce762410d720",
+          "merkle_root_display": "a433202440845088b37cde7ae8b1872e50949a04a00381ae8a1e81af22c4ea0b",
+          "header_hex": "00a00d26fa9a1dcf17f4c67b4b609a205f74c31ba1ef8221c36d010000000000000000000beac422af811e8aae8103a0049a94502e87b1e87ade7cb388508440242033a4011eb76ac51e02176b3bca46",
+          "ntime": 1790385665,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:21:05Z"
+        },
+        "968616": {
+          "height": 968616,
+          "block_hash": "0000000000000000000060c0383d5d0991ea1301f9bf6344d85b77c6f991545d",
+          "merkle_root_display": "09ceef7900164871c240fcb3eb7fdc9b689db4ff0ef3ef4d325063b7fa81e64f",
+          "header_hex": "00e0002020d7102476ce76b023da6022e6a5ea649f0b4e763aef000000000000000000004fe681fab76350324deff30effb49d689bdc7febb3fc40c27148160079efce093421b76ac51e0217a9dbf110",
+          "ntime": 1790386484,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:34:44Z"
+        },
+        "968617": {
+          "height": 968617,
+          "block_hash": "00000000000000000000b5437bdbf53b68c1d57a2893b38d5ae73ac77d4f981a",
+          "merkle_root_display": "23dc98cf54c5a0435dacea3b2a89568d917a517688b5a3ff82f45570f47a81b4",
+          "header_hex": "004001205d5491f9c6775bd84463bff90113ea91095d3d38c06000000000000000000000b4817af47055f482ffa3b58876517a918d56892a3beaac5d43a0c554cf98dc233221b76ac51e02175eb0b843",
+          "ntime": 1790386482,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:34:42Z"
+        },
+        "968618": {
+          "height": 968618,
+          "block_hash": "00000000000000000000e8d65bd992ee937a1481c523c39ffbdda52416fd2046",
+          "merkle_root_display": "1340c23d5e68a46c0cd704f72621c84cfce3cce5196f7d1fbfb071a05be2be06",
+          "header_hex": "000000201a984f7dc73ae75a8db393287ad5c1683bf5db7b43b50000000000000000000006bee25ba071b0bf1f7d6f19e5cce3fc4cc82126f704d70c6ca4685e3dc24013b922b76ac51e021744176f86",
+          "ntime": 1790386873,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:41:13Z"
+        },
+        "968619": {
+          "height": 968619,
+          "block_hash": "000000000000000000018d384904d471097eaf3957a84cc5793dd6def8042d3c",
+          "merkle_root_display": "0d6c77e92f3aa48b46838dc72f1dfec36e4caad9862f7e32c74528b8db9116e9",
+          "header_hex": "002001204620fd1624a5ddfb9fc323c581147a93ee92d95bd6e800000000000000000000e91691dbb82845c7327e2f86d9aa4c6ec3fe1d2fc78d83468ba43a2fe9776c0de122b76ac51e0217e7cbba21",
+          "ntime": 1790386913,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:41:53Z"
+        },
+        "968620": {
+          "height": 968620,
+          "block_hash": "00000000000000000001b325cb2bddc9b2a2a7012405c3d6cb60f28398be9228",
+          "merkle_root_display": "766388c7172637a087930025f3945bbca987ec31d735ecb7ad2967ecaa695fe6",
+          "header_hex": "004007203c2d04f8ded63d79c54ca85739af7e0971d40449388d01000000000000000000e65f69aaec6729adb7ec35d731ec87a9bc5b94f325009387a0372617c78863764826b76ac51e02179afb2500",
+          "ntime": 1790387784,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T01:56:24Z"
+        },
+        "968621": {
+          "height": 968621,
+          "block_hash": "000000000000000000005fbea95754a05cfc9fc7598ad624d77e0773b62dfdc0",
+          "merkle_root_display": "3c9b8a3f72fa689ca7a9fa9b845f563ac979af34f733f1d410c22d0b84719320",
+          "header_hex": "00e08a2a2892be9883f260cbd6c3052401a7a2b2c9dd2bcb25b301000000000000000000209371840b2dc210d4f133f734af79c93a565f849bfaa9a79c68fa723f8a9b3c602bb76ac51e021710650657",
+          "ntime": 1790389088,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:18:08Z"
+        },
+        "968622": {
+          "height": 968622,
+          "block_hash": "000000000000000000015e112db819a6e823e2eaa11afa3194c69fb90ed62788",
+          "merkle_root_display": "5c6b43a7b6aba6de7fde2e2679fbba90c213c19930184277e6d5db204f7edcb9",
+          "header_hex": "0020fe28c0fd2db673077ed724d68a59c79ffc5ca05457a9be5f00000000000000000000b9dc7e4f20dbd5e67742183099c113c290bafb79262ede7fdea6abb6a7436b5c9f2eb76ac51e0217751e2b20",
+          "ntime": 1790389919,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:31:59Z"
+        },
+        "968623": {
+          "height": 968623,
+          "block_hash": "0000000000000000000119aeb1a7b85863d7ef786037d9c0b5ebaf695206f06b",
+          "merkle_root_display": "ad30c087b71d95e343ed9703839e648e8d0701677d1f58d725b73bd1df062349",
+          "header_hex": "0060f4258827d60eb99fc69431fa1aa1eae223e8a619b82d115e01000000000000000000492306dfd13bb725d7581f7d6701078d8e649e830397ed43e3951db787c030ada62eb76ac51e02178dfba29c",
+          "ntime": 1790389926,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:32:06Z"
+        },
+        "968624": {
+          "height": 968624,
+          "block_hash": "000000000000000000000cc25b12b89d359192315c6d697d30de33a6ab3c4464",
+          "merkle_root_display": "b62fe23114f505b3edd2369324a5312e5c9f308f509f972c0396d8c45a10e881",
+          "header_hex": "00a099226bf0065269afebb5c0d9376078efd76358b8a7b1ae190100000000000000000081e8105ac4d896032c979f508f309f5c2e31a5249336d2edb305f51431e22fb6272fb76ac51e02178466f389",
+          "ntime": 1790390055,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:34:15Z"
+        },
+        "968625": {
+          "height": 968625,
+          "block_hash": "000000000000000000006d2d78d43a31ab28425e1426597f28d71a90e5db0612",
+          "merkle_root_display": "9f6a44fbfa27961940c1ac00a8cf9186be3d7cd100db745218c362a65d9ce098",
+          "header_hex": "0060582a64443caba633de307d696d5c319291359db8125bc20c0000000000000000000098e09c5da662c3185274db00d17c3dbe8691cfa800acc140199627fafb446a9fa330b76ac51e02173f3b0cb2",
+          "ntime": 1790390435,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:40:35Z"
+        },
+        "968626": {
+          "height": 968626,
+          "block_hash": "0000000000000000000169807c3595d959f697d7091f0487fa992b9ee56f7d65",
+          "merkle_root_display": "2afba51490bc1ca5872a8883a72764747e7ea9860af18029a7c788abe07b88c2",
+          "header_hex": "00001e231206dbe5901ad7287f5926145e4228ab313ad4782d6d00000000000000000000c2887be0ab88c7a72980f10a86a97e7e746427a783882a87a51cbc9014a5fb2a4432b76ac51e021789c477a5",
+          "ntime": 1790390852,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:47:32Z"
+        },
+        "968627": {
+          "height": 968627,
+          "block_hash": "000000000000000000000d3eae9ccc14e112a33cced3095db32cc83264f095b2",
+          "merkle_root_display": "c5ae8a0af61bd307e6de967816d7733b9ce2c9a8c5f217250defd12bd6a25103",
+          "header_hex": "0080742c657d6fe59e2b99fa87041f09d797f659d995357c8069010000000000000000000351a2d62bd1ef0d2517f2c5a8c9e29c3b73d7167896dee607d31bf60a8aaec5e634b76ac51e021711c5ba31",
+          "ntime": 1790391526,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T02:58:46Z"
+        },
+        "968628": {
+          "height": 968628,
+          "block_hash": "00000000000000000000d2d1b27dc8889c428987a2d69a236712d06a40e35f68",
+          "merkle_root_display": "57208f4965ff9c3f128d699a597e9d04bb28cd21a01ece767ad88291474098f5",
+          "header_hex": "00c00420b295f06432c82cb35d09d3ce3ca312e114cc9cae3e0d00000000000000000000f59840479182d87a76ce1ea021cd28bb049d7e599a698d123f9cff65498f20572a37b76ac51e02175195b036",
+          "ntime": 1790392106,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:08:26Z"
+        },
+        "968629": {
+          "height": 968629,
+          "block_hash": "000000000000000000018d49b66a256c8b1f181a9b06b49fee45068502e27a0e",
+          "merkle_root_display": "6c553c0389b817aa7d105147e5eb78c27b28fdeed352878d778c1133ff118c68",
+          "header_hex": "00800f20685fe3406ad01267239ad6a28789429c88c87db2d1d200000000000000000000688c11ff33118c778d8752d3eefd287bc278ebe54751107daa17b889033c556c6437b76ac51e02175e71fa44",
+          "ntime": 1790392164,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:09:24Z"
+        },
+        "968630": {
+          "height": 968630,
+          "block_hash": "00000000000000000001f57744b67db316c2c285accaa25d9ebd0543a142278a",
+          "merkle_root_display": "1cd1ee63dddef0a5b8f31a3f7548e0dd38536da29e236386511b922df1f844a6",
+          "header_hex": "0020b2330e7ae202850645ee9fb4069b1a181f8b6c256ab6498d01000000000000000000a644f8f12d921b518663239ea26d5338dde048753f1af3b8a5f0dedd63eed11c1438b76ac51e021773af7885",
+          "ntime": 1790392340,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:12:20Z"
+        },
+        "968631": {
+          "height": 968631,
+          "block_hash": "000000000000000000000edfbc568ae7c2242ea31d3faf81d6939fb448992d31",
+          "merkle_root_display": "87badfc24469b62ca2aefbb2920dd130231cd9353ab86c44e7e275741f6c834e",
+          "header_hex": "00e04d2e8a2742a14305bd9e5da2caac85c2c216b37db64477f5010000000000000000004e836c1f7475e2e7446cb83a35d91c2330d10d92b2fbaea22cb66944c2dfba87b63ab76ac51e02177241c7c4",
+          "ntime": 1790393014,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:23:34Z"
+        },
+        "968632": {
+          "height": 968632,
+          "block_hash": "0000000000000000000034661e81d3295c320558ab60201160715c5c670ffaa3",
+          "merkle_root_display": "ff5c97dfa8fbee5c03708588303f50293f811ee0898a1deeaac91055a9397a51",
+          "header_hex": "0020f524312d9948b49f93d681af3f1da32e24c2e78a56bcdf0e00000000000000000000517a39a95510c9aaee1d8a89e01e813f29503f30888570035ceefba8df975cffb03bb76ac51e02173a9576d4",
+          "ntime": 1790393264,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:27:44Z"
+        },
+        "968633": {
+          "height": 968633,
+          "block_hash": "00000000000000000001baea0218f616295c1f0776e1e5d20f7f3d9cb38c2c1d",
+          "merkle_root_display": "f68897c54152eb56702adbea88dc7234027ca20685b4b22a8aba895071337068",
+          "header_hex": "00c09827a3fa0f675c5c7160112060ab5805325c29d3811e663400000000000000000000687033715089ba8a2ab2b48506a27c023472dc88eadb2a7056eb5241c59788f61942b76ac51e0217d6d088d9",
+          "ntime": 1790394905,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T03:55:05Z"
+        },
+        "968634": {
+          "height": 968634,
+          "block_hash": "0000000000000000000034ba0b4bd93555a1fcc24ab2c474007c6e4024e47d71",
+          "merkle_root_display": "9d774a67ab757fc1448d1b6ce2c3ef941a7d4261190d6078e28b70a468f1edb6",
+          "header_hex": "00e0f0231d2c8cb39c3d7f0fd2e5e176071f5c2916f61802eaba01000000000000000000b6edf168a4708be278600d1961427d1a94efc3e26c1b8d44c17f75ab674a779d9044b76ac51e0217616c4c77",
+          "ntime": 1790395536,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:05:36Z"
+        },
+        "968635": {
+          "height": 968635,
+          "block_hash": "00000000000000000000836dfab1879244485960e1ee0a506461ad5a93560ed2",
+          "merkle_root_display": "b56fb3b6c231d470c3426dbac6d02360d2e740504d834d5a207a2a672246df07",
+          "header_hex": "00806424717de424406e7c0074c4b24ac2fca15535d94b0bba340000000000000000000007df4622672a7a205a4d834d5040e7d26023d0c6ba6d42c370d431c2b6b36fb51345b76ac51e02174fed6995",
+          "ntime": 1790395667,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:07:47Z"
+        },
+        "968636": {
+          "height": 968636,
+          "block_hash": "000000000000000000020f7777f5b90a9ef274e4e0f3fee2ba75b31f50ede393",
+          "merkle_root_display": "8ade41bea9a4d971ffca1940e2246e130ec4f72fae84c3597ce04ddd9e74a0a3",
+          "header_hex": "0020363bd20e56935aad6164500aeee1605948449287b1fa6d8300000000000000000000a3a0749edd4de07c59c384ae2ff7c40e136e24e24019caff71d9a4a9be41de8a8e46b76ac51e0217872018d5",
+          "ntime": 1790396046,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:14:06Z"
+        },
+        "968637": {
+          "height": 968637,
+          "block_hash": "0000000000000000000039509c96570c8ba3ba33c174a2d4aeb42d6fd2618d91",
+          "merkle_root_display": "7d3abcaafcf264f8a906811d5cfc57df495eed7d91b7bfea6a962481ca08dfa5",
+          "header_hex": "0000003493e3ed501fb375bae2fef3e0e474f29e0ab9f577770f02000000000000000000a5df08ca8124966aeabfb7917ded5e49df57fc5c1d8106a9f864f2fcaabc3a7deb48b76ac51e0217c060a38e",
+          "ntime": 1790396651,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:24:11Z"
+        },
+        "968638": {
+          "height": 968638,
+          "block_hash": "00000000000000000001cc91ceb814bac4f1e31760dbf39314f6bfbe700be542",
+          "merkle_root_display": "f4735c82f676a9cda207d6bee3fea51447c699335aa35037da90d50ab1b1caf1",
+          "header_hex": "00000034918d61d26f2db4aed4a274c133baa38b0c57969c503900000000000000000000f1cab1b10ad590da3750a35a3399c64714a5fee3bed607a2cda976f6825c73f4cd49b76ac51e0217b13229a4",
+          "ntime": 1790396877,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:27:57Z"
+        },
+        "968639": {
+          "height": 968639,
+          "block_hash": "00000000000000000000700f35157e09b4ce3c396930f2b4c8438e3e33523c46",
+          "merkle_root_display": "54a16fb12237b84f3649bf3613029855cc718eda450456786e025d607009b766",
+          "header_hex": "0020be2042e50b70bebff61493f3db6017e3f1c4ba14b8ce91cc0100000000000000000066b70970605d026e78560445da8e71cc5598021336bf49364fb83722b16fa154944ab76ac51e0217af54b2ad",
+          "ntime": 1790397076,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:31:16Z"
+        },
+        "968640": {
+          "height": 968640,
+          "block_hash": "00000000000000000001cd96cda7b5acd12d9c37d376d8f2d8c500e0495d6fc0",
+          "merkle_root_display": "0c4830ffdb1488138f7e3d3a0b2227c572e151887bc7e71f9e1031ee67a5774b",
+          "header_hex": "00600220463c52333e8e43c8b4f23069393cceb4097e15350f70000000000000000000004b77a567ee31109e1fe7c77b8851e172c527220b3a3d7e8f138814dbff30480cef4db76ac51e0217e0744d45",
+          "ntime": 1790397935,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:45:35Z"
+        },
+        "968641": {
+          "height": 968641,
+          "block_hash": "0000000000000000000154a4d28da60da733df876e6957d31dcef5ffc96a3ce7",
+          "merkle_root_display": "590494042db7ec4c529c6bf7aded1f4dc0d0c9b9e2ea89a398656ce77eb23a40",
+          "header_hex": "00e00020c06f5d49e000c5d8f2d876d3379c2dd1acb5a7cd96cd01000000000000000000403ab27ee76c6598a389eae2b9c9d0c04d1fedadf76b9c524cecb72d04940459074eb76ac51e02173e53438e",
+          "ntime": 1790397959,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:45:59Z"
+        },
+        "968642": {
+          "height": 968642,
+          "block_hash": "00000000000000000001780b3561440017b75d8e57ca549d99280de1854567e9",
+          "merkle_root_display": "b077cbe656a62a86fe05636336c8875ba51b57717f002f2b433da5fa09c9de29",
+          "header_hex": "00e0ff3fe73c6ac9fff5ce1dd357696e87df33a70da68dd2a4540100000000000000000029dec909faa53d432b2f007f71571ba55b87c836636305fe862aa656e6cb77b04e50b76ac51e021730f84093",
+          "ntime": 1790398542,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T04:55:42Z"
+        },
+        "968643": {
+          "height": 968643,
+          "block_hash": "0000000000000000000064a55d5fc6e05309bccf9ab379699d2c7c64d33943ff",
+          "merkle_root_display": "e786d75387af48a72c38d5e8adcbc8734982034eb4db18bc0bc94a9d5bb3198a",
+          "header_hex": "00000034e9674585e10d28999d54ca578e5db717004461350b78010000000000000000008a19b35b9d4ac90bbc18dbb44e03824973c8cbade8d5382ca748af8753d786e77f52b76ac51e021730ef0b4c",
+          "ntime": 1790399103,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T05:05:03Z"
+        },
+        "968644": {
+          "height": 968644,
+          "block_hash": "00000000000000000001938bf3b81195d366861f740345ceddfdbbf6707c1e65",
+          "merkle_root_display": "2119f29dba27e7754fc34b4d8a90ef37dd1f3c71f5acc88fe82f4affe950b4fc",
+          "header_hex": "00e00320ff4339d3647c2c9d6979b39acfbc0953e0c65f5da56400000000000000000000fcb450e9ff4a2fe88fc8acf5713c1fdd37ef908a4d4bc34f75e727ba9df219213058b76ac51e02177bd06287",
+          "ntime": 1790400560,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T05:29:20Z"
+        },
+        "968645": {
+          "height": 968645,
+          "block_hash": "00000000000000000001e68b80e497735fe32d0bc3cb8d4b2c14eb173c6b2580",
+          "merkle_root_display": "38b3c845e16f0b8a9b972c749452ebab1957d6e6172e4e26d06a75eb55edd5b7",
+          "header_hex": "00c0eb25651e7c70f6bbfdddce4503741f8666d39511b8f38b9301000000000000000000b7d5ed55eb756ad0264e2e17e6d65719abeb5294742c979b8a0b6fe145c8b3389b58b76ac51e02177b16dcf3",
+          "ntime": 1790400667,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T05:31:07Z"
+        },
+        "968646": {
+          "height": 968646,
+          "block_hash": "0000000000000000000027193566b1b97a1b7eccc8a066f249e7ad4b0a3d0b0c",
+          "merkle_root_display": "353839a506c174337c098c339f838c1545b9325e7b7f9a6a10b4fd28e37c8f75",
+          "header_hex": "00e0a52680256b3c17eb142c4b8dcbc30b2de35f7397e4808be601000000000000000000758f7ce328fdb4106a9a7f7b5e32b945158c839f338c097c3374c106a5393835dc59b76ac51e0217fba35a8c",
+          "ntime": 1790400988,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T05:36:28Z"
+        }
+      }
+    },
+    "crosscheck_adapter_968752": {
+      "start_height": 968741,
+      "end_height": 968763,
+      "header_count": 23,
+      "total_chainwork_hex": "0xad91ae3ce4333259dc80a",
+      "anchors": {
+        "968752": {
+          "height": 968752,
+          "block_hash": "00000000000000000001d30b15a85b9d1a5273726b21a0d31a8dfdd23ba86262",
+          "ntime": 1790465226,
+          "rwcp_iso": "2026-09-26T23:27:06Z",
+          "mtp_bip113": 1790458481,
+          "mtp_bip113_iso": "2026-09-26T21:34:41Z",
+          "fmtp_6": 1790465740,
+          "fmtp_6_iso": "2026-09-26T23:35:40Z",
+          "fmtp_11": 1790466284,
+          "fmtp_11_iso": "2026-09-26T23:44:44Z",
+          "confirmations_draft08": 12,
+          "confirmations_hardened20": 11
+        }
+      },
+      "headers": {
+        "968741": {
+          "height": 968741,
+          "block_hash": "000000000000000000002de21bc858c0fe7a3163b927a7dabc824142da783234",
+          "merkle_root_display": "f1896bfdc3ec49f228cdcc5a91b3183cc0522801d9065afaa1641c30d1e86c13",
+          "header_hex": "0000003cf066b4c3a5b00fe9ab427754e71b857924eeb92ecb1d00000000000000000000136ce8d1301c64a1fa5a06d9012852c03c18b3915acccd28f249ecc3fd6b89f11029b86ac51e02176ea670d2",
+          "ntime": 1790454032,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T20:20:32Z"
+        },
+        "968742": {
+          "height": 968742,
+          "block_hash": "00000000000000000001a88179e7d92e0b5c2a0a9b845d29367c1378f810d713",
+          "merkle_root_display": "6b0797384a27f79e0889ad654c5309fd1d8385d8271c5d47c074a64d75b6fd58",
+          "header_hex": "0000003a343278da424182bcdaa727b963317afec058c81be22d0000000000000000000058fdb6754da674c0475d1c27d885831dfd09534c65ad89089ef7274a3897076bef2fb86ac51e02170055313c",
+          "ntime": 1790455791,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T20:49:51Z"
+        },
+        "968743": {
+          "height": 968743,
+          "block_hash": "00000000000000000000d571ec430053f13c3f3efce9a79128f72a8a8643958f",
+          "merkle_root_display": "86dcf4597fac885574e603728728c3683aea6ed0b931fd7171f76f1a0c0dbd22",
+          "header_hex": "0000b02213d710f878137c36295d849b0a2a5c0b2ed9e77981a80100000000000000000022bd0d0c1a6ff77171fd31b9d06eea3a68c328877203e6745588ac7f59f4dc868835b86ac51e02172fdbc6bb",
+          "ntime": 1790457224,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T21:13:44Z"
+        },
+        "968744": {
+          "height": 968744,
+          "block_hash": "0000000000000000000070d699813720755c550e8c73021995a21962d8c2b1cd",
+          "merkle_root_display": "a36a3743ba9d78a757637ad7c2572e7c1b969c563200966d61e9d815201f9bc0",
+          "header_hex": "0000ff3f8f9543868a2af72891a7e9fc3e3f3cf1530043ec71d500000000000000000000c09b1f2015d8e9616d960032569c961b7c2e57c2d77a6357a7789dba43376aa37538b86ac51e02177e7eb1f3",
+          "ntime": 1790457973,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T21:26:13Z"
+        },
+        "968745": {
+          "height": 968745,
+          "block_hash": "0000000000000000000092e9383d071e2e7760bcfa71f80d2e14af2805df77b7",
+          "merkle_root_display": "868ff87343aecbbb84e6348259fbc682f69e5fb5b6ca023a8f59b8a08b0942cb",
+          "header_hex": "00800024cdb1c2d86219a2951902738c0e555c7520378199d67000000000000000000000cb42098ba0b8598f3a02cab6b55f9ef682c6fb598234e684bbcbae4373f88f863239b86ac51e02179eed08c8",
+          "ntime": 1790458162,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T21:29:22Z"
+        },
+        "968746": {
+          "height": 968746,
+          "block_hash": "000000000000000000013a5ac8fd33b9135ff4f39e3ae96f82033737587ce53d",
+          "merkle_root_display": "d5eaf9346f4a3e9497f104c11ab44192f71028f25a93194cab88878b2be1983b",
+          "header_hex": "00606c21b777df0528af142e0df871fabc60772e1e073d38e992000000000000000000003b98e12b8b8788ab4c19935af22810f79241b41ac104f197943e4a6f34f9ead5713ab86ac51e02171b18fc43",
+          "ntime": 1790458481,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T21:34:41Z"
+        },
+        "968747": {
+          "height": 968747,
+          "block_hash": "000000000000000000002a4e335b545f5d0cbc159a20e2d3b254dd5467a03ad3",
+          "merkle_root_display": "0f0f6690ced8e4067c8f4c37a587298096f130296f4c2a5be9421a9811525f92",
+          "header_hex": "00e0ff3f3de57c58373703826fe93a9ef3f45f13b933fdc85a3a01000000000000000000925f5211981a42e95b2a4c6f2930f196802987a5374c8f7c06e4d8ce90660f0f1e41b86ac51e0217a00a640f",
+          "ntime": 1790460190,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T22:03:10Z"
+        },
+        "968748": {
+          "height": 968748,
+          "block_hash": "00000000000000000000b2a3eea2368790e23bd29a76e0ea108f1312f02c5ea0",
+          "merkle_root_display": "f88b07bbfd44d6226683ae934377261d6f99cc66e450bacaed256846b4ea7624",
+          "header_hex": "00e00020d33aa06754dd54b2d3e2209a15bc0c5d5f545b334e2a000000000000000000002476eab4466825edcaba50e466cc996f1d26774393ae836622d644fdbb078bf89144b86ac51e0217616b2bf8",
+          "ntime": 1790461073,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T22:17:53Z"
+        },
+        "968749": {
+          "height": 968749,
+          "block_hash": "000000000000000000002c0adc153cf64bac8440660dfa8104329cb7fbf09751",
+          "merkle_root_display": "9dab0f9d3119b4f24d3a126836bc964562c626d14bd3a36f68e920f2f8cc48f1",
+          "header_hex": "00206832a05e2cf012138f10eae0769ad23be2908736a2eea3b200000000000000000000f148ccf8f220e9686fa3d34bd126c6624596bc3668123a4df2b419319d0fab9d2e4bb86ac51e02177a725f7b",
+          "ntime": 1790462766,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T22:46:06Z"
+        },
+        "968750": {
+          "height": 968750,
+          "block_hash": "00000000000000000001faa7eef315c0b82a8b59afa0c2c6510b1f776d275083",
+          "merkle_root_display": "50a36c5ab6dc0abb9afb3747e18b120e722415084cf51c7004fbcdf07f07a1b3",
+          "header_hex": "00a093225197f0fbb79c320481fa0d664084ac4bf63c15dc0a2c00000000000000000000b3a1077ff0cdfb04701cf54c081524720e128be14737fb9abb0adcb65a6ca3504d4eb86ac51e0217602d41d7",
+          "ntime": 1790463565,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T22:59:25Z"
+        },
+        "968751": {
+          "height": 968751,
+          "block_hash": "00000000000000000000ccd4e4e6f0e39b219b1ddabcf065bfa7808303128376",
+          "merkle_root_display": "0cfb28e289db106793aa0c0a136e03500c2d57b541498ea29249525ee63dc647",
+          "header_hex": "00a050228350276d771f0b51c6c2a0af598b2ab8c015f3eea7fa0100000000000000000047c63de65e524992a28e4941b5572d0c50036e130a0caa936710db89e228fb0c0f53b86ac51e0217a62cd327",
+          "ntime": 1790464783,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:19:43Z"
+        },
+        "968752": {
+          "height": 968752,
+          "block_hash": "00000000000000000001d30b15a85b9d1a5273726b21a0d31a8dfdd23ba86262",
+          "merkle_root_display": "fa1db3e033ede8f1360f8f027ce1c016b0879c325feead6d776826e5ce549e1d",
+          "header_hex": "00607c3e768312038380a7bf65f0bcda1d9b219be3f0e6e4d4cc000000000000000000001d9e54cee52668776dadee5f329c87b016c0e17c028f0f36f1e8ed33e0b31dfaca54b86ac51e0217bf18fe6e",
+          "ntime": 1790465226,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:27:06Z"
+        },
+        "968753": {
+          "height": 968753,
+          "block_hash": "00000000000000000001aa5cf8174c650ecbff8bf33348c614db44554ba118bd",
+          "merkle_root_display": "447d4945450420d55360a50fa02820b444efed8e2ee1b3030e17dc7d04302f53",
+          "header_hex": "00e005206262a83bd2fd8d1ad3a0216b7273521a9d5ba8150bd301000000000000000000532f30047ddc170e03b3e12e8eedef44b42028a00fa56053d520044545497d44cc56b86ac51e0217a9201d16",
+          "ntime": 1790465740,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:35:40Z"
+        },
+        "968754": {
+          "height": 968754,
+          "block_hash": "00000000000000000001454a77bda2a0c45f790eb9efa7ed27459dad18d52e8b",
+          "merkle_root_display": "b1ff1ab214c0d1bfe7b315f2c7a0e7db374697f864d0619d1d77b866ba6c0c1f",
+          "header_hex": "0000d42bbd18a14b5544db14c64833f38bffcb0e654c17f85caa010000000000000000001f0c6cba66b8771d9d61d064f8974637dbe7a0c7f215b3e7bfd1c014b21affb1f656b86ac51e02174d868e4f",
+          "ntime": 1790465782,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:36:22Z"
+        },
+        "968755": {
+          "height": 968755,
+          "block_hash": "00000000000000000001d696479be67246fea061479465b0ef04bdcc513d64ae",
+          "merkle_root_display": "a9653442113cf43aaa284127c05c67c17129237cfcbf2ff4351a777cafb75db5",
+          "header_hex": "00e09a268b2ed518ad9d4527eda7efb90e795fc4a0a2bd774a4501000000000000000000b55db7af7c771a35f42fbffc7c232971c1675cc0274128aa3af43c11423465a96458b86ac51e0217048ef948",
+          "ntime": 1790466148,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:42:28Z"
+        },
+        "968756": {
+          "height": 968756,
+          "block_hash": "00000000000000000000cc3454148dd4af5d3ac25f346443b988bb797c271846",
+          "merkle_root_display": "e255b439b1ede9317b20889c5d28d89289aeeb0dac82fe4d3e252b54631750c4",
+          "header_hex": "0020cc32ae643d51ccbd04efb065944761a0fe4672e69b4796d601000000000000000000c4501763542b253e4dfe82ac0debae8992d8285d9c88207b31e9edb139b455e2ac58b86ac51e02179c47be68",
+          "ntime": 1790466220,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:43:40Z"
+        },
+        "968757": {
+          "height": 968757,
+          "block_hash": "000000000000000000019cb5692829fa76d5708d8d5260c058447fd3dbf43920",
+          "merkle_root_display": "ed4a6fcde12b1209ac921c6c9d55fab205d07ae47ac4a48c78938cfceae283b0",
+          "header_hex": "0020ca244618277c79bb88b94364345fc23a5dafd48d145434cc00000000000000000000b083e2eafc8c93788ca4c47ae47ad005b2fa559d6c1c92ac09122be1cd6f4aedc958b86ac51e02174aaf5864",
+          "ntime": 1790466249,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:44:09Z"
+        },
+        "968758": {
+          "height": 968758,
+          "block_hash": "00000000000000000001def26ae79327ce5dd76edd82d277bf3a747df1d3e8b0",
+          "merkle_root_display": "9176f94e75fae79c38e74f02ec88100e6c4b250d9cdcb0a0990739232954a330",
+          "header_hex": "00e014202039f4dbd37f4458c060528d8d70d576fa292869b59c0100000000000000000030a3542923390799a0b0dc9c0d254b6c0e1088ec024fe7389ce7fa754ef97691ec58b86ac51e021797160139",
+          "ntime": 1790466284,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-26T23:44:44Z"
+        },
+        "968759": {
+          "height": 968759,
+          "block_hash": "00000000000000000001c86ef069276460f1acbdb5a69f014176098d325019cb",
+          "merkle_root_display": "a5a3dc888ae1e624591062a98bc16dfb01f24c101508872a6f8e1d437d225a1c",
+          "header_hex": "00000c25b0e8d3f17d743abf77d282dd6ed75dce2793e76af2de010000000000000000001c5a227d431d8e6f2a870815104cf201fb6dc18ba962105924e6e18a88dca3a51261b86ac51e02177a0fda07",
+          "ntime": 1790468370,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-27T00:19:30Z"
+        },
+        "968760": {
+          "height": 968760,
+          "block_hash": "000000000000000000000d2dc186e0e54c7e88daaf51405f387159d4db3dfa4e",
+          "merkle_root_display": "058406921b9d3b3eb31b2db6888e4e39a84e7092ff7c16be7fc8d86a7bdf3d9a",
+          "header_hex": "00c00120cb1950328d097641019fa6b5bdacf160642769f06ec8010000000000000000009a3ddf7b6ad8c87fbe167cff92704ea8394e8e88b62d1bb33e3b9d1b920684050862b86ac51e0217bc2a8f31",
+          "ntime": 1790468616,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-27T00:23:36Z"
+        },
+        "968761": {
+          "height": 968761,
+          "block_hash": "00000000000000000001dc4d13d95883397738d59aca7cfab6d308153d459ef9",
+          "merkle_root_display": "8fc19fa2bd96eb51d28d716560d1b6e7eb26979e89eace291820daf10c4e711e",
+          "header_hex": "002006204efa3ddbd45971385f4051afda887e4ce5e086c12d0d000000000000000000001e714e0cf1da201829ceea899e9726ebe7b6d16065718dd251eb96bda29fc18f5e64b86ac51e0217bdbcfd18",
+          "ntime": 1790469214,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-27T00:33:34Z"
+        },
+        "968762": {
+          "height": 968762,
+          "block_hash": "00000000000000000001a50df6ecdef2dc7ef103362e6893c4a8242b6b4d0655",
+          "merkle_root_display": "f2f967af979c1315e379e3bcec1077314337a6859c9cd23596abdbf488499e0c",
+          "header_hex": "00c01920f99e453d1508d3b6fa7cca9ad53877398358d9134ddc010000000000000000000c9e4988f4dbab9635d29c9c85a63743317710ecbce379e315139c97af67f9f2f664b86ac51e02170422b114",
+          "ntime": 1790469366,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-27T00:36:06Z"
+        },
+        "968763": {
+          "height": 968763,
+          "block_hash": "0000000000000000000189ed83681aa3bb7df28639cf292c0a126d4a73fe83f5",
+          "merkle_root_display": "9e6b5786aecfdf783b0e70977674ad97d22b22d36d7c89a3bccb2371c28b32db",
+          "header_hex": "0000702255064d6b2b24a8c493682e3603f17edcf2deecf60da501000000000000000000db328bc27123cbbca3897c6dd3222bd297ad747697700e3b78dfcfae86576b9e5865b86ac51e0217017fb143",
+          "ntime": 1790469464,
+          "nbits_hex": "0x17021ec5",
+          "iso_utc": "2026-09-27T00:37:44Z"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[package]
+name = "scitt_time_anchor_wasm"
+version = "0.2.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Thin C-ABI WebAssembly export shim over #![forbid(unsafe_code)] scitt_time_anchor_rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+scitt_time_anchor_rs = { path = ".." }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

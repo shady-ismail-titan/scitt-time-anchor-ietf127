@@ -1,0 +1,22 @@
+[package]
+name = "scitt_time_anchor_rs"
+version = "0.2.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Clean-room zero-unsafe, zero-dependency Rust verifier for draft-fassbender-scitt-time-anchor-08"
+
+[lib]
+name = "scitt_time_anchor_rs"
+crate-type = ["rlib"]
+
+[[bin]]
+name = "scitt_time_anchor_rs"
+path = "src/main.rs"
+
+[dependencies]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

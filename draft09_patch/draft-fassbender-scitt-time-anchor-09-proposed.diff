@@ -1,0 +1,215 @@
+# NON-NORMATIVE IMPLEMENTER FEEDBACK DIFF (Offered respectfully to Draft Editor H. Fassbender & IETF SCITT WG to illustrate optional editorial clarifications for F1-F7; NOT a competing fork.)
+--- a/draft-fassbender-scitt-time-anchor-08.txt
++++ b/draft-fassbender-scitt-time-anchor-09.txt
+@@ -1859,11 +1859,16 @@
+    *  VALIDATE-HEADER-ON-CHAIN(validated_chain, H, candidate) -- returns
+       candidate where validated_chain establishes that the block header
+       at height H is exactly those 80 bytes, and NULL in every other
+-      case, including where the view does not reach height H.  This
+-      function is what distinguishes a header the verifier has placed on
+-      the validated most-work chain from one that was reported to it,
+-      and a verifier that treats retrieval as sufficient has not
+-      performed it.  Defined operationally per [NAKAMOTO].
++      case, including where the view does not reach height H.  When
++      validating a header chain offline, the verifier MUST decode nBits
++      using exact signed-compact semantics (rejecting mantissa == 0,
++      sign bit (nBits & 0x00800000) != 0, or target overflow above the
++      ledger powLimit), verify SHA-256(SHA-256(header_80)) <= target,
++      verify prev_block_hash continuity and [BIP113] nTime > MTP(H-1)
++      wherever the eleven preceding headers are present, and select
++      among competing valid chains by maximum cumulative 256-bit
++      ChainWork = sum(floor((2^256 - 1) / (target + 1)) + 1) rather than
++      chain length alone.  Defined operationally per [NAKAMOTO].
+ 
+    *  CONFIRMATIONS-ON(validated_chain, H) -- returns the number of
+       blocks validated_chain establishes at height H and above, counting
+@@ -1899,9 +1904,20 @@
+       the proof header (file_hash_op), the message the proof commits to
+       (msg), the recorded operation sequence, and the attestations that
+       terminate its branches.  Returns NULL if parsing fails.  The
+-      serialisation format it consumes is defined by [OTS].  It is the
+-      one operation in this list for which this profile gives no
+-      algorithm; see Section 7.2.1.
++      serialisation format it consumes is defined by [OTS].  To prevent
++      cross-runtime integer-width divergence (e.g., 32-bit bitwise shifts
++      versus unbounded integers) and resource exhaustion, implementations
++      of the strict profile MUST enforce: (a) canonical unsigned LEB128
++      varuint encoding (at most 5 octets, value <= 2^32 - 1, with no
++      redundant trailing zero continuation octets when byte_count > 1);
++      (b) total proof byte length <= 65,536 octets, branch count <= 64,
++      operation depth <= 4,608, unknown attestation payload <= 8,192
++      octets, and pending URI length <= 1,000 octets over [A-Za-z0-9-._/:];
++      (c) an iterative explicit work-stack (O(1) call-stack frames) so
++      deep linear operation chains cannot overflow fixed WebAssembly or
++      embedded thread stacks; and (d) exact end-of-buffer consumption
++      with zero trailing octets both at the outer proof boundary and
++      inside each attestation payload.
+ 
+    *  OTS-ATTESTED-HEIGHT(branch) -- returns the Bitcoin block height
+       recorded in the Bitcoin attestation that terminates a single
+@@ -1911,14 +1927,18 @@
+       branches that verified is selected; see Section 4.1, steps 6 and
+       8, and the note on multiple attestations.
+ 
+-   *  OTS-REPLAY(branch, hash) -- replays the sequence of append,
+-      prepend and SHA-256 operations along a single Bitcoin branch of
+-      the proof, starting from hash, and returns the resulting 32-byte
+-      digest.  The OpenTimestamps format admits further operations,
+-      including hash functions other than SHA-256, and Assumption A1
+-      (Section 7.2) is stated for SHA-256 alone; a verifier conforming
+-      to this profile MUST NOT replay a branch containing any operation
+-      other than append, prepend and SHA-256.  For such a branch the
++   *  OTS-REPLAY(branch, hash) -- replays the sequence of append (0xf0),
++      prepend (0xf1) and SHA-256 (0x08) operations along a single Bitcoin
++      branch of the proof, starting from hash, and returns the resulting
++      32-byte digest.  The OpenTimestamps format admits further
++      operations, including legacy 160-bit hashes (OpSHA1 0x02,
++      OpRIPEMD160 0x03) and unary expansion (OpHexlify 0xf3), and
++      Assumption A1 (Section 7.2) is stated for SHA-256 alone; a verifier
++      conforming to this profile MUST NOT replay a branch containing any
++      operation other than append (0xf0), prepend (0xf1) and SHA-256
++      (0x08), MUST enforce 1 <= operand_len <= 512 octets and working
++      buffer size <= 4,096 octets at every step, and in strict mode MUST
++      reject proofs carrying disallowed opcodes during deserialization.  For such a branch the
+       function returns NULL, as it does when the replay cannot be
+       completed for any other reason, and Section 4.1 step 8 classifies
+       the branch as unevaluated rather than as failing.  Under this
+@@ -2082,15 +2102,20 @@
+        // check: the artifact hash resolves, through a branch's
+        // recorded operations, to a value committed by Bitcoin
+        // proof-of-work.
+-       b* <- the branch in verified with the lowest b.H
++       durable <- { b IN verified :
++                    CONFIRMATIONS-ON(validated_chain, b.H) IS NOT NULL
++                    AND CONFIRMATIONS-ON(validated_chain, b.H)
++                        >= MIN_CONFIRMATIONS }
++       IF durable IS EMPTY:
++         RETURN unverifiable
++       b* <- the branch in durable with the lowest b.H
+        H <- b*.H
+        header <- b*.header
+-       // Lowest verified height: the tightest bound (7.1).
+-       // Both digests are compared as internal byte order, the
+-       // order in which OTS-REPLAY produces the digest and in
+-       // which merkle_root appears in the 80-byte header. A
+-       // value read from a block explorer is typically
+-       // byte-reversed; see Appendix D.3.
++       // Filtering by MIN_CONFIRMATIONS before selecting the minimum
++       // height prevents an unconfirmed branch on a sparse checkpoint
++       // segment from masking an already-durable branch at a higher
++       // height. Both digests are compared in internal byte order;
++       // see Appendix D.3.
+ 
+    9.  CHECK CONFIRMATION DEPTH
+        k <- CONFIRMATIONS-ON(validated_chain, H)
+@@ -2127,8 +2152,15 @@
+        // present it as the normative temporal value.
+        //
+        // OPTIONAL: a verifier MAY compute the Median Time Past
+-       // per [BIP113] from the eleven preceding headers as a
+-       // strict lower bound on block_time_RWCP.
++       // MTP(H) = median(nTime[H-11 .. H-1]) per [BIP113] as a
++       // strict lower bound on block_time_RWCP, and MAY also
++       // compute Forward-MTP(H+5) = median(nTime[H-5 .. H+5])
++       // across the 11-header window ending at H+5 (available
++       // at exact MIN_CONFIRMATIONS = 6 with zero extra block
++       // wait). Under [BIP113], Forward-MTP(H+5) is guaranteed
++       // monotonic non-decreasing (>=) across adjacent heights
++       // and strictly increasing (>) across every 6-block stride
++       // within Bitcoin's consensus clock tolerance.
+ 
+    11. RETURN valid
+        // These exact bytes were committed to the Bitcoin block
+@@ -3023,8 +3055,15 @@
+ Internet-Draft           Umarise Temporal Proofs            October 2026
+ 
+ 
+-       // is applied and no domain-separation prefix is used. An
+-       // odd trailing element is promoted unchanged to the next
++       // is applied and no domain-separation prefix is used in
++       // baseline v1 OpenTimestamps batches (preserving 100%
++       // compatibility with existing .ots verifiers). Note that
++       // without leaf/node prefixes, a 64-byte synthetic input
++       // equal to L_0 || L_1 hashes at Step 2 to an internal node;
++       // future v2 batch profiles MAY prepend 0x00 to leaves and
++       // 0x01 to internal pairs per [RFC6962] Section 2.1, while
++       // v1 verifiers MUST NOT require 0x00 prefixes. An odd
++       // trailing element is promoted unchanged to the next
+        // level, where it appears last.
+        //
+        // Each pairing records two operations, one on each side:
+@@ -3262,9 +3301,16 @@
+    which is later by the intervals described in Section 3.7.  A Receipt
+    therefore exists before the proof that would have to be referenced in
+    it, and neither [RFC9943] nor [RFC9942] defines a Receipt field for
+-   such a reference.  A deployment that requires a binding would have to
+-   define a separate object, signed after the upgrade, that names both;
+-   specifying one is out of scope here.
++   such a reference.  Conversely, when anchoring occurs after SCITT
++   registration, the producer MAY either anchor the Transparency
++   Service's Merkle Tree Head (Section 3.3) or compute the anchored
++   digest over a deterministic CBOR tuple binding the COSE_Sign1
++   protected header, SHA-256(payload), the bstr-wrapped signature per
++   [RFC9921] Section 3.1.1, and all COSE_Receipt elements carried in
++   header parameter 394 ([RFC9942] Section 8).  Computing the imprint
++   over immutable fields rather than raw outer COSE_Sign1 bytes prevents
++   unprotected header updates from causing Step 2 HASH_MISMATCH while
++   establishing that log inclusion preceded Bitcoin block H.
+ 
+ 6.4.  Relationship to RFC 9921 (COSE Timestamp Headers)
+ 
+@@ -3957,7 +4003,13 @@
+ 
+    This is remediated by revision of this profile rather than at
+    runtime.  Field F2 (hash_algorithm, Section 3.4.1) MUST be "sha256"
+-   under this profile, and a successor hash function would be introduced
++   (0x08) under this profile, and every mid-path digest operation in
++   OTS-REPLAY MUST likewise be SHA-256 (0x08); rejecting legacy 160-bit
++   OpenTimestamps opcodes (OpSHA1 0x02 and OpRIPEMD160 0x03) eliminates
++   80-bit classical / 2^80 Grover narrow-pipe bottlenecks and preserves
++   a uniform, key-free 2^128 quantum Grover preimage bound across the
++   entire Merkle and SHA-256d Proof-of-Work chain (Section 8.10).  A
++   successor hash function would be introduced
+    by a revised profile that defines a further permitted value
+    (Section 7.7).  Existing proofs retain what they establish, but the
+    two hash properties involved age differently.  Collision resistance
+@@ -4864,11 +4916,17 @@
+                          (Reference Wall-Clock Projection;
+                          informative; Section 2.2)
+ 
+-   Median Time Past:     2026-07-09T09:26:48Z
+-                         (strict lower bound on the block's
+-                         declared nTime, not on physical
+-                         acceptance time; [BIP113];
+-                         optional; Section 7.1)
++   Median Time Past:     2026-07-09T09:24:46Z
++                         (median of preceding blocks 957278..957288,
++                         unix 1783589086; strict lower bound on the
++                         block's declared nTime [BIP113]; note that
++                         09:26:48Z / 1783589208 is the inclusive
++                         window 957279..957289; optional; Section 7.1)
++
++   Forward-MTP(H+5):     2026-07-09T10:02:59Z
++                         (median of blocks 957284..957294 at exact 6
++                         confirmations, unix 1783591379; consensus
++                         monotonic non-decreasing >= projection)
+ 
+    Expected VERIFY-ANCHOR result: valid, for a verifier
+                          that has placed block 957289 on the
+@@ -5220,6 +5278,16 @@
+    and which holds no validated view of its own fails this vector by
+    construction.
+ 
++   Eight additional conformance and boundary vectors (N9 through N16)
++   covering 6-octet LEB128 cross-runtime split-brain height encoding
++   (0xe9b6ba808008), overlong LEB128 trailing zero octets (0xe9b6ba00),
++   non-SHA-256 file_hash_op (0x67 OpKeccak256), unary OpHexlify (0xf3)
++   buffer amplification, mid-path 160-bit OpSHA1 (0x02) narrow-pipe
++   downgrade, negative SetCompact sign-bit headers (nBits = 0x1dfbffff),
++   unconsumed trailing attestation payload octets, and SCITT COSE_Sign1
++   unprotected header 394 ([RFC9942]) relay invariance are provided in
++   the companion conformance suite.
++
+ D.7.  Independent Verification
+ 
+    The vectors can be verified without contacting the anchoring service

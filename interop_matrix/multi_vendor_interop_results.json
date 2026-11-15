@@ -1,0 +1,1502 @@
+{
+  "stage": "Stage 1 \u2014 True Multi-Vendor Real-World Interoperability Matrix (7 External Orgs + Clean-Room Triple Engine)",
+  "external_organizations_count": 7,
+  "total_implementations_executed": 10,
+  "versions": {
+    "python_opentimestamps": "0.5.0",
+    "umarise_pypi": "1.0.0",
+    "pycose": "1.1.0",
+    "pyscitt": "0.15.0",
+    "cbor2": "5.9.0",
+    "emilia_scitt_time_anchor_verifier": "0.1.0",
+    "cryptogeekpt_interop_03": "commit-main (draft-03)",
+    "dps_lemonnier_verify_anchor": "commit-main (draft-08)",
+    "umarise_verify_anchoring_org_bundle_bytes": 1599354,
+    "umarise_verify_anchoring_ignoreBitcoinNode": true
+  },
+  "additional_empirical_findings": {
+    "dps_empty_bitcoin_payload_uncaught_exception": "ValueError: truncated",
+    "dps_setcompact_0x1dfbffff_sign_bit_bypass": {
+      "nbits_hex": "0x1dfbffff",
+      "dps_bits_to_target_positive": true,
+      "dps_target_hex": "0xfbffff0000000000000000000000000000000000000000000000000000",
+      "bitcoin_core_setcompact_valid": false
+    }
+  },
+  "ots_interop_matrix_16_vectors": [
+    {
+      "id": "V01_APPENDIX_D5_MAINNET_957289",
+      "category": "Official draft-08 Appendix D.5",
+      "description": "Appendix D.5 Vector 1 anchored at Bitcoin Mainnet Block 957289 (82 ops + pending branch)",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 957289,
+          "confirmations": 12,
+          "branch_heights": [
+            957289
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 957289: verified"
+          ],
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 957289,
+        "block_time_rwcp": 1783591379,
+        "confirmations": 12,
+        "fmtp_11": 1783595033,
+        "fmtp_5": 1783591379,
+        "fmtp_6": 1783593190,
+        "id": "V01_APPENDIX_D5_MAINNET_957289__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1783589086,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": 957289,
+        "block_time_rwcp": 1783591379,
+        "confirmations": 12,
+        "fmtp_11": 1783595033,
+        "fmtp_5": 1783591379,
+        "fmtp_6": 1783593190,
+        "id": "V01_APPENDIX_D5_MAINNET_957289__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": 1783589086,
+        "outcome": "valid",
+        "step": 11
+      }
+    },
+    {
+      "id": "V02_APPENDIX_D7_EXPLORER_NO_CHAIN",
+      "category": "Official draft-08 Appendix C.3 / D.7",
+      "description": "Appendix D.5 Vector 1 with NO PoW-validated chain (contrasting verify-anchoring.org ignoreBitcoinNode:true)",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 114,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "unverifiable (no verified branch and at least one branch was unevaluated)",
+        "raw": {
+          "outcome": "unverifiable",
+          "reason": "no verified branch and at least one branch was unevaluated",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": [
+            957289
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 7)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 7
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "branch height 957289: unavailable"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V02_APPENDIX_D7_EXPLORER_NO_CHAIN__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V02_APPENDIX_D7_EXPLORER_NO_CHAIN__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      }
+    },
+    {
+      "id": "V03_CRYPTOGEEK_WILD_960175",
+      "category": "Wild Mainnet Proof (CryptoGeekPT)",
+      "description": "Real anchored artifact.txt.ots from CryptoGeekPT at Bitcoin Mainnet Block 960175",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "aad94933346aadcaed1b6b5e3e926d9fa0b815fa448cfe3d6168bc0ea81d630a",
+        "bitcoin_heights": [
+          960175,
+          960175
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 166
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "aad94933346aadcaed1b6b5e3e926d9fa0b815fa448cfe3d6168bc0ea81d630a",
+        "bitcoin_heights": [
+          960175,
+          960175
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 166
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "aad94933346aadcaed1b6b5e3e926d9fa0b815fa448cfe3d6168bc0ea81d630a",
+        "bitcoin_heights": [
+          960175,
+          960175
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 166,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=960175)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 960175,
+          "confirmations": 12,
+          "branch_heights": [
+            960175,
+            960175
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=960175)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 960175,
+          "block_time_RWCP": 1785370575,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=960175)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 960175: verified",
+            "branch height 960175: verified"
+          ],
+          "block_height_H": 960175,
+          "block_time_RWCP": 1785370575,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 960175,
+        "block_time_rwcp": 1785370575,
+        "confirmations": 12,
+        "fmtp_11": 1785372800,
+        "fmtp_5": 1785370575,
+        "fmtp_6": 1785370759,
+        "id": "V03_CRYPTOGEEK_WILD_960175__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1785369145,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": 960175,
+        "block_time_rwcp": 1785370575,
+        "confirmations": 12,
+        "fmtp_11": 1785372800,
+        "fmtp_5": 1785370575,
+        "fmtp_6": 1785370759,
+        "id": "V03_CRYPTOGEEK_WILD_960175__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": 1785369145,
+        "outcome": "valid",
+        "step": 11
+      }
+    },
+    {
+      "id": "V04_CRYPTOGEEK_SHA256SUMS_960468",
+      "category": "Wild Mainnet Proof (CryptoGeekPT)",
+      "description": "Real anchored SHA256SUMS.ots from CryptoGeekPT at Bitcoin Mainnet Block 960468",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "9c55d35824cc109d04d243145068f40489a2a35c855b57059bfaaf8898a48bb6",
+        "bitcoin_heights": [
+          960468
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 108
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "9c55d35824cc109d04d243145068f40489a2a35c855b57059bfaaf8898a48bb6",
+        "bitcoin_heights": [
+          960468
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 108
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "9c55d35824cc109d04d243145068f40489a2a35c855b57059bfaaf8898a48bb6",
+        "bitcoin_heights": [
+          960468
+        ],
+        "pending_count": 4,
+        "total_ops_walked": 108,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=960468)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 960468,
+          "confirmations": 12,
+          "branch_heights": [
+            960468
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=960468)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 960468,
+          "block_time_RWCP": 1785533157,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=960468)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 960468: verified"
+          ],
+          "block_height_H": 960468,
+          "block_time_RWCP": 1785533157,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 960468,
+        "block_time_rwcp": 1785533157,
+        "confirmations": 12,
+        "fmtp_11": 1785539683,
+        "fmtp_5": 1785533157,
+        "fmtp_6": 1785534431,
+        "id": "V04_CRYPTOGEEK_SHA256SUMS_960468__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1785530546,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": 960468,
+        "block_time_rwcp": 1785533157,
+        "confirmations": 12,
+        "fmtp_11": 1785539683,
+        "fmtp_5": 1785533157,
+        "fmtp_6": 1785534431,
+        "id": "V04_CRYPTOGEEK_SHA256SUMS_960468__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": 1785530546,
+        "outcome": "valid",
+        "step": 11
+      }
+    },
+    {
+      "id": "V05_EMILIA_CROSSCHECK_MULTI_968588_968635",
+      "category": "Wild Multi-Branch Proof (EMILIA x CryptoGeekPT)",
+      "description": "Real dual-calendar anchored cc1.txt.anchored.ots at Bitcoin Mainnet Blocks 968588 & 968635",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "d2d6506942e9e4784d0d0e67e8da7020aae847db2801985dda50e600f5403c6f",
+        "bitcoin_heights": [
+          968588,
+          968588,
+          968588,
+          968588,
+          968635,
+          968635
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 454
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "d2d6506942e9e4784d0d0e67e8da7020aae847db2801985dda50e600f5403c6f",
+        "bitcoin_heights": [
+          968588,
+          968588,
+          968588,
+          968588,
+          968635,
+          968635
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 454
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "DeserializationError: Invalid timestamp; op OpSHA256() repeated",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=968588)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 968588,
+          "confirmations": 59,
+          "branch_heights": [
+            968588,
+            968588,
+            968635
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=968588)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 968588,
+          "block_time_RWCP": 1790370293,
+          "confirmations": 59
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=968588)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 968588: verified",
+            "branch height 968588: verified",
+            "branch height 968588: verified",
+            "branch height 968588: verified",
+            "branch height 968635: verified",
+            "branch height 968635: verified"
+          ],
+          "block_height_H": 968588,
+          "block_time_RWCP": 1790370293,
+          "confirmations_established": 59
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 968588,
+        "block_time_rwcp": 1790370293,
+        "confirmations": 59,
+        "fmtp_11": 1790377922,
+        "fmtp_5": 1790370293,
+        "fmtp_6": 1790370633,
+        "id": "V05_EMILIA_CROSSCHECK_MULTI_968588_968635__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1790366698,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": 968588,
+        "block_time_rwcp": 1790370293,
+        "confirmations": 59,
+        "fmtp_11": 1790377922,
+        "fmtp_5": 1790370293,
+        "fmtp_6": 1790370633,
+        "id": "V05_EMILIA_CROSSCHECK_MULTI_968588_968635__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": 1790366698,
+        "outcome": "valid",
+        "step": 11
+      }
+    },
+    {
+      "id": "V06_ADAPTER_ANCHOR_968752",
+      "category": "Wild Mainnet Proof (crosscheck-emilia)",
+      "description": "Real anchored SHA256SUMS-adapter.anchored.ots at Bitcoin Mainnet Block 968752",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "2ffd3731d7aac9dc2db593b3d2a39a6c5440d166a09513098ce5b8ac1b68b675",
+        "bitcoin_heights": [
+          968752,
+          968752,
+          968752
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 250
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "2ffd3731d7aac9dc2db593b3d2a39a6c5440d166a09513098ce5b8ac1b68b675",
+        "bitcoin_heights": [
+          968752,
+          968752,
+          968752
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 250
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "2ffd3731d7aac9dc2db593b3d2a39a6c5440d166a09513098ce5b8ac1b68b675",
+        "bitcoin_heights": [
+          968752,
+          968752,
+          968752
+        ],
+        "pending_count": 3,
+        "total_ops_walked": 250,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=968752)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 968752,
+          "confirmations": 12,
+          "branch_heights": [
+            968752,
+            968752,
+            968752
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=968752)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 968752,
+          "block_time_RWCP": 1790465226,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=968752)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 968752: verified",
+            "branch height 968752: verified",
+            "branch height 968752: verified"
+          ],
+          "block_height_H": 968752,
+          "block_time_RWCP": 1790465226,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 968752,
+        "block_time_rwcp": 1790465226,
+        "confirmations": 12,
+        "fmtp_11": 1790466284,
+        "fmtp_5": 1790465226,
+        "fmtp_6": 1790465740,
+        "id": "V06_ADAPTER_ANCHOR_968752__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1790458481,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": 968752,
+        "block_time_rwcp": 1790465226,
+        "confirmations": 12,
+        "fmtp_11": 1790466284,
+        "fmtp_5": 1790465226,
+        "fmtp_6": 1790465740,
+        "id": "V06_ADAPTER_ANCHOR_968752__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": 1790458481,
+        "outcome": "valid",
+        "step": 11
+      }
+    },
+    {
+      "id": "V07_UPSTREAM_OTS_HELLO_WORLD_358391",
+      "category": "Wild Pre-BIP113 Mainnet Proof (2015)",
+      "description": "Upstream javascript-opentimestamps hello-world.txt.ots at Bitcoin Mainnet Block 358391 (pre-CSV height < 419,328)",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "03ba204e50d126e4674c005e04d82e84c21366780af1f43bd54a37816b6ab340",
+        "bitcoin_heights": [
+          358391
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 38
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "03ba204e50d126e4674c005e04d82e84c21366780af1f43bd54a37816b6ab340",
+        "bitcoin_heights": [
+          358391
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 38
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "03ba204e50d126e4674c005e04d82e84c21366780af1f43bd54a37816b6ab340",
+        "bitcoin_heights": [
+          358391
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 38,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "unverifiable (no verified branch and at least one branch was unevaluated)",
+        "raw": {
+          "outcome": "unverifiable",
+          "reason": "no verified branch and at least one branch was unevaluated",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": [
+            358391
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 8)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 8
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "branch height 358391: unsupported"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V07_UPSTREAM_OTS_HELLO_WORLD_358391__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V07_UPSTREAM_OTS_HELLO_WORLD_358391__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V08_UPSTREAM_OTS_PENDING_ONLY",
+      "category": "Calendar Pending Boundary",
+      "description": "Upstream incomplete.txt.ots containing PendingAttestation only (Step 4 UNVERIFIABLE)",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "05c4f616a8e5310d19d938cfd769864d7f4ccdc2ca8b479b10af83564b097af9",
+        "bitcoin_heights": [],
+        "pending_count": 1,
+        "total_ops_walked": 6
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "05c4f616a8e5310d19d938cfd769864d7f4ccdc2ca8b479b10af83564b097af9",
+        "bitcoin_heights": [],
+        "pending_count": 1,
+        "total_ops_walked": 6
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "05c4f616a8e5310d19d938cfd769864d7f4ccdc2ca8b479b10af83564b097af9",
+        "bitcoin_heights": [],
+        "pending_count": 1,
+        "total_ops_walked": 6,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "unverifiable (proof carries no Bitcoin attestation)",
+        "raw": {
+          "outcome": "unverifiable",
+          "reason": "proof carries no Bitcoin attestation",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": []
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 4)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 4,
+          "why": "s\u00f3 compromisso de calend\u00e1rio; ainda n\u00e3o est\u00e1 no ledger"
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "4: no Bitcoin attestation (calendar commitment only)"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V08_UPSTREAM_OTS_PENDING_ONLY__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 4
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V08_UPSTREAM_OTS_PENDING_ONLY__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 4
+      }
+    },
+    {
+      "id": "V09_Z3_SPLIT_BRAIN_MAINNET_957289",
+      "category": "Z3 Witness \u2014 6-Byte LEB128 Split-Brain (Mainnet)",
+      "description": "6-byte LEB128 `e9b6ba808008`: JS `shift & 31` decodes REAL Mainnet Block 957289 while Python/Rust u64 decodes 274,878,864,233!",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "DeserializationError: Block height too large; 274878864233 > 4294967295",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "unverifiable (no verified branch and at least one branch was unevaluated)",
+        "raw": {
+          "outcome": "unverifiable",
+          "reason": "no verified branch and at least one branch was unevaluated",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": [
+            274878864233
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 7)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 7
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "branch height 274878864233: unavailable"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V09_Z3_SPLIT_BRAIN_MAINNET_957289__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V09_Z3_SPLIT_BRAIN_MAINNET_957289__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V10_Z3_SPLIT_BRAIN_80F0B380800A",
+      "category": "Z3 Witness \u2014 6-Byte LEB128 Split-Brain (850k)",
+      "description": "6-byte LEB128 `80f0b380800a`: Umarise Web & npm JS decode 850,000 while Python/EMILIA/DPS decode 343,598,233,600",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          850000
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          850000
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "DeserializationError: Block height too large; 343598233600 > 4294967295",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "unverifiable (no verified branch and at least one branch was unevaluated)",
+        "raw": {
+          "outcome": "unverifiable",
+          "reason": "no verified branch and at least one branch was unevaluated",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": [
+            343598233600
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 7)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 7
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "branch height 343598233600: unavailable"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V10_Z3_SPLIT_BRAIN_80F0B380800A__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V10_Z3_SPLIT_BRAIN_80F0B380800A__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V11_OVERLONG_LEB128_E9B6BA00",
+      "category": "Non-Canonical Encoding Test",
+      "description": "4-byte overlong LEB128 `e9b6ba00` for Mainnet Block 957289: accepted as VALID by EMILIA, CryptoGeekPT & DPS; rejected by Strict Profile",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 957289,
+          "confirmations": 12,
+          "branch_heights": [
+            957289
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 957289: verified"
+          ],
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 957289,
+        "block_time_rwcp": 1783591379,
+        "confirmations": 12,
+        "fmtp_11": 1783595033,
+        "fmtp_5": 1783591379,
+        "fmtp_6": 1783593190,
+        "id": "V11_OVERLONG_LEB128_E9B6BA00__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1783589086,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V11_OVERLONG_LEB128_E9B6BA00__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V12_KECCAK_HEADER_0X67_BYPASS",
+      "category": "Divergence Witness \u2014 File Hash Opcode Check",
+      "description": "File hash opcode `0x67` (Keccak-256) with SHA-256 digest & Block 957289 path: falsely accepted as VALID by CryptoGeekPT (`verify.py:51-55`)!",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": false,
+        "error": "Cannot read properties of undefined (reading '_DIGEST_LENGTH')"
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": false,
+        "error": "Cannot read properties of undefined (reading '_DIGEST_LENGTH')"
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "DeserializationError: Unknown unary op tag 0x67",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "invalid (OTS proof initial hash operation is not sha256)",
+        "raw": {
+          "outcome": "invalid",
+          "reason": "OTS proof initial hash operation is not sha256",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": []
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "invalid",
+        "raw": {
+          "result": "invalid",
+          "steps": [
+            "3: proof does not commit to this hash"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V12_KECCAK_HEADER_0X67_BYPASS__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V12_KECCAK_HEADER_0X67_BYPASS__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V13_HEXLIFY_30_AMPLIFICATION_65B",
+      "category": "Resource Bound Check \u2014 OpHexlify Amplification",
+      "description": "30 consecutive `0xf3` OpHexlify bytes (34.36 GB theoretical state): EMILIA -> INVALID (Step 3) vs CryptoGeekPT/DPS -> UNVERIFIABLE (Step 8)",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": false,
+        "error": "Expected msg to be bytes; got undefined"
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": false,
+        "error": "Expected msg to be bytes; got undefined"
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "DeserializationError: Invalid timestamp; message invalid for op OpHexlify(): MsgValueError('Message too long; 4096 > 2048')",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "invalid (OTS proof failed to parse)",
+        "raw": {
+          "outcome": "invalid",
+          "reason": "OTS proof failed to parse",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": []
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "unverifiable (step 8)",
+        "raw": {
+          "result": "unverifiable",
+          "step": 8
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "unverifiable",
+        "raw": {
+          "result": "unverifiable",
+          "steps": [
+            "branch height 957289: unsupported"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V13_HEXLIFY_30_AMPLIFICATION_65B__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "unverifiable",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V13_HEXLIFY_30_AMPLIFICATION_65B__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V14_MIDPATH_OPSHA1_NARROW_PIPE",
+      "category": "Cryptographic Agility / Narrow-Pipe Check",
+      "description": "Mid-path `0x02` OpSHA1 branch paired with valid Block 957289 branch: silently ignored (`VALID`) in baseline verifiers vs `INVALID` (Step 3) in Strict Profile",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289,
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 84
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289,
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 84
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289,
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 84,
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "outcome": "valid",
+          "reason": "artifact is bound to a sufficiently confirmed Bitcoin block",
+          "block_height": 957289,
+          "confirmations": 12,
+          "branch_heights": [
+            957289,
+            957289
+          ]
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations": 12
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 957289: unsupported",
+            "branch height 957289: verified"
+          ],
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": 957289,
+        "block_time_rwcp": 1783591379,
+        "confirmations": 12,
+        "fmtp_11": 1783595033,
+        "fmtp_5": 1783591379,
+        "fmtp_6": 1783593190,
+        "id": "V14_MIDPATH_OPSHA1_NARROW_PIPE__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": 1783589086,
+        "outcome": "valid",
+        "step": 11
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V14_MIDPATH_OPSHA1_NARROW_PIPE__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V15_EMPTY_BTC_PAYLOAD_AND_TRAILING_BYTES",
+      "category": "Malformed Attestation Payload Check",
+      "description": "Trailing bytes (`f9b63adeadbeef`) in Bitcoin height payload: falsely accepted as VALID (height 957289) by DPS `verify_anchor.py:180`!",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": true,
+        "file_digest_hex": "a183f624efbbda7d6208b9b5a6f9b0c2c95d90382eb209c44a1131954071f30b",
+        "bitcoin_heights": [
+          957289
+        ],
+        "pending_count": 0,
+        "total_ops_walked": 82
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "TrailingGarbageError: Trailing garbage found after end of deserialized data",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "invalid (OTS proof failed to parse)",
+        "raw": {
+          "outcome": "invalid",
+          "reason": "OTS proof failed to parse",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": []
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "invalid (step 3)",
+        "raw": {
+          "result": "invalid",
+          "step": 3
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "valid (H=957289)",
+        "raw": {
+          "result": "valid",
+          "steps": [
+            "branch height 957289: verified"
+          ],
+          "block_height_H": 957289,
+          "block_time_RWCP": 1783591379,
+          "confirmations_established": 12
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V15_EMPTY_BTC_PAYLOAD_AND_TRAILING_BYTES__draft08",
+        "mismatched_branches": 0,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V15_EMPTY_BTC_PAYLOAD_AND_TRAILING_BYTES__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    },
+    {
+      "id": "V16_DEEP_4096_OPS_STACK_STRESS",
+      "category": "Resource Bound Check \u2014 4,096 Unary Ops (4.17 KB)",
+      "description": "4,096 consecutive `0x08` OpSHA256 steps: crashes recursive Python parsers (`RecursionError`) while iterative O(1)-stack Rust/WASM/Python handle cleanly",
+      "umarise_verify_anchoring_web": {
+        "parse_ok": false,
+        "error": "Maximum call stack size exceeded"
+      },
+      "npm_javascript_opentimestamps": {
+        "parse_ok": false,
+        "error": "Maximum call stack size exceeded"
+      },
+      "python_opentimestamps_0_5_0": {
+        "parse_ok": false,
+        "error": "RecursionLimitError: Reached timestamp recursion depth limit while deserializing",
+        "umarise_sdk_hash_match": true
+      },
+      "emilia_protocol_v06": {
+        "summary": "invalid (OTS proof failed to parse)",
+        "raw": {
+          "outcome": "invalid",
+          "reason": "OTS proof failed to parse",
+          "block_height": null,
+          "confirmations": null,
+          "branch_heights": []
+        }
+      },
+      "cryptogeekpt_v03": {
+        "summary": "invalid (step 3)",
+        "raw": {
+          "result": "invalid",
+          "step": 3
+        }
+      },
+      "dps_lemonnier_v08": {
+        "summary": "invalid",
+        "raw": {
+          "result": "invalid",
+          "steps": [
+            "branch height 957289: mismatched"
+          ]
+        }
+      },
+      "clean_room_triple_draft08": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V16_DEEP_4096_OPS_STACK_STRESS__draft08",
+        "mismatched_branches": 1,
+        "mode": "draft08",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 8
+      },
+      "clean_room_triple_strict": {
+        "block_height_h": null,
+        "block_time_rwcp": null,
+        "confirmations": null,
+        "fmtp_11": null,
+        "fmtp_5": null,
+        "fmtp_6": null,
+        "id": "V16_DEEP_4096_OPS_STACK_STRESS__strict",
+        "mismatched_branches": 0,
+        "mode": "strict",
+        "mtp_bip113": null,
+        "outcome": "invalid",
+        "step": 3
+      }
+    }
+  ],
+  "scitt_cose_live_interop": {
+    "upstream_library_results": {
+      "wexp_signed_statement_cose": {
+        "size_bytes": 836,
+        "sha256": "18df0c526cbebabb192f1a8f8bb0ba2cfded48266984cc76f73c2cd4a8d866d9",
+        "cbor2_ok": true,
+        "protected_alg": -35,
+        "unprotected_keys": [
+          "395",
+          "394"
+        ],
+        "pycose_ok": true,
+        "pycose_alg": "{<class 'pycose.headers.Algorithm'>: <class 'pycose.algorithms.Es384'>, <class 'pycose.headers.KID'>: b'hGSYm_uWlFONvVeR7I__AShgZEN6c1ytFgkeMrwvVDs', 14: b'\\xd2\\x84D\\xa1\\x018\"\\xa1\\x04X+hGSYm_uWlFONvVeR7I__AShgZEN6c1ytFgkeMrwvVDsY\\x01(\\xa5\\x01x\\xe8did:jwk:eyJjcnYiOiJQLTM4NCIsImt0eSI6IkVDIiwieCI6IkxEU3Nvei1GYXlLTzVCdURZY28xc3FLWS1pU2JIVTJUN2tSZHo0cFVYcHVlZ2dHbWNObTY5WEZ5ZjJPOE4zMDQiLCJ5IjoiTFpLNC00QkpSeC1JYTRpQnItQlhyZFV0S3VyN1VBQWZBQjZrdEl3d2FwRUJjaElpZlBMT2lFTXpXRjhPS0huMyJ9\\x02x\\'wexp-interop:scitt-receipt-boundary-001\\x04\\x1aj\\xee@`\\x05\\x1aj\\xee2P\\x06\\x1aj\\xee2PX`l\\xf4\"\\xe4Y\\xa7\\x9d0\\xd1\\xdf\\xa2G\\xaa\\xf9\\xc7@\\x89?\\x99\\xcb]\\xea\\x8cgE\\x89\\x1f\\xa5i,\\xc5\\xc98|\\xea\\x10HI\\x01 \\xe7`\\xe5\\xf8\\xa9K\\x1a\\x8b\\x13\\xc4\\xeb\\x85\\xdb\\x90>\\x92\\x95?\\xbe\\xb6\\x9d\\xe4,\\x93%j\\x86,\\xe8\\'\\x1b\\xab\\x0bEKL\\xe3J\\xf7\\xfd\\xf4\\x174\\xc9\\x90LW\\xe1\\xf9\\x8d^V\\x9e7\\xce\\r', 393: {'register_by': 1000, 'sequence_no': 0, 'issuance_ts': 1000, 'no_replay': None}, <class 'pycose.headers.ContentType'>: 'application/json'}"
+      },
+      "wexp_receipt_cbor": {
+        "size_bytes": 667,
+        "sha256": "510a71486c25d7e8ac2814af268b705b156444ca5ec896d0da176dc8911e7dde",
+        "cbor2_ok": false,
+        "protected_alg": null,
+        "cbor2_error": "AttributeError: 'list' object has no attribute 'keys'",
+        "pycose_ok": false,
+        "pycose_error": "AttributeError: Message was not tagged."
+      },
+      "isoluce_live_checkpoint_cose": {
+        "size_bytes": 219,
+        "sha256": "5b20ffc55543cffef2866fcdfc396f7aff7083a6e780f43d947eb18182a8ea89",
+        "cbor2_ok": true,
+        "protected_alg": -19,
+        "unprotected_keys": [],
+        "pycose_ok": false,
+        "pycose_error": "CoseException: Unknown COSE attribute with value: [CoseAlgorithm - -19]"
+      }
+    },
+    "wexp_scitt_receipt_boundary_001": {
+      "bare_outer_sha256": "18df0c526cbebabb192f1a8f8bb0ba2cfded48266984cc76f73c2cd4a8d866d9",
+      "transparent_outer_sha256_hop1": "f6287e596d05890bd79f878bfc7d5e1fb398875d7a91cb549b3d36b1171005c4",
+      "transparent_outer_sha256_hop2": "56a6a5a61d45384e4e2a674eab9ddb80966692b8bfd0463ae1edbad0ff477244",
+      "outer_sha256_breaks_on_header_mutation": true,
+      "rfc9921_rfc9942_tbs_sha256_hop1": "00e097bf101fe7060eebab974e5a76edab68be01a79b59cb5c78fff6e1b2cc9e",
+      "rfc9921_rfc9942_tbs_sha256_hop2": "00e097bf101fe7060eebab974e5a76edab68be01a79b59cb5c78fff6e1b2cc9e",
+      "rfc9921_rfc9942_tbs_100pct_invariant": true
+    },
+    "isoluce_live_checkpoint": {
+      "endpoint": "https://ts.isoluce.net/checkpoint",
+      "size_bytes": 219,
+      "clean_room_cose_parse_ok": true,
+      "pycose_1_1_0_crashes_on_rfc9864_ed25519_alg_minus19": true,
+      "pycose_verbatim_error": "CoseException: Unknown COSE attribute with value: [CoseAlgorithm - -19]",
+      "clean_room_tbs_imprint_sha256": "254e7ffaf20531107ca3abb437cece78e72f420c9ef03fc47a52dcec0a283bb9"
+    }
+  },
+  "elapsed_ms": 616.65,
+  "verdict": "PASS"
+}

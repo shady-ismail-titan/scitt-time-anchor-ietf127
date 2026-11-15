@@ -1,0 +1,26 @@
+{
+  "suite": "Adversarial Independent 100,000-Mutation Chaotic Binary, CBOR/COSE, Consensus & Single-Instance WASM Memory-Leak Siege",
+  "total_hostile_mutations": 100000,
+  "extra_single_instance_leak_calls": 20000,
+  "total_wasm_executions_in_single_instance": 120000,
+  "crashes_or_traps": 0,
+  "divergences": {
+    "python_vs_rust": 0,
+    "rust_vs_wasm": 0,
+    "python_vs_wasm": 0,
+    "total": 0
+  },
+  "wasm_linear_memory_telemetry": {
+    "memStart": 1114112,
+    "memAfter100kBatch": 4718592,
+    "memAfterExtra20kSingleCalls": 4718592,
+    "deltaAfterSteadyStateBytes": 0
+  },
+  "timings_ms": {
+    "gen_ms": 152.52,
+    "python_ms": 457.38,
+    "rust_ms": 1956.73,
+    "wasm_ms": 3210.53
+  },
+  "verdict": "PASS"
+}
