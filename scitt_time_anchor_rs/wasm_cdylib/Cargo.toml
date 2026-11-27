@@ -1,9 +1,11 @@
 [package]
 name = "scitt_time_anchor_wasm"
-version = "0.2.0"
+version = "2.0.0"
 edition = "2021"
 license = "Apache-2.0"
+authors = ["Shady Ismail"]
 description = "Thin C-ABI WebAssembly export shim over #![forbid(unsafe_code)] scitt_time_anchor_rs"
+repository = "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
 
 [lib]
 crate-type = ["cdylib"]
@@ -16,3 +18,4 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
+strip = "debuginfo"

@@ -1,0 +1,258 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  python-conformance-and-z3:
+    name: Python Packaging, Parity Gates, Conformance, Framing-Space & Z3 SMT
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify tracked artifact checksums
+        run: sha256sum -c SHA256SUMS.txt
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Cross-manifest version parity gate
+        run: |
+          python3 - <<'PY'
+          import json, re, tomllib
+          from pathlib import Path
+
+          versions = {}
+          versions["pyproject.toml"] = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+          versions["scitt_time_anchor_rs/Cargo.toml"] = tomllib.loads(Path("scitt_time_anchor_rs/Cargo.toml").read_text(encoding="utf-8"))["package"]["version"]
+          versions["scitt_time_anchor_rs/wasm_cdylib/Cargo.toml"] = tomllib.loads(Path("scitt_time_anchor_rs/wasm_cdylib/Cargo.toml").read_text(encoding="utf-8"))["package"]["version"]
+
+          cff_text = Path("CITATION.cff").read_text(encoding="utf-8")
+          m = re.search(r'^version:\s*["\']?([^"\'\s#]+)["\']?\s*$', cff_text, re.MULTILINE)
+          assert m, "Missing version in CITATION.cff"
+          versions["CITATION.cff"] = m.group(1)
+
+          versions["codemeta.json"] = json.loads(Path("codemeta.json").read_text(encoding="utf-8"))["version"]
+
+          sbom = json.loads(Path("sbom.cdx.json").read_text(encoding="utf-8"))
+          sbom_ver = sbom["metadata"]["component"]["version"]
+          for comp in sbom["components"]:
+              assert comp["version"] == sbom_ver, f"SBOM component version mismatch: {comp}"
+              assert comp["purl"].endswith("@" + sbom_ver), f"SBOM PURL version mismatch: {comp['purl']}"
+          versions["sbom.cdx.json"] = sbom_ver
+
+          versions["osps-baseline.json"] = json.loads(Path("osps-baseline.json").read_text(encoding="utf-8"))["version"]
+          versions["VERIFICATION_MASTER_SUMMARY.json"] = json.loads(Path("VERIFICATION_MASTER_SUMMARY.json").read_text(encoding="utf-8"))["version"]
+
+          unique = set(versions.values())
+          for k, v in versions.items():
+              print(f"  {k}: {v}")
+          assert len(unique) == 1, f"Version mismatch across manifests: {versions}"
+          print(f"Cross-manifest version parity verified: {next(iter(unique))}")
+          PY
+
+      - name: Anti-obfuscation guard (open-source profile)
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          forbidden = [
+              ("eval(", re.compile(r"\beval\s*\(")),
+              ("new Function(", re.compile(r"new\s+Function\s*\(")),
+              ("obfuscation marker", re.compile("TITAN-TWIN-" + "SHIELD")),
+          ]
+          scanned = 0
+          for root_name in ["scitt_time_anchor_py", "scitt_time_anchor_rs", "web"]:
+              for p in sorted(Path(root_name).rglob("*")):
+                  if not p.is_file() or "target" in p.parts or "__pycache__" in p.parts:
+                      continue
+                  if p.suffix in (".wasm", ".png", ".jpg", ".ico"):
+                      continue
+                  txt = p.read_text(encoding="utf-8", errors="ignore")
+                  scanned += 1
+                  for label, pat in forbidden:
+                      assert not pat.search(txt), f"Forbidden {label} found in {p}"
+          print(f"Anti-obfuscation guard passed across {scanned} files.")
+          PY
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "20"
+
+      - name: Set up Rust stable toolchain
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+
+      - name: Build native Rust CLI release binary
+        run: |
+          RUSTFLAGS="--remap-path-prefix=${{ github.workspace }}=/src --remap-path-prefix=$HOME=/build -C strip=debuginfo" \
+          cargo build --manifest-path scitt_time_anchor_rs/Cargo.toml --release
+
+      - name: Run Appendix D & strict witness conformance suite
+        run: python3 verification_suite/test_appendix_d_conformance.py
+
+      - name: Run 64-variant CBOR framing-space empirical study
+        run: python3 verification_suite/experiment_cbor_framing_space_64.py
+
+      - name: Verify PEP 621 wheel packaging and CLI smoke test
+        run: |
+          python3 -m venv /tmp/ci_pkg_venv
+          /tmp/ci_pkg_venv/bin/pip install .
+          /tmp/ci_pkg_venv/bin/scitt-time-anchor --help
+          /tmp/ci_pkg_venv/bin/scitt-time-anchor --version
+          python3 - <<'PY'
+          import base64, json, subprocess
+          from pathlib import Path
+          spec = json.loads(Path("spec_vectors/appendix_d_vectors.json").read_text())
+          wild = json.loads(Path("spec_vectors/wild_mainnet_headers.json").read_text())
+          v0 = spec["vectors"][0]
+          hdrs = {k: r["header_hex"] for k, r in wild["windows"]["appendix_d3_957289"]["headers"].items()}
+          payload = json.dumps({
+              "id": "CI_SMOKE_D5",
+              "artifact_b64": base64.b64encode(v0["artifact"].encode()).decode(),
+              "ots_b64": v0["ots_base64"],
+              "claimed_hash": "sha256:" + v0["hash"],
+              "validated_chain": {"headers_hex": hdrs},
+          }) + "\n"
+          res = subprocess.run(["/tmp/ci_pkg_venv/bin/scitt-time-anchor", "--mode", "strict"], input=payload, text=True, capture_output=True, check=True)
+          out = json.loads(res.stdout.strip())
+          assert out["outcome"] == "valid" and out["step"] == 11 and out["block_height_h"] == 957289
+          PY
+          rm -rf /tmp/ci_pkg_venv build scitt_time_anchor_py/*.egg-info
+
+      - name: Install Z3 solver and verify formal invariants
+        run: |
+          python3 -m pip install --no-cache-dir z3-solver
+          python3 verification_suite/prove_z3_invariants.py
+
+  rust-wasm-and-differential:
+    name: Safe Rust, Clippy, Reproducible WASM, Artifact Forensics & 50k Differential
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "20"
+
+      - name: Set up Rust stable with wasm32 target and clippy
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+
+      - name: Verify #![forbid(unsafe_code)] and zero unsafe keywords
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for d in [Path("scitt_time_anchor_rs/src"), Path("scitt_time_anchor_rs/wasm_cdylib/src")]:
+              for f in sorted(d.glob("*.rs")):
+                  txt = f.read_text(encoding="utf-8")
+                  assert "unsafe " not in txt and "unsafe{" not in txt, f"Unsafe token in {f}"
+          assert "#![forbid(unsafe_code)]" in Path("scitt_time_anchor_rs/src/lib.rs").read_text(encoding="utf-8")
+          PY
+
+      - name: Run Clippy lint gate (warnings denied)
+        run: cargo clippy --manifest-path scitt_time_anchor_rs/Cargo.toml --all-targets -- -D warnings
+
+      - name: Run Rust release unit tests and CLI build
+        run: |
+          cargo test --manifest-path scitt_time_anchor_rs/Cargo.toml --release --lib
+          RUSTFLAGS="--remap-path-prefix=${{ github.workspace }}=/src --remap-path-prefix=$HOME=/build -C strip=debuginfo" \
+          cargo build --manifest-path scitt_time_anchor_rs/Cargo.toml --release
+
+      - name: Build wasm32-unknown-unknown target cleanly
+        run: |
+          export SOURCE_DATE_EPOCH=1795737600
+          RUSTFLAGS="--remap-path-prefix=${{ github.workspace }}=/src --remap-path-prefix=$HOME=/build" \
+          cargo build --manifest-path scitt_time_anchor_rs/wasm_cdylib/Cargo.toml --release --target wasm32-unknown-unknown
+
+      - name: Reproducible WASM double-build gate (OpenSSF Gold)
+        run: |
+          export SOURCE_DATE_EPOCH=1795737600
+          COMMON_FLAGS="--remap-path-prefix=${{ github.workspace }}=/src --remap-path-prefix=$HOME=/build"
+          RUSTFLAGS="$COMMON_FLAGS --remap-path-prefix=/tmp/wasm_repro_a=/target" \
+          CARGO_TARGET_DIR=/tmp/wasm_repro_a \
+            cargo build --manifest-path scitt_time_anchor_rs/wasm_cdylib/Cargo.toml --release --target wasm32-unknown-unknown
+          RUSTFLAGS="$COMMON_FLAGS --remap-path-prefix=/tmp/wasm_repro_b=/target" \
+          CARGO_TARGET_DIR=/tmp/wasm_repro_b \
+            cargo build --manifest-path scitt_time_anchor_rs/wasm_cdylib/Cargo.toml --release --target wasm32-unknown-unknown
+          HASH_A=$(sha256sum /tmp/wasm_repro_a/wasm32-unknown-unknown/release/scitt_time_anchor_wasm.wasm | awk '{print $1}')
+          HASH_B=$(sha256sum /tmp/wasm_repro_b/wasm32-unknown-unknown/release/scitt_time_anchor_wasm.wasm | awk '{print $1}')
+          echo "WASM Repro Build A: $HASH_A"
+          echo "WASM Repro Build B: $HASH_B"
+          test "$HASH_A" = "$HASH_B"
+          rm -rf /tmp/wasm_repro_a /tmp/wasm_repro_b
+
+      - name: Artifact forensics gate (wheel, native CLI, and WASM)
+        run: |
+          mkdir -p /tmp/ci_forensics
+          python3 -m pip wheel --no-deps -w /tmp/ci_forensics .
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+
+          forbidden_exact = [
+              b"/Users/",
+              b"/home/",
+              b"gh" + b"p_",
+              b"AK" + b"IA",
+              b"BEGIN PRIVATE " + b"KEY",
+          ]
+          forbidden_ci = [b"sci" + b"verify"]
+
+          def scan_blob(label: str, data: bytes) -> None:
+              for tok in forbidden_exact:
+                  assert tok not in data, f"Forbidden token {tok!r} leaked in {label}"
+              lower = data.lower()
+              for tok in forbidden_ci:
+                  assert tok not in lower, f"Forbidden cross-identity token {tok!r} leaked in {label}"
+
+          wheels = sorted(Path("/tmp/ci_forensics").glob("*.whl"))
+          assert wheels, "No wheel built for forensics inspection"
+          for whl in wheels:
+              scan_blob(str(whl), whl.read_bytes())
+              with zipfile.ZipFile(whl) as zf:
+                  for name in zf.namelist():
+                      scan_blob(f"{whl.name}:{name}", zf.read(name))
+
+          for bin_path in [
+              Path("scitt_time_anchor_rs/target/release/scitt_time_anchor_rs"),
+              Path("scitt_time_anchor_rs/wasm_cdylib/target/wasm32-unknown-unknown/release/scitt_time_anchor_wasm.wasm"),
+          ]:
+              assert bin_path.is_file(), f"Missing built artifact: {bin_path}"
+              scan_blob(str(bin_path), bin_path.read_bytes())
+
+          print("Artifact forensics gate passed (wheel, native Rust CLI, and WASM clean).")
+          PY
+          rm -rf /tmp/ci_forensics build scitt_time_anchor_py/*.egg-info
+
+      - name: Run WASM deep-stack stress and 120k single-instance leak sieve
+        run: |
+          node verification_suite/wasm_batch_eval.mjs --stress-deep
+          node verification_suite/wasm_100k_leak_runner.mjs
+
+      - name: Run 50,000-vector triple-engine differential suite
+        run: python3 verification_suite/run_50k_triple_differential.py

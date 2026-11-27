@@ -1,0 +1,134 @@
+{
+  "experiment": "64-Variant CBOR Framing-Space Equivalence & Determinism Study (draft-templeman-scitt-framing-space-01)",
+  "version": "2.0.0",
+  "axes_count": 6,
+  "total_variants": 64,
+  "axes": [
+    {
+      "bit": 0,
+      "name": "tag18_overlong",
+      "description": "Tag 18 minimal (0xd2) vs overlong 2-byte (0xd8 0x12)"
+    },
+    {
+      "bit": 1,
+      "name": "array_len_overlong",
+      "description": "Array(4) minimal (0x84) vs overlong (0x98 0x04)"
+    },
+    {
+      "bit": 2,
+      "name": "empty_prot_a0",
+      "description": "Empty protected b\"\" (0x40) vs RFC 9052 Sec. 3 non-canonical b\"\\xa0\" (0x41 0xa0)"
+    },
+    {
+      "bit": 3,
+      "name": "unprot_key_order_reversed",
+      "description": "Unprotected map canonical {4, 394} vs reversed {394, 4}"
+    },
+    {
+      "bit": 4,
+      "name": "payload_len_overlong",
+      "description": "Payload bstr minimal uint8 len (0x58 25) vs overlong uint16 (0x59 00 25)"
+    },
+    {
+      "bit": 5,
+      "name": "signature_len_overlong",
+      "description": "Signature bstr minimal uint8 len (0x58 40) vs overlong uint16 (0x59 00 40)"
+    }
+  ],
+  "uniqueness": {
+    "unique_wire_encodings": 64,
+    "unique_outer_sha256_digests": 64,
+    "unique_scitt_ots_ctt_imprints": 2,
+    "canonical_variant_0_bytes": 199,
+    "max_variant_63_bytes": 204
+  },
+  "parser_acceptance": {
+    "cbor2_available": false,
+    "cbor2_accepted_of_64": null,
+    "draft08_permissive_accepted_of_64": 64,
+    "strict_v3_accepted_of_64": 1,
+    "strict_v3_rejected_of_64": 63
+  },
+  "end_to_end_verification_matrix": {
+    "cose_sign1_draft08": {
+      "valid_step11": 1,
+      "invalid_step2": 63
+    },
+    "cose_sign1_strict": {
+      "valid_step11": 1,
+      "invalid_step0": 63
+    },
+    "scitt_ots_ctt_draft08": {
+      "valid_step11": 32,
+      "invalid_step2": 32
+    },
+    "scitt_ots_ctt_strict": {
+      "valid_step11": 1,
+      "invalid_step0": 63
+    }
+  },
+  "unprotected_header_relay_invariance": {
+    "relay_hops_tested": 5,
+    "outer_cose_sign1_valid": 0,
+    "scitt_ots_ctt_strict_valid": 5
+  },
+  "triple_engine_parity": {
+    "total_cases_executed_per_engine": 266,
+    "python_vs_rust_divergences": 0,
+    "rust_vs_wasm_divergences": 0,
+    "python_vs_wasm_divergences": 0,
+    "total_divergences": 0
+  },
+  "sample_variants": [
+    {
+      "mask": 0,
+      "bits": "000000",
+      "non_canonical_axes": [],
+      "byte_len": 199,
+      "outer_sha256": "12d8a00497f7e888bad73f6f4f3992b202c4eef0ee85f69df7782e7c202c53fd"
+    },
+    {
+      "mask": 1,
+      "bits": "000001",
+      "non_canonical_axes": [
+        "tag18_overlong"
+      ],
+      "byte_len": 200,
+      "outer_sha256": "d27d20e9562a360fc13c4cdfc5d95435bff7037d85cd65e6115ff44d6394651b"
+    },
+    {
+      "mask": 4,
+      "bits": "000100",
+      "non_canonical_axes": [
+        "empty_prot_a0"
+      ],
+      "byte_len": 200,
+      "outer_sha256": "2a7f97696e1523b071c343efbe8d1b487d87bf4fbc89f2af063e963f18797136"
+    },
+    {
+      "mask": 8,
+      "bits": "001000",
+      "non_canonical_axes": [
+        "unprot_key_order_reversed"
+      ],
+      "byte_len": 199,
+      "outer_sha256": "01cb8cf64f8c44287ca8ebdf616be7bf624e26e12e174d0bae72b7f2271c9aff"
+    },
+    {
+      "mask": 63,
+      "bits": "111111",
+      "non_canonical_axes": [
+        "tag18_overlong",
+        "array_len_overlong",
+        "empty_prot_a0",
+        "unprot_key_order_reversed",
+        "payload_len_overlong",
+        "signature_len_overlong"
+      ],
+      "byte_len": 204,
+      "outer_sha256": "251808aad889161dd5bd197fbc8b5a2c6d491def11bf5c32305b98d1b4b5a78d"
+    }
+  ],
+  "elapsed_ms": 100.25,
+  "verdict": "PASS"
+}

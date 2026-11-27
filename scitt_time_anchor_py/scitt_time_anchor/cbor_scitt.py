@@ -308,6 +308,15 @@ def parse_cose_sign1_statement(
         return None
     if len(sig) == 0:
         return None
+    if strict_deterministic and len(prot) > 0:
+        prot_res = _decode_item(prot, 0, 0, strict_det=True, allow_any_tag=True)
+        if prot_res is None:
+            return None
+        prot_val, prot_end = prot_res
+        # RFC 9052 Section 3: an empty protected header map MUST be encoded as zero-length bstr (b""),
+        # never as the 1-byte empty CBOR map b"\xa0".
+        if prot_end != len(prot) or not isinstance(prot_val, dict) or len(prot_val) == 0:
+            return None
     return CoseSign1Statement(
         protected_hdr=prot,
         unprotected_hdr=unprot,
@@ -317,8 +326,24 @@ def parse_cose_sign1_statement(
     )
 
 
-def extract_embedded_receipts(stmt: CoseSign1Statement) -> Optional[List[bytes]]:
-    """Extract ALL RFC 9942 COSE Receipts (`header 394` => `[ + COSE_Receipt ]`, or single `bstr`)."""
+def _has_ambiguous_receipt_headers(stmt: CoseSign1Statement) -> bool:
+    return (
+        SCITT_RECEIPTS_HEADER_LABEL in stmt.unprotected_hdr
+        and "scitt_receipt" in stmt.unprotected_hdr
+    )
+
+
+def extract_embedded_receipts(
+    stmt: CoseSign1Statement,
+    *,
+    strict: bool = False,
+) -> Optional[List[bytes]]:
+    """Extract ALL RFC 9942 COSE Receipts (`header 394` => `[ + COSE_Receipt ]`, or single `bstr`).
+    Prioritizes integer label `394` over legacy `"scitt_receipt"`. In `strict` mode, rejects
+    statements containing BOTH `394` and `"scitt_receipt"` simultaneously as ambiguous.
+    """
+    if strict and _has_ambiguous_receipt_headers(stmt):
+        return None
     for key in (SCITT_RECEIPTS_HEADER_LABEL, "scitt_receipt"):
         if key in stmt.unprotected_hdr:
             val = stmt.unprotected_hdr[key]
@@ -341,6 +366,7 @@ def compute_scitt_ots_tbs_bytes(
     receipt_bytes: Optional[bytes] = None,
     detached_payload: Optional[bytes] = None,
     require_receipt: bool = True,
+    strict: bool = False,
 ) -> Optional[bytes]:
     """Deterministic CBOR commitment aligned with RFC 9921 §3.1.1 (`bstr`-wrapped `signature`),
     `protected` header, `SHA-256(payload)`, and all RFC 9942 receipts in `header 394` (`[ + COSE_Receipt ]`).
@@ -349,13 +375,15 @@ def compute_scitt_ots_tbs_bytes(
     eff_payload = stmt.payload if stmt.payload is not None else detached_payload
     if eff_payload is None:
         return None
+    if strict and _has_ambiguous_receipt_headers(stmt):
+        return None
 
     if receipt_bytes is not None:
         if len(receipt_bytes) == 0:
             return None
         receipts_list: List[bytes] = [receipt_bytes]
     else:
-        receipts_list = extract_embedded_receipts(stmt) or []
+        receipts_list = extract_embedded_receipts(stmt, strict=strict) or []
 
     if require_receipt and not receipts_list:
         return None
@@ -383,7 +411,10 @@ def parse_proof_bundle_cbor(
         return None
 
     if 1 in decoded or 2 in decoded:
-        if not all(isinstance(k, int) and k in (1, 2, 3, 4) for k in decoded):
+        if not all(
+            isinstance(k, int) and not isinstance(k, bool) and k in (1, 2, 3, 4)
+            for k in decoded
+        ):
             return None
         ots_proof = decoded.get(1)
         tbs_hash = decoded.get(2)
@@ -397,6 +428,10 @@ def parse_proof_bundle_cbor(
             if not isinstance(decoded[3], int) or isinstance(decoded[3], bool) or decoded[3] < 0:
                 return None
             out["bitcoin_block_height"] = decoded[3]
+        if 4 in decoded:
+            if not isinstance(decoded[4], str):
+                return None
+            out["origin_id"] = decoded[4]
         return out
 
     allowed_str_keys = {"ots_proof", "claimed_hash", "origin_id", "bitcoin_block_height"}

@@ -1,0 +1,123 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:7c4b9e31-8d24-4f6a-a1e9-3b60d2f854c2",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-27T00:00:00Z",
+    "authors": [
+      {
+        "name": "Shady Ismail"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "scitt-time-anchor@2.0.0",
+      "name": "scitt-time-anchor",
+      "version": "2.0.0",
+      "description": "Clean-room zero-dependency Python 3, safe Rust (#![forbid(unsafe_code)]), and zero-import WebAssembly reference verifier for draft-fassbender-scitt-time-anchor-08 and hardened strict profile.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
+        },
+        {
+          "type": "website",
+          "url": "https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/scitt-time-anchor@2.0.0",
+      "name": "scitt-time-anchor",
+      "version": "2.0.0",
+      "purl": "pkg:pypi/scitt-time-anchor@2.0.0",
+      "scope": "required",
+      "description": "Zero-dependency Python 3 (>= 3.10) standard-library reference verifier and CLI.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "scitt:runtime-dependencies",
+          "value": "0"
+        },
+        {
+          "name": "scitt:python-requires",
+          "value": ">=3.10"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:cargo/scitt_time_anchor_rs@2.0.0",
+      "name": "scitt_time_anchor_rs",
+      "version": "2.0.0",
+      "purl": "pkg:cargo/scitt_time_anchor_rs@2.0.0",
+      "scope": "required",
+      "description": "Zero-dependency safe Rust (#![forbid(unsafe_code)]) verifier library and CLI.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "scitt:runtime-dependencies",
+          "value": "0"
+        },
+        {
+          "name": "scitt:unsafe-code",
+          "value": "forbid"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/scitt_time_anchor_wasm@2.0.0",
+      "name": "scitt_time_anchor_wasm",
+      "version": "2.0.0",
+      "purl": "pkg:generic/scitt_time_anchor_wasm@2.0.0",
+      "scope": "required",
+      "description": "Zero-import offline wasm32-unknown-unknown C-ABI export shim over scitt_time_anchor_rs.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "scitt:runtime-dependencies",
+          "value": "0"
+        },
+        {
+          "name": "scitt:target",
+          "value": "wasm32-unknown-unknown"
+        },
+        {
+          "name": "scitt:wasm-host-imports",
+          "value": "0"
+        }
+      ]
+    }
+  ],
+  "dependencies": []
+}

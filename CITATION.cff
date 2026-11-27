@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: >-
+  If you reference this verifier, formal proofs, or empirical interoperability
+  datasets in IETF standards discussions or technical research, please cite it
+  using the metadata below.
+type: software
+title: "SCITT Time-Anchor Triple-Engine Verifier"
+version: "2.0.0"
+date-released: "2026-11-27"
+license: Apache-2.0
+authors:
+  - family-names: Ismail
+    given-names: Shady
+repository-code: "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
+url: "https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/"
+abstract: >-
+  Clean-room, zero-dependency reference verifiers for
+  draft-fassbender-scitt-time-anchor-08 and a hardened strict consensus and
+  deterministic-encoding profile implemented across Python 3, safe Rust
+  (#![forbid(unsafe_code)]), and zero-import offline WebAssembly, accompanied by
+  Z3 SMT invariant proofs, a 64-variant CBOR framing-space empirical harness,
+  and a multi-vendor interoperability suite.
+keywords:
+  - IETF
+  - SCITT
+  - OpenTimestamps
+  - COSE
+  - CBOR
+  - Bitcoin
+  - WebAssembly
+  - RFC 9921
+  - RFC 9942
+  - RFC 9943
+  - formal-verification
+  - draft-fassbender-scitt-time-anchor
+  - draft-templeman-scitt-framing-space

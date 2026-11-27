@@ -67,7 +67,7 @@ def main():
             "artifact_b64": base64.b64encode(b"hostile-test").decode(),
             "ots_b64": base64.b64encode(bytes(base)).decode(),
             "claimed_hash": hashlib.sha256(b"hostile-test").hexdigest(),
-            "validated_chain": {"headers_hex": chain_hdrs},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_hdrs},
         })
 
     for i in range(30000):
@@ -91,9 +91,11 @@ def main():
             cbor_b = bytes(b)
         cases.append({
             "id": f"HB_CBOR_{i:05d}", "mode": "strict" if (i % 2) else "draft08",
-            "cose_statement_b64": base64.b64encode(cbor_b).decode(),
+            "input_mode": "scitt_ots_ctt",
+            "cose_sign1_b64": base64.b64encode(cbor_b).decode(),
             "ots_b64": base64.b64encode(seed_blobs[0]).decode(),
-            "validated_chain": {"headers_hex": chain_hdrs},
+            "claimed_hash": hashlib.sha256(b"hostile-cbor").hexdigest(),
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_hdrs},
         })
 
     for i in range(30000):
@@ -115,12 +117,15 @@ def main():
             mut_hdrs = {}
         else:
             mut_hdrs = {str(x): chain_hdrs[str(x)] for x in range(rng.randint(1, 5))}
+        vc_obj: dict = {"headers_hex": mut_hdrs}
+        if (i % 4) != 0:
+            vc_obj["ledger_id"] = "synthetic_regtest"
         cases.append({
             "id": f"HB_BTC_{i:05d}", "mode": "strict" if (i % 2) else "draft08",
             "artifact_b64": base64.b64encode(b"btc-test").decode(),
             "ots_b64": base64.b64encode(seed_blobs[0]).decode(),
             "claimed_hash": hashlib.sha256(b"btc-test").hexdigest(),
-            "validated_chain": {"headers_hex": mut_hdrs},
+            "validated_chain": vc_obj,
         })
 
     gen_ms = round((time.perf_counter() - t0)*1000, 2)
@@ -142,10 +147,18 @@ def main():
     rs_res = [json.loads(l) for l in p_rs.stdout.strip().splitlines()]
 
     t_wa = time.perf_counter()
-    p_wa = subprocess.run(["node", "/tmp/wasm_100k_leak_runner.mjs", str(ROOT / "web/scitt_time_anchor.wasm")], input=jsonl_str, text=True, capture_output=True, check=True)
+    leak_runner = ROOT / "verification_suite" / "wasm_100k_leak_runner.mjs"
+    tel_path = ROOT / "verification_suite" / "wasm_mem_telemetry.json"
+    p_wa = subprocess.run(
+        ["node", str(leak_runner), str(ROOT / "web/scitt_time_anchor.wasm"), str(tel_path)],
+        input=jsonl_str,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
     wa_ms = round((time.perf_counter() - t_wa)*1000, 2)
     wa_res = [json.loads(l) for l in p_wa.stdout.strip().splitlines()]
-    mem_tel = json.loads(pathlib.Path("/tmp/wasm_mem_telemetry.json").read_text())
+    mem_tel = json.loads(tel_path.read_text())
 
     py_rs_div = sum(1 for a, b in zip(py_res, rs_res) if a != b)
     rs_wa_div = sum(1 for a, b in zip(rs_res, wa_res) if a != b)
@@ -164,6 +177,8 @@ def main():
     }
     (ROOT / "verification_suite/mutation_fuzz_100k_report.json").write_text(json.dumps(rep, indent=2))
     print(json.dumps(rep, indent=2))
+    if rep["verdict"] != "PASS":
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

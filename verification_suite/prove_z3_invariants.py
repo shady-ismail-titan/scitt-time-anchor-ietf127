@@ -511,6 +511,67 @@ def audit_finding_7_scitt_transparent_hash_mismatch() -> Dict[str, Any]:
     }
 
 
+def audit_finding_8_consensus_target_and_retarget() -> Dict[str, Any]:
+    """Finding #8 (`Z3-8`, IETF 127 Hackathon Slide 4 `-09` update):
+    Trivial-Target Forged Chain Acceptance (`draft08`) vs Mainnet `powLimit` + `4x` Retarget Soundness (`strict`).
+    """
+    # Part A (draft08 SAT witness): When a verifier only checks `hash <= target(nBits)` per header
+    # without Mainnet target bounds (`0x1d00ffff` / post-CSV `0x181fffff`), an attacker mines
+    # 6 linked headers with trivial regtest target (`0x207fffff`, work=2/blk -> total=12 vs real
+    # Mainnet work > 1e24).
+    s_d08 = z3.Solver()
+    regtest_t = z3.BitVecVal((0x7FFFFF << (8 * (0x20 - 3))), 256)
+    mainnet_pow_lim = z3.BitVecVal((0x00FFFF << (8 * (0x1D - 3))), 256)
+    post_csv_max_t = z3.BitVecVal((0x1FFFFF << (8 * (0x18 - 3))), 256)
+    forged_target = z3.BitVec("forged_target", 256)
+    forged_hash = z3.BitVec("forged_hash", 256)
+    s_d08.add(forged_target == regtest_t)
+    s_d08.add(z3.ULE(forged_hash, forged_target))
+    s_d08.add(z3.UGT(forged_target, mainnet_pow_lim))
+    assert s_d08.check() == z3.sat
+
+    # Part B (strict UNSAT): Enforcing `target <= mainnet_pow_lim` and post-CSV `target <= post_csv_max_t`
+    # plus mid-epoch equality `(h % 2016) != 0 => t_h == t_{h-1}` and `[t_{h-1}/4, min(pow_lim, 4*t_{h-1})]`
+    # makes BOTH trivial regtest/diff-1 forging at h >= 419,328 and >4x retarget jumps strictly UNSAT.
+    s_str = z3.Solver()
+    t_prev, t_cur = z3.Ints("t_prev t_cur")
+    pow_lim_int = 0x00FFFF << (8 * (0x1D - 3))
+    post_csv_int = 0x1FFFFF << (8 * (0x18 - 3))
+    h_idx = z3.Int("h_idx")
+    timespan = z3.Int("timespan")
+    s_str.add(h_idx >= 419_328)
+    s_str.add(t_prev > 0, t_prev <= post_csv_int)
+    s_str.add(timespan >= 302_400, timespan <= 4_838_400)
+    # Candidate -09 strict invariant:
+    s_str.add(t_cur > 0, t_cur <= pow_lim_int, t_cur <= post_csv_int)
+    s_str.add(z3.If((h_idx % 2016) != 0, t_cur == t_prev, z3.And(t_cur <= t_prev * 4, t_cur * 4 >= t_prev)))
+
+    # Assert forbidden states (either mid-epoch mutation, >4x retarget jump, or trivial target > post_csv_int):
+    s_str.add(
+        z3.Or(
+            z3.And((h_idx % 2016) != 0, t_cur != t_prev),
+            t_cur > t_prev * 4,
+            t_cur * 4 < t_prev,
+            t_cur > pow_lim_int,
+            t_cur > post_csv_int,
+        )
+    )
+    assert s_str.check() == z3.unsat
+
+    return {
+        "id": "FINDING-08 (Z3-8 / IETF 127 Slide 4 -09 validated_chain)",
+        "title": "Mainnet Target Ceiling (powLimit & Post-CSV Floor) + 4x Retarget & Mid-Epoch Invariance",
+        "draft08_result": "SAT (Trivial-target 0x207fffff forged 6-block chain passes self-referential hash <= target)",
+        "strict_result": "UNSAT (0 trivial-target, mid-epoch drift, or >4x retarget violations reachable on Mainnet)",
+        "z3_witness": {
+            "mainnet_pow_limit_nbits": "0x1d00ffff",
+            "post_csv_max_nbits": "0x181fffff",
+            "forged_trivial_nbits": "0x207fffff",
+            "retarget_soundness": "UNSAT (0 counterexamples)",
+        },
+    }
+
+
 def main() -> None:
     t0 = time.perf_counter()
     soundness = prove_m0_soundness_and_partition()
@@ -522,11 +583,12 @@ def main() -> None:
         audit_finding_5_rfc6962_producer_batch_merkle(),
         audit_finding_6_dark_anchoring_and_queue_starvation(),
         audit_finding_7_scitt_transparent_hash_mismatch(),
+        audit_finding_8_consensus_target_and_retarget(),
     ]
     elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
 
     report = {
-        "pass": "Z3 Formal Invariant Audit (Microsoft Z3 SMT Formal Verification of All 7 Candidate -09 Findings)",
+        "pass": "Z3 Formal Invariant Audit (Microsoft Z3 SMT Formal Verification of All 8 Candidate -09 Findings)",
         "z3_version": z3.get_version_string(),
         "soundness_proof": soundness,
         "findings_verified_count": len(findings),

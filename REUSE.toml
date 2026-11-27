@@ -1,0 +1,20 @@
+version = 1
+SPDX-PackageName = "scitt-time-anchor"
+SPDX-PackageSupplier = "Shady Ismail <audit@titancapitalforensics.com>"
+SPDX-PackageDownloadLocation = "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Shady Ismail"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = [
+    "spec_vectors/appendix_d_vectors.json",
+    "spec_vectors/wild_mainnet_headers.json",
+    "draft09_patch/draft-fassbender-scitt-time-anchor-09-proposed.diff",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 IETF Trust and draft-fassbender-scitt-time-anchor authors (public test vector excerpts)"
+SPDX-License-Identifier = "Apache-2.0"

@@ -1,0 +1,64 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "scitt-time-anchor",
+  "name": "scitt-time-anchor",
+  "version": "2.0.0",
+  "description": "Clean-room, zero-dependency reference verifiers for draft-fassbender-scitt-time-anchor-08 and a hardened strict consensus and deterministic-encoding profile implemented across Python 3, safe Rust (#![forbid(unsafe_code)]), and zero-import offline WebAssembly, accompanied by Z3 SMT invariant proofs, a 64-variant CBOR framing-space empirical harness, and a multi-vendor interoperability suite.",
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "codeRepository": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127",
+  "url": "https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/",
+  "issueTracker": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/issues",
+  "readme": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/blob/main/README.md",
+  "contIntegration": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/ci.yml",
+  "dateCreated": "2026-11-15",
+  "datePublished": "2026-11-27",
+  "dateModified": "2026-11-27",
+  "developmentStatus": "active",
+  "programmingLanguage": [
+    "Python",
+    "Rust",
+    "WebAssembly"
+  ],
+  "runtimePlatform": [
+    "Python >= 3.10",
+    "Rust >= 1.75",
+    "WebAssembly (wasm32-unknown-unknown)"
+  ],
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows",
+    "Web Browser"
+  ],
+  "softwareRequirements": [],
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Shady",
+      "familyName": "Ismail"
+    }
+  ],
+  "maintainer": {
+    "@type": "Person",
+    "givenName": "Shady",
+    "familyName": "Ismail",
+    "email": "audit@titancapitalforensics.com"
+  },
+  "keywords": [
+    "IETF",
+    "SCITT",
+    "OpenTimestamps",
+    "COSE",
+    "CBOR",
+    "Bitcoin",
+    "WebAssembly",
+    "RFC 9921",
+    "RFC 9942",
+    "RFC 9943",
+    "draft-fassbender-scitt-time-anchor",
+    "draft-templeman-scitt-framing-space",
+    "formal-verification",
+    "reproducible-builds"
+  ]
+}

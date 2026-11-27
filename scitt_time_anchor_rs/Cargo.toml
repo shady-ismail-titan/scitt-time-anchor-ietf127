@@ -1,9 +1,12 @@
 [package]
 name = "scitt_time_anchor_rs"
-version = "0.2.0"
+version = "2.0.0"
 edition = "2021"
 license = "Apache-2.0"
+authors = ["Shady Ismail"]
 description = "Clean-room zero-unsafe, zero-dependency Rust verifier for draft-fassbender-scitt-time-anchor-08"
+repository = "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
+homepage = "https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/"
 
 [lib]
 name = "scitt_time_anchor_rs"

@@ -71,8 +71,19 @@ if (process.argv.includes("--stress-deep")) {
     tail,
   ]);
   const d1 = callWasmDissect(deep4096);
-  if (!d1.draft08_parse_ok || d1.strict_parse_ok || d1.parse_error !== null) {
-    console.error("Deep 4096 dissect mismatch:", d1);
+  if (
+    !d1.draft08_parse_ok ||
+    d1.strict_parse_ok ||
+    d1.spans.length > 2048 ||
+    d1.parse_error === null ||
+    !d1.parse_error.message.includes("2048")
+  ) {
+    console.error("Deep 4096 dissect cap mismatch:", {
+      draft08_parse_ok: d1.draft08_parse_ok,
+      strict_parse_ok: d1.strict_parse_ok,
+      spans_len: d1.spans.length,
+      parse_error: d1.parse_error,
+    });
     process.exit(1);
   }
 
@@ -84,8 +95,8 @@ if (process.argv.includes("--stress-deep")) {
     tail,
   ]);
   const d2 = callWasmDissect(deep5000);
-  if (d2.draft08_parse_ok || d2.strict_parse_ok) {
-    console.error("Deep 5000 should be rejected cleanly:", d2);
+  if (d2.draft08_parse_ok || d2.strict_parse_ok || d2.spans.length > 2048) {
+    console.error("Deep 5000 should be rejected cleanly:", d2.parse_error);
     process.exit(1);
   }
   console.log(
@@ -94,6 +105,8 @@ if (process.argv.includes("--stress-deep")) {
       deep4096_bytes: deep4096.length,
       deep4096_draft08_parse_ok: d1.draft08_parse_ok,
       deep4096_strict_parse_ok: d1.strict_parse_ok,
+      deep4096_spans_capped: d1.spans.length,
+      deep4096_cap_message: d1.parse_error.message,
       deep5000_bytes: deep5000.length,
       deep5000_rejected_without_trap: !d2.draft08_parse_ok,
       verdict: "PASS",
@@ -102,12 +115,23 @@ if (process.argv.includes("--stress-deep")) {
   process.exit(0);
 }
 
+let defaultModeId = 0;
+for (let a = 2; a < process.argv.length; a++) {
+  const arg = process.argv[a];
+  if (arg === "--mode" && a + 1 < process.argv.length) {
+    defaultModeId = process.argv[a + 1] === "strict" ? 1 : 0;
+    a++;
+  } else if (arg.startsWith("--mode=")) {
+    defaultModeId = arg.slice("--mode=".length) === "strict" ? 1 : 0;
+  }
+}
+
 const stdinText = fs.readFileSync(0, "utf8");
 const lines = stdinText.split("\n").filter((l) => l.trim().length > 0);
 const BATCH = 250;
 for (let i = 0; i < lines.length; i += BATCH) {
   const slice = lines.slice(i, i + BATCH).join("\n") + "\n";
-  const out = callWasmJsonl(slice, 0);
+  const out = callWasmJsonl(slice, defaultModeId);
   if (out.length > 0) {
     process.stdout.write(out + "\n");
   }

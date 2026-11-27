@@ -126,4 +126,192 @@ mod tests {
         deep.extend_from_slice(&[0x03, 0xd0, 0xf0, 0x33]);
         assert!(ots_deserialize(&deep, VerifierMode::Draft08).is_none());
     }
+
+    #[test]
+    fn test_compact_roundtrip_and_json_determinism() {
+        use super::bitcoin::{
+            calculate_next_work_required, mainnet_pow_limit, target_to_compact_exact,
+        };
+        use super::json_min::{parse_json_object, MAX_JSON_DEPTH};
+
+        for nb in [0x1d00_ffffu32, 0x1702_1a42u32, 0x1816_86f5u32, 0x207f_ffffu32] {
+            let tgt = set_compact_exact(nb).unwrap();
+            assert_eq!(target_to_compact_exact(tgt), nb);
+        }
+        let next_nb = calculate_next_work_required(
+            mainnet_pow_limit(),
+            1_000_000,
+            1_000_000 + 1_209_600,
+            mainnet_pow_limit(),
+        );
+        assert_eq!(next_nb, 0x1d00_ffff);
+
+        // Duplicate JSON keys rejected cleanly
+        assert!(parse_json_object("{\"a\":1,\"a\":2}").is_none());
+        // Over-i64 integer rejected cleanly
+        assert!(parse_json_object("{\"big\":9223372036854775808}").is_none());
+        // Multi-byte UTF-8 and valid surrogate pair decoded without mangling
+        let m = parse_json_object("{\"id\":\"ok-✓-\\uD83D\\uDE00\"}").unwrap();
+        assert_eq!(m.get("id").and_then(|v| v.as_str()), Some("ok-✓-😀"));
+        // Lone surrogate rejected
+        assert!(parse_json_object("{\"id\":\"\\uD800\"}").is_none());
+        // Depth > MAX_JSON_DEPTH rejected cleanly
+        let deep_json = format!(
+            "{}1{}",
+            "{\"a\":".repeat(MAX_JSON_DEPTH + 1),
+            "}".repeat(MAX_JSON_DEPTH + 1)
+        );
+        assert!(parse_json_object(&deep_json).is_none());
+        // DIV-1: RFC 8259 rejects form-feed (0x0c) as JSON whitespace
+        assert!(parse_json_object("{\x0c\"id\":\"x\"}").is_none());
+    }
+
+    #[test]
+    fn test_v3_security_and_parity_invariants() {
+        use super::bitcoin::{
+            ChainBuildOptions, ValidatedHeaderChain, BITCOIN_MAINNET_GENESIS_HEX, U256,
+        };
+        use super::cbor::{
+            compute_scitt_ots_tbs_bytes, decode_cbor, encode_cbor_bytes, encode_cbor_text,
+            extract_embedded_receipts, parse_cose_sign1_statement, parse_proof_bundle_cbor,
+        };
+        use super::engine::evaluate_line;
+        use super::json_min::parse_json_object;
+        use super::ots::{
+            ots_deserialize_dag, VerifierMode, BITCOIN_ATTESTATION_TAG, DRAFT08_MAX_TOTAL_OPS,
+            HARDENED_MAX_RUNNING_BYTES, OP_SHA256, OTS_MAGIC, STRICT_MAX_TOTAL_OPS,
+            TAG_ATTESTATION, TAG_BRANCH,
+        };
+        use super::sha256::decode_base64;
+        use std::collections::BTreeMap;
+
+        // DIV-2: Base64 rejects form-feed, mid-stream padding, and RFC 4648 §3.5 non-zero trailing bits
+        assert!(decode_base64("AA==\x0c").is_none());
+        assert!(decode_base64("AA==AA==").is_none());
+        assert!(decode_base64("AB==").is_none());
+        assert!(decode_base64("AAB=").is_none());
+        assert_eq!(decode_base64("AA=="), Some(vec![0u8]));
+
+        // DIV-6: Semantic duplicate CBOR map key {0x01: 1, 0x18 0x01: 2} rejected in BOTH modes
+        let sem_dup = [0xa2, 0x01, 0x01, 0x18, 0x01, 0x02];
+        assert!(decode_cbor(&sem_dup, false).is_none());
+        assert!(decode_cbor(&sem_dup, true).is_none());
+
+        // SEC-2: COSE_Sign1 with protected_hdr = b"\xa0" rejected in strict, accepted in draft08
+        let mut cose_a0 = vec![0xd2, 0x84];
+        cose_a0.extend_from_slice(&encode_cbor_bytes(&[0xa0])); // protected = b"\xa0"
+        cose_a0.push(0xa0); // unprotected = {}
+        cose_a0.extend_from_slice(&encode_cbor_bytes(b"msg"));
+        cose_a0.extend_from_slice(&encode_cbor_bytes(&[0x55; 64]));
+        assert!(parse_cose_sign1_statement(&cose_a0, false).is_some());
+        assert!(parse_cose_sign1_statement(&cose_a0, true).is_none());
+
+        // DIV-7: Unprotected header with both 394 and "scitt_receipt": 394 wins in draft08, rejected in strict
+        let mut cose_both = vec![0xd2, 0x84];
+        cose_both.extend_from_slice(&encode_cbor_bytes(&[])); // canonical empty protected
+        cose_both.push(0xa2); // map(2): key "scitt_receipt" first, then 394
+        cose_both.extend_from_slice(&encode_cbor_text("scitt_receipt"));
+        cose_both.extend_from_slice(&encode_cbor_bytes(b"legacy-rcpt"));
+        cose_both.extend_from_slice(&[0x19, 0x01, 0x8a]); // uint 394
+        cose_both.extend_from_slice(&encode_cbor_bytes(b"rfc9942-rcpt"));
+        cose_both.extend_from_slice(&encode_cbor_bytes(b"payload"));
+        cose_both.extend_from_slice(&encode_cbor_bytes(&[0x55; 64]));
+        let stmt_both = parse_cose_sign1_statement(&cose_both, false).unwrap();
+        assert_eq!(
+            extract_embedded_receipts(&stmt_both, false),
+            Some(vec![b"rfc9942-rcpt".to_vec()])
+        );
+        assert!(extract_embedded_receipts(&stmt_both, true).is_none());
+        assert!(compute_scitt_ots_tbs_bytes(&stmt_both, None, None, false, true).is_none());
+
+        // SEC-3: CBOR ProofBundle integer key 4 validated as Text
+        let mut pb_bad_k4 = vec![0xa3, 0x01];
+        pb_bad_k4.extend_from_slice(&encode_cbor_bytes(b"ots"));
+        pb_bad_k4.push(0x02);
+        pb_bad_k4.extend_from_slice(&encode_cbor_bytes(&[0x11; 32]));
+        pb_bad_k4.extend_from_slice(&[0x04, 0x18, 0x2a]); // key 4 => uint 42 (invalid!)
+        assert!(parse_proof_bundle_cbor(&pb_bad_k4, true).is_none());
+        assert!(parse_proof_bundle_cbor(&pb_bad_k4, false).is_none());
+
+        // SEC-4: Forged height-0 header on Bitcoin Mainnet rejected
+        let mut hdr_map = BTreeMap::new();
+        hdr_map.insert(0u64, vec![0u8; 80]);
+        assert!(ValidatedHeaderChain::build_with_options(
+            hdr_map,
+            ChainBuildOptions {
+                ledger_id: BITCOIN_MAINNET_GENESIS_HEX.to_string(),
+                verify_pow_and_links: true,
+                allow_sparse_checkpoints: false,
+                enforce_retarget_4x_bound: false,
+                enforce_consensus_targets: false,
+                min_chainwork: U256::ZERO,
+            }
+        )
+        .is_none());
+
+        // SEC-5: 50KB non-ASCII UTF-8 string parses linearly
+        let big_utf8 = format!("{{\"id\":\"{}\"}}", "é".repeat(25_000));
+        let parsed_utf8 = parse_json_object(&big_utf8).unwrap();
+        assert_eq!(
+            parsed_utf8.get("id").and_then(|v| v.as_str()).map(|s| s.len()),
+            Some(50_000)
+        );
+
+        // SEC-6: 4,090 shared SHA256 + 256 branches evaluates in O(4,346) ops & total-op caps enforced
+        let mut amp = Vec::with_capacity(9000);
+        amp.extend_from_slice(OTS_MAGIC);
+        amp.extend_from_slice(&[0x01, OP_SHA256]);
+        amp.extend_from_slice(&[0xab; 32]);
+        amp.resize(amp.len() + 4090, OP_SHA256);
+        for i in 0..256 {
+            if i < 255 {
+                amp.push(TAG_BRANCH);
+            }
+            amp.push(OP_SHA256);
+            amp.push(TAG_ATTESTATION);
+            amp.extend_from_slice(&BITCOIN_ATTESTATION_TAG);
+            amp.extend_from_slice(&[0x03, 0xd0, 0xf0, 0x33]);
+        }
+        let dag = ots_deserialize_dag(&amp, VerifierMode::Draft08).unwrap();
+        assert_eq!(dag.nodes.len(), 4090 + 256);
+        assert_eq!(dag.branches.len(), 256);
+        let digests = dag.eval_branch_digests(&[0xab; 32], HARDENED_MAX_RUNNING_BYTES);
+        assert_eq!(digests.len(), 256);
+        assert!(digests.iter().all(|d| d.is_some()));
+
+        // Exceeding STRICT_MAX_TOTAL_OPS (1024) with 16 branches * 70 ops = 1120 ops rejected in strict
+        let mut over_strict = Vec::new();
+        over_strict.extend_from_slice(OTS_MAGIC);
+        over_strict.extend_from_slice(&[0x01, OP_SHA256]);
+        over_strict.extend_from_slice(&[0xcd; 32]);
+        for i in 0..16 {
+            if i < 15 {
+                over_strict.push(TAG_BRANCH);
+            }
+            over_strict.resize(over_strict.len() + 70, OP_SHA256);
+            over_strict.push(TAG_ATTESTATION);
+            over_strict.extend_from_slice(&BITCOIN_ATTESTATION_TAG);
+            over_strict.extend_from_slice(&[0x03, 0xd0, 0xf0, 0x33]);
+        }
+        let over_strict_dag = ots_deserialize_dag(&over_strict, VerifierMode::Draft08).unwrap();
+        assert_eq!(over_strict_dag.nodes.len(), 16 * 70);
+        assert!(over_strict_dag.nodes.len() > STRICT_MAX_TOTAL_OPS);
+        assert!(over_strict_dag.nodes.len() <= DRAFT08_MAX_TOTAL_OPS);
+        assert!(ots_deserialize_dag(&over_strict, VerifierMode::Strict).is_none());
+
+        // DIV-3 & DIV-4: Non-canonical height keys and non-string min_chainwork_hex rejected
+        use super::engine::build_chain_from_json_obj;
+        let bad_h_obj = parse_json_object("{\"headers_hex\":{\"+1\":\"00\"}}").unwrap();
+        assert!(build_chain_from_json_obj(&bad_h_obj, VerifierMode::Draft08).is_none());
+        let bad_lz_obj = parse_json_object("{\"headers_hex\":{\"01\":\"00\"}}").unwrap();
+        assert!(build_chain_from_json_obj(&bad_lz_obj, VerifierMode::Draft08).is_none());
+        let bad_cw_obj =
+            parse_json_object("{\"headers_hex\":{},\"min_chainwork_hex\":999}").unwrap();
+        assert!(build_chain_from_json_obj(&bad_cw_obj, VerifierMode::Strict).is_none());
+        let bad_h_resp = evaluate_line(
+            "{\"id\":\"H\",\"artifact_b64\":\"AA==\",\"ots_b64\":\"AA==\",\"claimed_hash\":\"00\",\"candidate_store\":{\"source\":\"validated_node\",\"headers_hex\":{\"+1\":\"00\"}}}",
+            VerifierMode::Draft08,
+        );
+        assert!(bad_h_resp.contains("\"outcome\": \"invalid\""));
+    }
 }

@@ -1,12 +1,12 @@
 {
-  "pass": "Z3 Formal Invariant Audit (Microsoft Z3 SMT Formal Verification of All 7 Candidate -09 Findings)",
-  "z3_version": "5.3.3",
+  "pass": "Z3 Formal Invariant Audit (Microsoft Z3 SMT Formal Verification of All 8 Candidate -09 Findings)",
+  "z3_version": "5.4.1",
   "soundness_proof": {
     "partition_completeness": "UNSAT (exact 3-way partition proven)",
     "section_7_1_soundness": "UNSAT (0 soundness counterexamples)",
     "commitment_only_guard": "UNSAT (VALID unreachable without artifact_bytes)"
   },
-  "findings_verified_count": 7,
+  "findings_verified_count": 8,
   "all_draft08_edge_cases_synthesized_sat": true,
   "all_strict_profile_invariants_proven_unsat": true,
   "formal_findings": [
@@ -103,8 +103,20 @@
         "unprotected_transparent_label": 394,
         "tbs_digest_invariance": "UNSAT (0 mismatches)"
       }
+    },
+    {
+      "id": "FINDING-08 (Z3-8 / IETF 127 Slide 4 -09 validated_chain)",
+      "title": "Mainnet Target Ceiling (powLimit & Post-CSV Floor) + 4x Retarget & Mid-Epoch Invariance",
+      "draft08_result": "SAT (Trivial-target 0x207fffff forged 6-block chain passes self-referential hash <= target)",
+      "strict_result": "UNSAT (0 trivial-target, mid-epoch drift, or >4x retarget violations reachable on Mainnet)",
+      "z3_witness": {
+        "mainnet_pow_limit_nbits": "0x1d00ffff",
+        "post_csv_max_nbits": "0x181fffff",
+        "forged_trivial_nbits": "0x207fffff",
+        "retarget_soundness": "UNSAT (0 counterexamples)"
+      }
     }
   ],
-  "elapsed_ms": 231.68,
+  "elapsed_ms": 219.82,
   "verdict": "PASS"
 }

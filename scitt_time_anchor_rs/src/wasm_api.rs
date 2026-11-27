@@ -6,7 +6,7 @@ use std::sync::Mutex;
 use crate::engine::evaluate_line;
 use crate::json_min::escape_json_str;
 use crate::ots::{
-    decode_varuint_js_toint32, decode_varuint_py_unbounded, ots_deserialize, read_varuint,
+    decode_varuint_js_toint32, decode_varuint_py_unbounded, ots_deserialize_dag, read_varuint,
     VerifierMode, BITCOIN_ATTESTATION_TAG, DRAFT08_MAX_DEPTH, DRAFT08_MAX_OPERAND_BYTES,
     HARDENED_MAX_RUNNING_BYTES, MAX_ATTESTATION_PAYLOAD_BYTES, OP_APPEND, OP_HEXLIFY,
     OP_KECCAK256, OP_LEGACY_01, OP_PREPEND, OP_REVERSE, OP_RIPEMD160, OP_SHA1, OP_SHA256,
@@ -15,6 +15,8 @@ use crate::ots::{
 use crate::sha256::hex_lower;
 
 pub const MAX_WASM_IO_BYTES: usize = 4_194_304;
+pub const MAX_DISSECT_SPANS: usize = 2_048;
+pub const MAX_DISSECT_BRANCHES: usize = 256;
 
 static INPUT_BUF: Mutex<Vec<u8>> = Mutex::new(Vec::new());
 static OUTPUT_BUF: Mutex<Vec<u8>> = Mutex::new(Vec::new());
@@ -80,7 +82,7 @@ pub extern "C" fn wasm_evaluate_jsonl(default_mode_id: u32) -> usize {
 
     let mut lines_out: Vec<String> = Vec::new();
     for line in text.lines() {
-        let trimmed = line.trim();
+        let trimmed = line.trim_matches(|c| matches!(c, ' ' | '\t' | '\r' | '\n'));
         if trimmed.is_empty() {
             continue;
         }
@@ -114,6 +116,8 @@ struct Dissector {
     spans_json: Vec<String>,
     varuints_json: Vec<String>,
     growth_json: Vec<String>,
+    branches_seen: usize,
+    forks_seen: usize,
     parse_error: Option<(usize, String)>,
 }
 
@@ -123,6 +127,8 @@ impl Dissector {
             spans_json: Vec::new(),
             varuints_json: Vec::new(),
             growth_json: Vec::new(),
+            branches_seen: 0,
+            forks_seen: 0,
             parse_error: None,
         }
     }
@@ -135,7 +141,16 @@ impl Dissector {
         label: &str,
         section: &str,
         detail: &str,
-    ) {
+    ) -> bool {
+        if self.spans_json.len() >= MAX_DISSECT_SPANS {
+            if self.parse_error.is_none() {
+                self.parse_error = Some((
+                    start,
+                    format!("Exceeded max dissect span cap ({})", MAX_DISSECT_SPANS),
+                ));
+            }
+            return false;
+        }
         self.spans_json.push(format!(
             "{{\"start\": {}, \"end\": {}, \"kind\": {}, \"label\": {}, \"section\": {}, \"detail\": {}}}",
             start,
@@ -145,6 +160,7 @@ impl Dissector {
             escape_json_str(section),
             escape_json_str(detail)
         ));
+        true
     }
 
     fn record_varuint(&mut self, buf: &[u8], pos: usize, role: &str) -> Option<(u64, usize)> {
@@ -203,6 +219,15 @@ impl Dissector {
         });
 
         while let Some(frame) = stack.pop() {
+            if self.spans_json.len() >= MAX_DISSECT_SPANS {
+                if self.parse_error.is_none() {
+                    self.parse_error = Some((
+                        pos,
+                        format!("Exceeded max dissect span cap ({})", MAX_DISSECT_SPANS),
+                    ));
+                }
+                return None;
+            }
             match frame {
                 DissectFrame::EnterTimestamp {
                     running_len,
@@ -221,14 +246,27 @@ impl Dissector {
                         return None;
                     }
                     if buf[pos] == TAG_BRANCH {
-                        self.push_span(
+                        if self.forks_seen >= MAX_DISSECT_BRANCHES {
+                            self.parse_error = Some((
+                                pos,
+                                format!(
+                                    "Exceeded max dissect branch cap ({})",
+                                    MAX_DISSECT_BRANCHES
+                                ),
+                            ));
+                            return None;
+                        }
+                        self.forks_seen += 1;
+                        if !self.push_span(
                             pos,
                             pos + 1,
                             "branch",
                             "Branch Fork (0xff)",
                             "Section 3.4 / Step 5",
                             "Splits Merkle timestamp tree into an additional attestation branch",
-                        );
+                        ) {
+                            return None;
+                        }
                         pos += 1;
                         stack.push(DissectFrame::AfterBranchStep {
                             running_len,
@@ -261,14 +299,27 @@ impl Dissector {
                         return None;
                     }
                     if buf[pos] == TAG_BRANCH {
-                        self.push_span(
+                        if self.forks_seen >= MAX_DISSECT_BRANCHES {
+                            self.parse_error = Some((
+                                pos,
+                                format!(
+                                    "Exceeded max dissect branch cap ({})",
+                                    MAX_DISSECT_BRANCHES
+                                ),
+                            ));
+                            return None;
+                        }
+                        self.forks_seen += 1;
+                        if !self.push_span(
                             pos,
                             pos + 1,
                             "branch",
                             "Branch Fork (0xff)",
                             "Section 3.4 / Step 5",
                             "Splits Merkle timestamp tree into an additional attestation branch",
-                        );
+                        ) {
+                            return None;
+                        }
                         pos += 1;
                         stack.push(DissectFrame::AfterBranchStep {
                             running_len,
@@ -303,14 +354,27 @@ impl Dissector {
                     let tag = buf[pos];
                     match tag {
                         TAG_ATTESTATION => {
-                            self.push_span(
+                            if self.branches_seen >= MAX_DISSECT_BRANCHES {
+                                self.parse_error = Some((
+                                    pos,
+                                    format!(
+                                        "Exceeded max dissect branch cap ({})",
+                                        MAX_DISSECT_BRANCHES
+                                    ),
+                                ));
+                                return None;
+                            }
+                            self.branches_seen += 1;
+                            if !self.push_span(
                                 pos,
                                 pos + 1,
                                 "att_marker",
                                 "Attestation Marker (0x00)",
                                 "Section 3.4.2 / Step 4",
                                 "Introduces an 8-byte OpenTimestamps attestation type identifier",
-                            );
+                            ) {
+                                return None;
+                            }
                             pos += 1;
                             if pos.checked_add(8)? > buf.len() {
                                 self.parse_error =
@@ -319,7 +383,7 @@ impl Dissector {
                             }
                             let mut att_tag = [0u8; 8];
                             att_tag.copy_from_slice(&buf[pos..pos + 8]);
-                            if att_tag == BITCOIN_ATTESTATION_TAG {
+                            let tag_ok = if att_tag == BITCOIN_ATTESTATION_TAG {
                                 self.push_span(
                                     pos,
                                     pos + 8,
@@ -327,7 +391,7 @@ impl Dissector {
                                     "Bitcoin Block Header Attestation Tag",
                                     "Section 3.4.2 / Step 4",
                                     "0588960d73d71901 — commits branch tip to Bitcoin block Merkle root at height H",
-                                );
+                                )
                             } else if att_tag == PENDING_ATTESTATION_TAG {
                                 self.push_span(
                                     pos,
@@ -336,7 +400,7 @@ impl Dissector {
                                     "Pending Calendar Attestation Tag",
                                     "Section 3.4.1 / Step 4",
                                     "83dfe30d2ef90c8e — unanchored calendar commitment URI (ignored once Bitcoin branch verifies)",
-                                );
+                                )
                             } else {
                                 self.push_span(
                                     pos,
@@ -348,20 +412,25 @@ impl Dissector {
                                         "Tag {} — skipped up to 8192 B per notary.py",
                                         hex_lower(&att_tag)
                                     ),
-                                );
+                                )
+                            };
+                            if !tag_ok {
+                                return None;
                             }
                             pos += 8;
 
                             let (plen_u64, p_start) =
                                 self.record_varuint(buf, pos, "attestation_payload_len")?;
-                            self.push_span(
+                            if !self.push_span(
                                 pos,
                                 p_start,
                                 "varuint_len",
                                 "Attestation Payload Length",
                                 "Section 3.4.2",
                                 &format!("Payload byte length = {}", plen_u64),
-                            );
+                            ) {
+                                return None;
+                            }
                             let plen = match usize::try_from(plen_u64) {
                                 Ok(v) if v <= MAX_ATTESTATION_PAYLOAD_BYTES => v,
                                 _ => {
@@ -384,7 +453,7 @@ impl Dissector {
                                 }
                             };
 
-                            if att_tag == BITCOIN_ATTESTATION_TAG {
+                            let pl_ok = if att_tag == BITCOIN_ATTESTATION_TAG {
                                 let (py_h, h_end) =
                                     self.record_varuint(buf, p_start, "bitcoin_block_height")?;
                                 let js_h = decode_varuint_js_toint32(buf, p_start)
@@ -412,7 +481,7 @@ impl Dissector {
                                     "Bitcoin Block Height (LEB128)",
                                     "Section 3.4.2 / Section 4.1 Step 3 & 6",
                                     &detail,
-                                );
+                                )
                             } else if att_tag == PENDING_ATTESTATION_TAG {
                                 let uri_preview = core::str::from_utf8(&buf[p_start..p_end])
                                     .unwrap_or("<binary calendar payload>");
@@ -423,7 +492,7 @@ impl Dissector {
                                     "Calendar Server URI Payload",
                                     "Section 3.4.1 / Section 5.2",
                                     &format!("Pending calendar payload ({} B): {}", plen, uri_preview),
-                                );
+                                )
                             } else {
                                 self.push_span(
                                     p_start,
@@ -432,7 +501,10 @@ impl Dissector {
                                     "Opaque Attestation Payload",
                                     "Section 4.1 Step 4",
                                     &format!("{} bytes", plen),
-                                );
+                                )
+                            };
+                            if !pl_ok {
+                                return None;
                             }
                             pos = p_end;
                         }
@@ -442,7 +514,7 @@ impl Dissector {
                             } else {
                                 "OpPrepend (0xf1)"
                             };
-                            self.push_span(
+                            if !self.push_span(
                                 pos,
                                 pos + 1,
                                 "op_concat",
@@ -453,18 +525,22 @@ impl Dissector {
                                 } else {
                                     "Prepends operand bytes to left of current digest state"
                                 },
-                            );
+                            ) {
+                                return None;
+                            }
                             pos += 1;
                             let (alen_u64, a_start) =
                                 self.record_varuint(buf, pos, "operand_len")?;
-                            self.push_span(
+                            if !self.push_span(
                                 pos,
                                 a_start,
                                 "varuint_len",
                                 "Operand Length (varuint)",
                                 "Section 4.1 Step 3",
                                 &format!("{} bytes", alen_u64),
-                            );
+                            ) {
+                                return None;
+                            }
                             let alen = match usize::try_from(alen_u64) {
                                 Ok(v) if v <= DRAFT08_MAX_OPERAND_BYTES => v,
                                 _ => {
@@ -483,7 +559,7 @@ impl Dissector {
                                     return None;
                                 }
                             };
-                            self.push_span(
+                            if !self.push_span(
                                 a_start,
                                 a_end,
                                 "operand",
@@ -493,7 +569,9 @@ impl Dissector {
                                     "Hex: {}",
                                     hex_lower(&buf[a_start..core::cmp::min(a_end, a_start + 32)])
                                 ),
-                            );
+                            ) {
+                                return None;
+                            }
                             let next_len = running_len.saturating_add(alen as u64);
                             if record_growth && self.growth_json.len() < 128 {
                                 self.growth_json.push(format!(
@@ -513,14 +591,16 @@ impl Dissector {
                             });
                         }
                         OP_SHA256 => {
-                            self.push_span(
+                            if !self.push_span(
                                 pos,
                                 pos + 1,
                                 "op_sha256",
                                 "OpSHA256 (0x08)",
                                 "Section 4.1 Step 5",
                                 "Compresses running buffer via SHA-256 to 32 bytes",
-                            );
+                            ) {
+                                return None;
+                            }
                             if record_growth && self.growth_json.len() < 128 {
                                 self.growth_json.push(format!(
                                     "{{\"step\": {}, \"op\": \"OpSHA256 (0x08)\", \"bytes\": 32, \"exceeded_strict\": false}}",
@@ -565,14 +645,16 @@ impl Dissector {
                                 ),
                                 _ => ("OpLegacy01 (0x01)", 20u64, "Legacy opcode 0x01"),
                             };
-                            self.push_span(
+                            if !self.push_span(
                                 pos,
                                 pos + 1,
                                 "op_alert",
                                 op_name,
                                 "Section 4.1 Step 3 & Step 5 / Section 8.8",
                                 note,
-                            );
+                            ) {
+                                return None;
+                            }
                             if record_growth && self.growth_json.len() < 128 {
                                 self.growth_json.push(format!(
                                     "{{\"step\": {}, \"op\": {}, \"bytes\": {}, \"exceeded_strict\": {}}}",
@@ -591,7 +673,7 @@ impl Dissector {
                             });
                         }
                         other => {
-                            self.push_span(
+                            let _ = self.push_span(
                                 pos,
                                 pos + 1,
                                 "op_alert",
@@ -615,8 +697,8 @@ pub extern "C" fn wasm_dissect_ots() -> usize {
         Ok(g) => g.clone(),
         Err(p) => p.into_inner().clone(),
     };
-    let draft08_ok = ots_deserialize(&raw, VerifierMode::Draft08).is_some();
-    let strict_ok = ots_deserialize(&raw, VerifierMode::Strict).is_some();
+    let draft08_ok = ots_deserialize_dag(&raw, VerifierMode::Draft08).is_some();
+    let strict_ok = ots_deserialize_dag(&raw, VerifierMode::Strict).is_some();
 
     let mut d = Dissector::new();
 

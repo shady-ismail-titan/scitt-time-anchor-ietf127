@@ -7,6 +7,7 @@ Zero external dependencies (Python 3 standard library only).
 
 from .bitcoin_chain import (
     BITCOIN_MAINNET_BIP113_HEIGHT,
+    BITCOIN_MAINNET_CHECKPOINTS,
     BITCOIN_MAINNET_GENESIS_HEX,
     BitcoinHeader,
     CandidateHeaderStore,
@@ -26,10 +27,15 @@ from .cbor_scitt import (
     parse_proof_bundle_cbor,
 )
 from .ots_parser import (
+    DRAFT08_MAX_TOTAL_OPS,
+    STRICT_MAX_TOTAL_OPS,
     AttestationKind,
     BatchOrigin,
     OtsBranch,
+    OtsDagBranch,
+    OtsDagProof,
     OtsOp,
+    OtsOpNode,
     OtsProof,
     VerifierMode,
     batch_anchor_merkle,
@@ -37,9 +43,11 @@ from .ots_parser import (
     decode_varuint_py_unbounded,
     is_allowed_pending_uri_bytes,
     ots_deserialize,
+    ots_deserialize_dag,
     ots_replay,
     ots_serialize,
     verify_rfc6962_batch_prefix,
+    verify_rfc6962_batch_prefix_ops,
 )
 from .verifier import (
     MIN_CONFIRMATIONS,
@@ -49,21 +57,30 @@ from .verifier import (
     verify_anchor,
 )
 
+__version__ = "2.0.0"
+
 __all__ = [
+    "__version__",
     "AttestationKind",
     "BITCOIN_MAINNET_BIP113_HEIGHT",
+    "BITCOIN_MAINNET_CHECKPOINTS",
     "BITCOIN_MAINNET_GENESIS_HEX",
     "BatchOrigin",
     "BitcoinHeader",
     "CandidateHeaderStore",
+    "DRAFT08_MAX_TOTAL_OPS",
     "HeaderSource",
     "MIN_CONFIRMATIONS",
     "OtsBranch",
+    "OtsDagBranch",
+    "OtsDagProof",
     "OtsOp",
+    "OtsOpNode",
     "OtsProof",
     "Outcome",
     "ProofBundle",
     "SCITT_RECEIPTS_HEADER_LABEL",
+    "STRICT_MAX_TOTAL_OPS",
     "ValidatedHeaderChain",
     "VerificationResult",
     "VerifierMode",
@@ -77,6 +94,7 @@ __all__ = [
     "extract_embedded_receipts",
     "is_allowed_pending_uri_bytes",
     "ots_deserialize",
+    "ots_deserialize_dag",
     "ots_replay",
     "ots_serialize",
     "parse_cose_sign1_statement",
@@ -85,4 +103,5 @@ __all__ = [
     "set_compact_exact",
     "verify_anchor",
     "verify_rfc6962_batch_prefix",
+    "verify_rfc6962_batch_prefix_ops",
 ]

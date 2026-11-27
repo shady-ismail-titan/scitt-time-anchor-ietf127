@@ -1,0 +1,138 @@
+{
+  "schema": "osps-baseline-self-attestation/v1",
+  "baseline_standard": "OpenSSF OSPS Baseline",
+  "baseline_version": "v2026.08.28",
+  "project": "scitt-time-anchor",
+  "version": "2.0.0",
+  "repository": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127",
+  "assessed_date": "2026-11-27",
+  "assessor": "Shady Ismail",
+  "target_maturity_level": "Level 2 (with Level 3 reproducible WASM builds and SLSA v1 provenance)",
+  "regulatory_crosswalk": {
+    "eu_cra": "Regulation (EU) 2024/2847 (EU Cyber Resilience Act) Annex I Essential Cybersecurity Requirements & Articles 13-14",
+    "nist_ssdf": "NIST SP 800-218 v1.1 Secure Software Development Framework (PO, PS, PW, RV)"
+  },
+  "controls": [
+    {
+      "id": "OSPS-BR-01",
+      "domain": "Build & Release",
+      "level": 2,
+      "status": "implemented",
+      "summary": "All CI/CD and release workflows pin every GitHub Action to immutable 40-character commit SHAs with minimal least-privilege token permissions and persist-credentials: false.",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/pages.yml",
+        ".github/workflows/scorecard.yml",
+        ".github/workflows/reuse.yml",
+        ".github/workflows/release.yml"
+      ],
+      "eu_cra": ["Annex I Part I (2)(a)", "Annex I Part I (2)(c)"],
+      "nist_ssdf": ["PO.3.1", "PO.3.2", "PS.2.1"]
+    },
+    {
+      "id": "OSPS-BR-02",
+      "domain": "Build & Release",
+      "level": 3,
+      "status": "implemented",
+      "summary": "Tag-triggered releases generate SHA-256 checksums, attach CycloneDX 1.5 SBOM, sign SLSA v1 build provenance attestations, and CI enforces bit-for-bit reproducible WASM double-builds (SOURCE_DATE_EPOCH + --remap-path-prefix) plus artifact forensics.",
+      "evidence": [
+        ".github/workflows/release.yml",
+        ".github/workflows/ci.yml",
+        "sbom.cdx.json",
+        "REPRODUCIBILITY.md",
+        "SHA256SUMS.txt"
+      ],
+      "eu_cra": ["Art. 13(23)", "Annex I Part II (1)"],
+      "nist_ssdf": ["PS.2.1", "PS.3.1", "PS.3.2"]
+    },
+    {
+      "id": "OSPS-DO-01",
+      "domain": "Documentation",
+      "level": 2,
+      "status": "implemented",
+      "summary": "Comprehensive architecture, profile usage, formal verification, reproducibility, and citation metadata published in machine-readable and human-readable forms.",
+      "evidence": [
+        "README.md",
+        "REPRODUCIBILITY.md",
+        "CITATION.cff",
+        "codemeta.json",
+        "CHANGELOG.md"
+      ],
+      "eu_cra": ["Art. 13(18)", "Annex II"],
+      "nist_ssdf": ["PO.1.1", "PW.1.1"]
+    },
+    {
+      "id": "OSPS-GV-01",
+      "domain": "Governance",
+      "level": 2,
+      "status": "implemented",
+      "summary": "Public contribution policy enforcing IETF RFC 8179 IPR disclosure, Apache-2.0 inbound=outbound licensing, triple-engine parity, and IETF RFC 7154 + Contributor Covenant 2.1 conduct standards.",
+      "evidence": [
+        "CONTRIBUTING.md",
+        "CODE_OF_CONDUCT.md"
+      ],
+      "eu_cra": ["Art. 13(15)"],
+      "nist_ssdf": ["PO.2.1", "PO.2.3"]
+    },
+    {
+      "id": "OSPS-LE-01",
+      "domain": "Legal & Licensing",
+      "level": 2,
+      "status": "implemented",
+      "summary": "Canonical SPDX Apache-2.0 LICENSE and LICENSES/Apache-2.0.txt with 100% FSFE REUSE 3.3 SPDX coverage enforced continuously in CI.",
+      "evidence": [
+        "LICENSE",
+        "LICENSES/Apache-2.0.txt",
+        "REUSE.toml",
+        ".github/workflows/reuse.yml"
+      ],
+      "eu_cra": ["Art. 13(23)"],
+      "nist_ssdf": ["PO.1.3"]
+    },
+    {
+      "id": "OSPS-QA-01",
+      "domain": "Quality Assurance",
+      "level": 2,
+      "status": "implemented",
+      "summary": "Automated CI gates enforce Rust clippy (-D warnings), #![forbid(unsafe_code)], cross-manifest version parity, anti-obfuscation guards, Appendix D + strict conformance, 64-variant CBOR framing-space parity, Z3 SMT formal invariants, 50k triple differential, 100k mutation fuzz, and 120k WASM leak verification.",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        "VERIFICATION_MASTER_SUMMARY.json",
+        "verification_suite/test_appendix_d_conformance.py",
+        "verification_suite/experiment_cbor_framing_space_64.py",
+        "verification_suite/prove_z3_invariants.py"
+      ],
+      "eu_cra": ["Annex I Part I (2)(b)", "Annex I Part I (2)(f)"],
+      "nist_ssdf": ["PW.4.4", "PW.7.2", "PW.8.2"]
+    },
+    {
+      "id": "OSPS-SA-01",
+      "domain": "Security Architecture",
+      "level": 2,
+      "status": "implemented",
+      "summary": "Documented threat model defining trust boundaries, explicit non-goals, bounded O(1)-stack/O(1)-UTF-8/DAG DoS budgets, LEB128/CBOR/JSON parity defenses, strict consensus ceilings, zero-dependency CycloneDX 1.5 SBOM, and browser WASM zero-egress isolation (connect-src 'none', 0 imports).",
+      "evidence": [
+        "THREAT_MODEL.md",
+        "sbom.cdx.json",
+        ".github/workflows/pages.yml"
+      ],
+      "eu_cra": ["Annex I Part I (1)", "Annex I Part I (2)(e)", "Annex I Part I (2)(j)"],
+      "nist_ssdf": ["PW.1.1", "PW.1.2", "PW.4.1"]
+    },
+    {
+      "id": "OSPS-VM-01",
+      "domain": "Vulnerability Management",
+      "level": 2,
+      "status": "implemented",
+      "summary": "RFC 9116 aligned private vulnerability reporting (GitHub Security Advisories + OpenPGP email), 48h acknowledgement SLA, 14d triage target, Safe Harbor, OpenVEX v0.2.0 exploitability baseline, weekly Dependabot monitoring, and continuous OpenSSF Scorecard SARIF reporting.",
+      "evidence": [
+        "SECURITY.md",
+        "openvex.json",
+        ".github/dependabot.yml",
+        ".github/workflows/scorecard.yml"
+      ],
+      "eu_cra": ["Art. 14", "Annex I Part II (2)", "Annex I Part II (5)"],
+      "nist_ssdf": ["RV.1.1", "RV.1.2", "RV.1.3", "RV.2.1"]
+    }
+  ]
+}

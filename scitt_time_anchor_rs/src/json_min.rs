@@ -2,6 +2,8 @@
 
 use std::collections::BTreeMap;
 
+pub const MAX_JSON_DEPTH: usize = 64;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum JsonVal {
     Null,
@@ -56,12 +58,17 @@ struct JsonParser<'a> {
 
 impl<'a> JsonParser<'a> {
     fn skip_ws(&mut self) {
-        while self.pos < self.b.len() && self.b[self.pos].is_ascii_whitespace() {
+        while self.pos < self.b.len()
+            && matches!(self.b[self.pos], b' ' | b'\t' | b'\n' | b'\r')
+        {
             self.pos += 1;
         }
     }
 
-    fn parse_val(&mut self) -> Option<JsonVal> {
+    fn parse_val(&mut self, depth: usize) -> Option<JsonVal> {
+        if depth > MAX_JSON_DEPTH {
+            return None;
+        }
         self.skip_ws();
         if self.pos >= self.b.len() {
             return None;
@@ -92,11 +99,19 @@ impl<'a> JsonParser<'a> {
                 }
             }
             b'"' => self.parse_str().map(JsonVal::Str),
-            b'[' => self.parse_arr().map(JsonVal::Arr),
-            b'{' => self.parse_obj().map(JsonVal::Obj),
+            b'[' => self.parse_arr(depth + 1).map(JsonVal::Arr),
+            b'{' => self.parse_obj(depth + 1).map(JsonVal::Obj),
             b'-' | b'0'..=b'9' => self.parse_num().map(JsonVal::Num),
             _ => None,
         }
+    }
+
+    fn parse_hex4(&mut self) -> Option<u32> {
+        let hex_slice = self.b.get(self.pos..self.pos + 4)?;
+        let hex_str = core::str::from_utf8(hex_slice).ok()?;
+        let code = u32::from_str_radix(hex_str, 16).ok()?;
+        self.pos += 4;
+        Some(code)
     }
 
     fn parse_str(&mut self) -> Option<String> {
@@ -107,11 +122,15 @@ impl<'a> JsonParser<'a> {
         let mut out = String::new();
         while self.pos < self.b.len() {
             let c = self.b[self.pos];
-            self.pos += 1;
             if c == b'"' {
+                self.pos += 1;
                 return Some(out);
             }
+            if c < 0x20 {
+                return None;
+            }
             if c == b'\\' {
+                self.pos += 1;
                 let esc = *self.b.get(self.pos)?;
                 self.pos += 1;
                 match esc {
@@ -124,16 +143,45 @@ impl<'a> JsonParser<'a> {
                     b'r' => out.push('\r'),
                     b't' => out.push('\t'),
                     b'u' => {
-                        let hex_slice = self.b.get(self.pos..self.pos + 4)?;
-                        let hex_str = core::str::from_utf8(hex_slice).ok()?;
-                        let code = u32::from_str_radix(hex_str, 16).ok()?;
-                        self.pos += 4;
-                        out.push(char::from_u32(code)?);
+                        let code = self.parse_hex4()?;
+                        if (0xD800..=0xDBFF).contains(&code) {
+                            if self.b.get(self.pos..self.pos + 2)? != b"\\u" {
+                                return None;
+                            }
+                            self.pos += 2;
+                            let low = self.parse_hex4()?;
+                            if !(0xDC00..=0xDFFF).contains(&low) {
+                                return None;
+                            }
+                            let cp = 0x10000 + (((code - 0xD800) << 10) | (low - 0xDC00));
+                            out.push(char::from_u32(cp)?);
+                        } else if (0xDC00..=0xDFFF).contains(&code) {
+                            return None;
+                        } else {
+                            out.push(char::from_u32(code)?);
+                        }
                     }
                     _ => return None,
                 }
-            } else {
+            } else if c < 0x80 {
+                self.pos += 1;
                 out.push(c as char);
+            } else {
+                let width = if (c & 0xE0) == 0xC0 {
+                    2
+                } else if (c & 0xF0) == 0xE0 {
+                    3
+                } else if (c & 0xF8) == 0xF0 {
+                    4
+                } else {
+                    return None;
+                };
+                let end = self.pos.checked_add(width)?;
+                let slice = self.b.get(self.pos..end)?;
+                let ch_str = core::str::from_utf8(slice).ok()?;
+                let ch = ch_str.chars().next()?;
+                self.pos = end;
+                out.push(ch);
             }
         }
         None
@@ -144,14 +192,32 @@ impl<'a> JsonParser<'a> {
         if self.b.get(self.pos) == Some(&b'-') {
             self.pos += 1;
         }
-        while self.pos < self.b.len() && self.b[self.pos].is_ascii_digit() {
+        let first = *self.b.get(self.pos)?;
+        if !first.is_ascii_digit() {
+            return None;
+        }
+        if first == b'0' {
             self.pos += 1;
+            if matches!(self.b.get(self.pos), Some(b'0'..=b'9')) {
+                return None;
+            }
+        } else {
+            while self.pos < self.b.len() && self.b[self.pos].is_ascii_digit() {
+                self.pos += 1;
+            }
+        }
+        // Reject fractional / exponent floats explicitly for strict cross-engine integer determinism.
+        if matches!(self.b.get(self.pos), Some(b'.' | b'e' | b'E')) {
+            return None;
         }
         let s = core::str::from_utf8(&self.b[start..self.pos]).ok()?;
         s.parse::<i64>().ok()
     }
 
-    fn parse_arr(&mut self) -> Option<Vec<JsonVal>> {
+    fn parse_arr(&mut self, depth: usize) -> Option<Vec<JsonVal>> {
+        if depth > MAX_JSON_DEPTH {
+            return None;
+        }
         if self.b.get(self.pos)? != &b'[' {
             return None;
         }
@@ -163,7 +229,7 @@ impl<'a> JsonParser<'a> {
             return Some(arr);
         }
         loop {
-            let val = self.parse_val()?;
+            let val = self.parse_val(depth)?;
             arr.push(val);
             self.skip_ws();
             match self.b.get(self.pos)? {
@@ -177,7 +243,10 @@ impl<'a> JsonParser<'a> {
         }
     }
 
-    fn parse_obj(&mut self) -> Option<BTreeMap<String, JsonVal>> {
+    fn parse_obj(&mut self, depth: usize) -> Option<BTreeMap<String, JsonVal>> {
+        if depth > MAX_JSON_DEPTH {
+            return None;
+        }
         if self.b.get(self.pos)? != &b'{' {
             return None;
         }
@@ -191,12 +260,15 @@ impl<'a> JsonParser<'a> {
         loop {
             self.skip_ws();
             let key = self.parse_str()?;
+            if map.contains_key(&key) {
+                return None;
+            }
             self.skip_ws();
             if self.b.get(self.pos)? != &b':' {
                 return None;
             }
             self.pos += 1;
-            let val = self.parse_val()?;
+            let val = self.parse_val(depth)?;
             map.insert(key, val);
             self.skip_ws();
             match self.b.get(self.pos)? {
@@ -216,7 +288,7 @@ pub fn parse_json_object(line: &str) -> Option<BTreeMap<String, JsonVal>> {
         b: line.as_bytes(),
         pos: 0,
     };
-    let val = p.parse_val()?;
+    let val = p.parse_val(0)?;
     p.skip_ws();
     if p.pos != p.b.len() {
         return None;

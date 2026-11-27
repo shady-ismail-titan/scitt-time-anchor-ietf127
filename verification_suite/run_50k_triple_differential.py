@@ -278,7 +278,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 make_proof(h_fixed, [make_btc_branch(ops_fixed, target_h)])
             ).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F02_valid_synthetic_heights", f02)
 
@@ -356,7 +356,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(raw_ots).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F05_noncanonical_leb128_varuints", f05)
 
@@ -395,7 +395,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(raw_ots).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F06_op_hexlify_and_operand_caps", f06)
 
@@ -412,7 +412,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(make_proof(h_fixed, branches)).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F07_midpath_narrow_pipe_opcodes", f07)
 
@@ -436,7 +436,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(raw_ots).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F08_file_hash_op_mismatch", f08)
 
@@ -479,7 +479,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(raw_ots).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F09_pending_uri_and_unknown_attestations", f09)
 
@@ -505,7 +505,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_cur,
             "ots_b64": ots_fixed_b64,
             "claimed_hash": ch,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F10_claimed_hash_and_artifact_mutations", f10)
 
@@ -518,7 +518,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": None,
             "ots_b64": ots_fixed_b64,
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F11_missing_artifact_guard", f11)
 
@@ -530,13 +530,13 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             vc = None
             cs = {"source": "public_explorer", "headers_hex": chain_inv_compact}
         elif kind == 1:
-            vc = {"headers_hex": chain_inv_compact}
+            vc = {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact}
             cs = {"source": "anchoring_service", "headers_hex": chain_inv_compact}
         elif kind == 2:
-            vc = {"headers_hex": chain_inv_compact}
+            vc = {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact}
             cs = {"source": "validated_node", "headers_hex": {"850000": "aa" * 79}}  # 79B != 80B!
         else:
-            vc = {"headers_hex": chain_inv_compact}
+            vc = {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact}
             tampered_hdr = "ff" + chain_inv_compact["850000"][2:]
             cs = {"source": "public_explorer", "headers_hex": {"850000": tampered_hdr}}
         f12.append({
@@ -581,7 +581,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": ots_multi_inv,
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": hdrs},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": hdrs},
         })
     add_family("F14_bip113_and_forward_mtp_windows", f14)
 
@@ -602,34 +602,35 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "ots_b64": ots_sparse_b64,
             "claimed_hash": h_fixed_hex,
             "validated_chain": {
+                "ledger_id": "synthetic_regtest",
                 "headers_hex": sparse_combo,
                 "allow_sparse_checkpoints": allow_sp,
             },
         })
     add_family("F15_sparse_checkpoint_argmin", f15)
 
-    # F16: SetCompact negative/overflow nBits, 64-hex min_chainwork, & ChainWork fork selection
+    # F16: SetCompact negative/overflow nBits, Mainnet trivial-target forging, 64-hex min_chainwork, & ChainWork fork selection
     f16 = []
     bad_nbits_vals = [0x1DFBFFFF, 0x23010000, 0x00000000, 0x1D800001]
     ots_900k_b64 = base64.b64encode(
         make_proof(h_fixed, [make_btc_branch(ops_fixed, 900000)])
     ).decode()
     for i in range(PER_FAMILY):
-        kind = i % 4
+        kind = i % 5
         if kind == 0:
             f16.append({
                 "id": f"F16_{i:04d}",
-                "mode": "strict" if ((i // 4) % 2) else "draft08",
+                "mode": "strict" if ((i // 5) % 2) else "draft08",
                 "artifact_b64": art_fixed_b64,
                 "ots_b64": ots_900k_b64,
                 "claimed_hash": h_fixed_hex,
                 "candidate_chains": [
-                    {"headers_hex": fork_low_work},
-                    {"headers_hex": fork_high_work},
+                    {"ledger_id": "synthetic_regtest", "headers_hex": fork_low_work},
+                    {"ledger_id": "synthetic_regtest", "headers_hex": fork_high_work},
                 ],
             })
         elif kind == 1:
-            nb = bad_nbits_vals[(i // 4) % len(bad_nbits_vals)]
+            nb = bad_nbits_vals[(i // 5) % len(bad_nbits_vals)]
             bad_hdr = struct.pack("<I32s32sIII", 0x20000000, b"\x00" * 32, mr_fixed, 1700000000, nb, 0)
             f16.append({
                 "id": f"F16_{i:04d}",
@@ -637,7 +638,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "artifact_b64": art_fixed_b64,
                 "ots_b64": ots_900k_b64,
                 "claimed_hash": h_fixed_hex,
-                "validated_chain": {"headers_hex": {"900000": bad_hdr.hex()}},
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": {"900000": bad_hdr.hex()}},
             })
         elif kind == 2:
             # Non-64-char min_chainwork_hex rejected cleanly by U256::from_hex / parse_u256_hex_64
@@ -648,12 +649,13 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "ots_b64": ots_fixed_b64,
                 "claimed_hash": h_fixed_hex,
                 "validated_chain": {
+                    "ledger_id": "synthetic_regtest",
                     "headers_hex": chain_inv_compact,
                     "min_chainwork_hex": "1234",
                 },
             })
-        else:
-            cw_64 = "0" * 62 + ("10" if ((i // 4) % 2 == 0) else "ff")
+        elif kind == 3:
+            cw_64 = "0" * 62 + ("10" if ((i // 5) % 2 == 0) else "ff")
             f16.append({
                 "id": f"F16_{i:04d}",
                 "mode": "strict",
@@ -661,9 +663,20 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "ots_b64": ots_fixed_b64,
                 "claimed_hash": h_fixed_hex,
                 "validated_chain": {
+                    "ledger_id": "synthetic_regtest",
                     "headers_hex": chain_inv_compact,
                     "min_chainwork_hex": cw_64,
                 },
+            })
+        else:
+            # Slide 4 forged trivial-target Mainnet chain (`ledger_id` defaults to Mainnet!)
+            f16.append({
+                "id": f"F16_{i:04d}",
+                "mode": "strict" if ((i // 5) % 2 == 0) else "draft08",
+                "artifact_b64": art_fixed_b64,
+                "ots_b64": ots_fixed_b64,
+                "claimed_hash": h_fixed_hex,
+                "validated_chain": {"headers_hex": chain_inv_compact},
             })
     add_family("F16_setcompact_and_chainwork_forks", f16)
 
@@ -691,17 +704,28 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "mode": "strict" if (i % 2) else "draft08",
             "artifact_b64": art_fixed_b64,
             "proof_bundle_cbor_b64": base64.b64encode(pb).decode(),
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F17_cbor_proof_bundle_determinism", f17)
 
-    # F18: SCITT COSE_Sign1 & RFC 9942 header 394 `[ + COSE_Receipt ]` multi-receipt invariance
+    # F18: SCITT COSE_Sign1 & RFC 9942 header 394 `[ + COSE_Receipt ]` multi-receipt invariance & protected-hdr determinism
     f18 = []
     ots_scitt_pb = base64.b64encode(
         encode_det_cbor({1: ots_scitt, 2: tbs_multi_h, 3: 920000})
     ).decode()
+    cose_nonmin_prot = encode_det_cbor(
+        CborTag(
+            18,
+            [
+                b"\xa1\x18\x01\x26",  # non-minimal 2-byte uint `18 01` in protected_hdr
+                {SCITT_RECEIPTS_HEADER_LABEL: [rcpt1, rcpt2]},
+                payload_bstr,
+                sig_bstr,
+            ],
+        )
+    )
     for i in range(PER_FAMILY):
-        kind = i % 4
+        kind = i % 5
         if kind == 0:
             # Relayed unprotected header mutation -> VALID in scitt_ots_ctt!
             relayed = encode_det_cbor(
@@ -721,7 +745,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "input_mode": "scitt_ots_ctt",
                 "cose_sign1_b64": base64.b64encode(relayed).decode(),
                 "proof_bundle_cbor_b64": ots_scitt_pb,
-                "validated_chain": {"headers_hex": chain_scitt},
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_scitt},
             })
         elif kind == 1:
             # Dropped second receipt from header 394 -> MUST fail hash comparison (Step 2 INVALID)!
@@ -742,7 +766,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "input_mode": "scitt_ots_ctt",
                 "cose_sign1_b64": base64.b64encode(dropped).decode(),
                 "proof_bundle_cbor_b64": ots_scitt_pb,
-                "validated_chain": {"headers_hex": chain_scitt},
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_scitt},
             })
         elif kind == 2:
             # Bare receiptless statement -> rejected at Step 0 when require_receipt=True
@@ -752,9 +776,9 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "input_mode": "scitt_ots_ctt",
                 "cose_sign1_b64": base64.b64encode(cose_bare).decode(),
                 "proof_bundle_cbor_b64": ots_scitt_pb,
-                "validated_chain": {"headers_hex": chain_scitt},
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_scitt},
             })
-        else:
+        elif kind == 3:
             # Outer cose_sign1 mode
             f18.append({
                 "id": f"F18_{i:04d}",
@@ -763,7 +787,17 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
                 "cose_sign1_b64": base64.b64encode(cose_multi).decode(),
                 "ots_b64": base64.b64encode(ots_scitt).decode(),
                 "claimed_hash": tbs_multi_h.hex(),
-                "validated_chain": {"headers_hex": chain_scitt},
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_scitt},
+            })
+        else:
+            # Non-deterministic protected_hdr CBOR -> Step 0 INVALID in strict!
+            f18.append({
+                "id": f"F18_{i:04d}",
+                "mode": "strict",
+                "input_mode": "scitt_ots_ctt",
+                "cose_sign1_b64": base64.b64encode(cose_nonmin_prot).decode(),
+                "proof_bundle_cbor_b64": ots_scitt_pb,
+                "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_scitt},
             })
     add_family("F18_scitt_cose_and_multi_receipt_394", f18)
 
@@ -785,7 +819,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": ots_b_6962 if use_6962 else ots_b_raw,
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_m_6962 if use_6962 else chain_m_raw},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_m_6962 if use_6962 else chain_m_raw},
         })
     add_family("F19_producer_rfc6962_batch_trees", f19)
 
@@ -823,7 +857,7 @@ def generate_50000_cases(seed: int = 20261115) -> Tuple[List[Dict[str, Any]], Di
             "artifact_b64": art_fixed_b64,
             "ots_b64": base64.b64encode(raw_ots).decode(),
             "claimed_hash": h_fixed_hex,
-            "validated_chain": {"headers_hex": chain_inv_compact},
+            "validated_chain": {"ledger_id": "synthetic_regtest", "headers_hex": chain_inv_compact},
         })
     add_family("F20_deep_iterative_tree_stress", f20)
 

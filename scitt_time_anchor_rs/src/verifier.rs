@@ -3,7 +3,7 @@
 
 use crate::bitcoin::{BitcoinHeader, CandidateHeaderStore, ValidatedHeaderChain};
 use crate::ots::{
-    ots_deserialize, ots_replay, verify_rfc6962_batch_prefix, Attestation, OtsBranch, VerifierMode,
+    ots_deserialize_dag, verify_rfc6962_batch_prefix_ops, Attestation, OtsDagBranch, VerifierMode,
     HARDENED_MAX_RUNNING_BYTES, OP_SHA256,
 };
 use crate::sha256::{hex_lower, sha256};
@@ -84,6 +84,7 @@ enum BranchState {
     Unsupported,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn verify_anchor(
     artifact_bytes: Option<&[u8]>,
     proof_bundle: &ProofBundle,
@@ -95,6 +96,11 @@ pub fn verify_anchor(
     require_rfc6962_batch: bool,
 ) -> VerificationResult {
     let strict = mode == VerifierMode::Strict;
+    let effective_min_conf = if strict {
+        min_confirmations.max(MIN_CONFIRMATIONS)
+    } else {
+        min_confirmations
+    };
 
     let artifact = match artifact_bytes {
         Some(a) => a,
@@ -114,8 +120,8 @@ pub fn verify_anchor(
         return VerificationResult::early(Outcome::Invalid, 2, mode);
     }
 
-    // Step 3: PARSE OTS PROOF
-    let parsed = match ots_deserialize(&proof_bundle.ots_proof, mode) {
+    // Step 3: PARSE OTS PROOF (shared-prefix DAG with total-ops budget)
+    let parsed = match ots_deserialize_dag(&proof_bundle.ots_proof, mode) {
         Some(p) => p,
         None => return VerificationResult::early(Outcome::Invalid, 3, mode),
     };
@@ -125,11 +131,12 @@ pub fn verify_anchor(
     }
 
     // Step 4: CHECK PROOF STATUS
-    let btc_branches: Vec<(&OtsBranch, u64)> = parsed
+    let btc_branches: Vec<(usize, &OtsDagBranch, u64)> = parsed
         .branches
         .iter()
-        .filter_map(|b| match b.attestation {
-            Attestation::Bitcoin(h) => Some((b, h)),
+        .enumerate()
+        .filter_map(|(idx, b)| match b.attestation {
+            Attestation::Bitcoin(h) => Some((idx, b, h)),
             _ => None,
         })
         .collect();
@@ -139,20 +146,22 @@ pub fn verify_anchor(
     }
 
     if strict && require_rfc6962_batch {
-        for (b, _) in &btc_branches {
-            if !verify_rfc6962_batch_prefix(b) {
+        for (_, b, _) in &btc_branches {
+            let ops = parsed.branch_ops(b);
+            if !verify_rfc6962_batch_prefix_ops(&ops) {
                 return VerificationResult::early(Outcome::Invalid, 3, mode);
             }
         }
     }
 
-    // Steps 5, 6, 7a, 7b, 8
+    // Steps 5, 6, 7a, 7b, 8 — evaluate shared prefix DAG once in O(total_wire_ops)
+    let all_digests = parsed.eval_branch_digests(&computed_hash, HARDENED_MAX_RUNNING_BYTES);
     let mut states = Vec::with_capacity(btc_branches.len());
     let mut verified_headers: Vec<(u64, BitcoinHeader)> = Vec::new();
     let mut mismatched_count: usize = 0;
 
-    for (branch, h) in btc_branches {
-        let digest_opt = ots_replay(branch, &computed_hash, HARDENED_MAX_RUNNING_BYTES);
+    for (br_idx, _branch, h) in btc_branches {
+        let digest_opt = &all_digests[br_idx];
 
         let candidate_opt = if let Some(cs) = candidate_store {
             cs.fetch_block_header_by_height(h)
@@ -169,7 +178,7 @@ pub fn verify_anchor(
             None
         };
 
-        let st = match (&digest_opt, &validated_hdr_opt) {
+        let st = match (digest_opt, &validated_hdr_opt) {
             (None, _) => BranchState::Unsupported,
             (Some(_), None) => BranchState::Unavailable,
             (Some(d), Some(hdr)) => {
@@ -233,7 +242,7 @@ pub fn verify_anchor(
         let mut confirmed: Vec<(u64, BitcoinHeader, u64)> = Vec::new();
         for (h, hdr) in &verified_headers {
             if let Some(k) = vc.confirmations_on(*h) {
-                if k >= min_confirmations {
+                if k >= effective_min_conf {
                     confirmed.push((*h, hdr.clone(), k));
                 }
             }
@@ -259,7 +268,7 @@ pub fn verify_anchor(
     } else {
         let (first_h, ref first_hdr) = verified_headers[0];
         match vc.confirmations_on(first_h) {
-            Some(k) if k >= min_confirmations => (first_h, first_hdr.clone(), k),
+            Some(k) if k >= effective_min_conf => (first_h, first_hdr.clone(), k),
             other => {
                 return VerificationResult {
                     outcome: Outcome::Unverifiable,

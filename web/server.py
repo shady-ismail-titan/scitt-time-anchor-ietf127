@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static HTTP server with strict offline Content-Security-Policy for the WASM lab."""
+"""Static HTTP server with strict zero-egress CSP for the offline WASM lab."""
 from __future__ import annotations
 
 import argparse
@@ -23,12 +23,13 @@ def make_handler(secret_prefix: str | None):
             super().__init__(*args, directory=str(WEB_ROOT), **kwargs)
 
         def end_headers(self) -> None:
-            self.send_header("X-Robots-Tag", "noindex, nofollow, noarchive")
             self.send_header(
                 "Content-Security-Policy",
-                "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; "
-                "style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'",
+                "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; "
+                "style-src 'self'; img-src 'self' data:; connect-src 'none'; "
+                "object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
             )
+            self.send_header("X-Content-Type-Options", "nosniff")
             super().end_headers()
 
         def _rewrite_prefix(self) -> str:
@@ -73,8 +74,9 @@ def make_handler(secret_prefix: str | None):
     return OfflineLabHandler
 
 
-class ReusableTCPServer(socketserver.TCPServer):
+class ReusableTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
+    daemon_threads = True
 
 
 def main() -> None:

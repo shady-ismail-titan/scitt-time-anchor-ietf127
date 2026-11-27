@@ -3,96 +3,152 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow, noarchive">
-  <title>SCITT Time-Anchor Byte-Ray Workbench — IETF 127 Conformance Suite</title>
+  <meta name="color-scheme" content="light dark">
+  <meta name="darkreader-lock">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'">
+  <title>SCITT Time-Anchor v2.0.0 — Offline WASM Verifier Lab</title>
+  <meta name="description" content="Offline RFC Reference Verification Instrument for draft-fassbender-scitt-time-anchor-08 and strict consensus profile (Python 3, Rust, WebAssembly).">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SCITT Time-Anchor v2.0.0 — Offline WASM Verifier Lab">
+  <meta property="og:description" content="Offline RFC Reference Verification Instrument: deterministic COSE and OTS proof engine with 131/131 conformance, 11/11 Z3 formal proofs, 64-variant CBOR framing study, and 100,000 mutation fuzz vectors.">
+  <meta property="og:image" content="./assets/scitt-time-anchor-v2-og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="SCITT Time-Anchor v2.0.0 offline RFC verification instrument showing 131/131 conformance, 11/11 Z3 formal proofs, 100,000 fuzz vectors, 64-variant CBOR framing study, and S0..S11 PASS pipeline trace">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SCITT Time-Anchor v2.0.0 — Offline WASM Verifier Lab">
+  <meta name="twitter:description" content="Offline RFC Reference Verification Instrument for draft-fassbender-scitt-time-anchor-08 + strict profile (110.9 KB WASM, 0 external calls).">
+  <meta name="twitter:image" content="./assets/scitt-time-anchor-v2-og.png">
+  <meta name="twitter:image:alt" content="SCITT Time-Anchor v2.0.0 offline verification summary and S0..S11 receipt pipeline trace">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230F172A'/%3E%3Crect x='4' y='4' width='24' height='24' rx='2' fill='none' stroke='%230F766E' stroke-width='2'/%3E%3Cpath d='M10 16.5l4 4 8-9' fill='none' stroke='%2310B981' stroke-width='2.6' stroke-linecap='square'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./theme.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand-block">
-        <h1 class="site-title">SCITT Time-Anchor Byte-Ray Workbench</h1>
-        <p class="site-subtitle">Clean-room client-side WebAssembly verifier and wire dissector for draft-fassbender-scitt-time-anchor-08</p>
+      <div class="header-top-row">
+        <div class="brand-block">
+          <div class="title-row">
+            <h1 class="site-title">SCITT Time-Anchor Verifier Lab</h1>
+            <span class="version-tag mono notranslate" translate="no">v2.0.0</span>
+          </div>
+          <p class="site-subtitle">Clean-room offline WebAssembly verifier for draft-fassbender-scitt-time-anchor-08 and strict consensus profile</p>
+        </div>
+        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn mono" aria-label="Switch color theme">Theme: System</button>
       </div>
-      <div class="header-telemetry">
-        <span class="meta-chip"><span class="status-dot"></span><span id="wasm-status-text">Initializing WASM</span></span>
-        <span class="meta-chip mono">#![forbid(unsafe_code)]</span>
-        <span class="meta-chip mono" id="wasm-size-chip">wasm32 · 43.1 KB gzip</span>
-        <span class="meta-chip meta-chip-accent mono" id="wasm-latency-chip">Eval: 0.00 ms</span>
+      <div class="runtime-bar" aria-label="WASM runtime telemetry">
+        <span id="wasm-status-chip" class="meta-chip"><span id="wasm-status-dot" class="status-dot" aria-hidden="true"></span><span id="wasm-status-text">Initializing WASM</span></span>
+        <span class="meta-chip mono notranslate" id="wasm-size-chip" translate="no">110.9 KB WASM</span>
+        <span class="meta-chip meta-chip-accent mono notranslate" id="wasm-latency-chip" translate="no">Eval: 0.00 ms</span>
+        <span class="meta-chip meta-chip-offline" id="wasm-offline-chip">Zero External Requests (100% Offline WASM)</span>
+        <span class="meta-chip mono notranslate" translate="no">#![forbid(unsafe_code)]</span>
       </div>
     </div>
   </header>
 
   <nav class="tab-bar-wrap" aria-label="Workbench sections">
-    <div class="tab-bar" role="tablist">
-      <button type="button" class="tab-btn" role="tab" id="tab-btn-workbench" aria-selected="true" aria-controls="panel-workbench" data-tab="workbench">Byte-Ray WASM Workbench</button>
-      <button type="button" class="tab-btn" role="tab" id="tab-btn-interop" aria-selected="false" aria-controls="panel-interop" data-tab="interop">Multi-Vendor Interop (7 Orgs)</button>
-      <button type="button" class="tab-btn" role="tab" id="tab-btn-z3" aria-selected="false" aria-controls="panel-z3" data-tab="z3">Z3 Formal Proofs (7 Findings)</button>
-      <button type="button" class="tab-btn" role="tab" id="tab-btn-diff" aria-selected="false" aria-controls="panel-diff" data-tab="diff">Candidate draft-09 Spec Diff</button>
+    <div class="tab-bar" role="tablist" aria-label="Verification views">
+      <button type="button" class="tab-btn" role="tab" id="tab-btn-workbench" aria-selected="true" data-tab="workbench">Verifier Workbench</button>
+      <button type="button" class="tab-btn" role="tab" id="tab-btn-interop" aria-selected="false" data-tab="interop">Interop (7 Orgs)</button>
+      <button type="button" class="tab-btn" role="tab" id="tab-btn-z3" aria-selected="false" data-tab="z3">Z3 Proofs (11)</button>
+      <button type="button" class="tab-btn" role="tab" id="tab-btn-diff" aria-selected="false" data-tab="diff">Spec Diff (-09)</button>
     </div>
   </nav>
 
   <main class="main-shell">
-    <!-- TAB 1: BYTE-RAY WASM WORKBENCH -->
-    <section id="panel-workbench" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-btn-workbench">
-      <div class="preset-section">
-        <div class="section-bar">
-          <h2 class="section-heading">Conformance and Divergence Presets</h2>
-          <span class="section-caption">Executed 100% locally inside compiled Rust WebAssembly with zero network requests</span>
-        </div>
-        <div id="preset-grid" class="preset-grid"></div>
-      </div>
-
-      <div class="scenario-brief">
-        <div class="brief-copy">
-          <h3 id="brief-title" class="brief-title">Loading scenario</h3>
-          <p id="brief-cite" class="brief-cite"></p>
-          <p id="brief-summary" class="brief-summary"></p>
+    <!-- TAB 1: VERIFIER WORKBENCH -->
+    <section id="panel-workbench" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-workbench">
+      <div class="controls-bar">
+        <div class="mode-selector-block">
+          <span class="control-label">Verification Profile</span>
+          <div class="mode-segmented" role="group" aria-label="Verification profile selector">
+            <button type="button" id="mode-btn-draft08" class="mode-btn notranslate" data-mode="draft08" aria-pressed="false" translate="no">Mode: draft08</button>
+            <button type="button" id="mode-btn-strict" class="mode-btn is-selected notranslate" data-mode="strict" aria-pressed="true" translate="no">Mode: strict (v2.0)</button>
+          </div>
         </div>
         <div class="explorer-control-box">
           <label class="toggle-label" for="explorer-only-toggle">
             <input type="checkbox" id="explorer-only-toggle">
-            <span>Simulate unvalidated explorer header only (Appendix C Entry 3 / D.7 Route 4)</span>
+            <span>Simulate unvalidated explorer header only (Appendix D.7 Route 4)</span>
           </label>
           <p id="explorer-toggle-note" class="toggle-note">
-            Drops the local PoW-validated header chain and supplies candidate header bytes tagged as a public block explorer, demonstrating Step 7b returning unverifiable rather than valid.
+            Drops the PoW-validated header chain and feeds candidate bytes tagged public_explorer so Step 7b yields unverifiable.
           </p>
         </div>
       </div>
+
+      <div class="preset-section">
+        <div class="section-bar">
+          <h2 class="section-heading">Interactive Verification Presets (Live In-Browser WASM)</h2>
+          <span class="section-caption">9 conformance and adversarial presets covering Slide 4 consensus, RFC 8259 JSONL, CBOR/COSE, and OTS wire bounds</span>
+        </div>
+        <div id="preset-grid" class="preset-grid"></div>
+      </div>
+
+      <!-- PRIMARY ACTIVE-MODE VERIFICATION VERDICT BANNER -->
+      <section id="active-verdict-banner" class="active-verdict-banner" aria-live="polite">
+        <div class="avb-header">
+          <div class="avb-title-group">
+            <div class="avb-kicker-row">
+              <span id="avb-mode-pill" class="mode-pill mono notranslate" translate="no">strict (v2.0)</span>
+              <span id="brief-cite" class="brief-cite"></span>
+            </div>
+            <h2 id="brief-title" class="brief-title">Loading preset</h2>
+            <p id="brief-summary" class="brief-summary"></p>
+          </div>
+          <div class="avb-verdict-box">
+            <span id="active-verdict-badge" class="outcome-badge outcome-badge-lg outcome-neutral notranslate" translate="no">PENDING</span>
+            <span id="active-verdict-step" class="avb-step mono notranslate" translate="no">Step --</span>
+          </div>
+        </div>
+
+        <div class="avb-grid">
+          <div class="avb-subcard">
+            <h3 class="subcard-title">Verification Pipeline Step Trace</h3>
+            <ol id="step-trace-list" class="step-trace-list notranslate" translate="no"></ol>
+          </div>
+          <div class="avb-subcard">
+            <h3 class="subcard-title">Bitcoin Consensus &amp; Envelope Telemetry</h3>
+            <div id="consensus-telemetry-kv" class="kv-list notranslate" translate="no"></div>
+          </div>
+        </div>
+      </section>
 
       <div id="feedback-banner" class="feedback-banner" role="alert"></div>
 
       <div class="verdict-grid">
         <article class="verdict-card" id="card-draft08">
           <div class="verdict-card-head">
-            <h3 class="verdict-engine-name">Baseline Profile (draft-08)</h3>
-            <span id="badge-draft08" class="outcome-badge outcome-neutral">pending</span>
+            <h3 class="verdict-engine-name">Baseline Profile (draft08)</h3>
+            <span id="badge-draft08" class="outcome-badge outcome-neutral notranslate" translate="no">pending</span>
           </div>
-          <div id="kv-draft08" class="kv-list"></div>
+          <div id="kv-draft08" class="kv-list notranslate" translate="no"></div>
         </article>
 
-        <article class="verdict-card" id="card-strict">
+        <article class="verdict-card is-active-mode" id="card-strict">
           <div class="verdict-card-head">
-            <h3 class="verdict-engine-name">Candidate -09 Strict Profile</h3>
-            <span id="badge-strict" class="outcome-badge outcome-neutral">pending</span>
+            <h3 class="verdict-engine-name">Hardened Profile (strict v2.0)</h3>
+            <span id="badge-strict" class="outcome-badge outcome-neutral notranslate" translate="no">pending</span>
           </div>
-          <div id="kv-strict" class="kv-list"></div>
+          <div id="kv-strict" class="kv-list notranslate" translate="no"></div>
         </article>
 
         <article class="verdict-card" id="card-upstream-js">
           <div class="verdict-card-head">
-            <h3 class="verdict-engine-name">Upstream JS Reference (OTS)</h3>
-            <span id="badge-upstream-js" class="outcome-badge outcome-neutral">observed</span>
+            <h3 class="verdict-engine-name">Upstream JS / Reference Behavior</h3>
+            <span id="badge-upstream-js" class="outcome-badge outcome-neutral notranslate" translate="no">reference</span>
           </div>
-          <div id="kv-upstream-js" class="kv-list"></div>
+          <div id="kv-upstream-js" class="kv-list notranslate" translate="no"></div>
         </article>
       </div>
 
       <div class="workbench-split">
         <div class="panel-card">
           <div class="section-bar">
-            <h3 class="section-heading">Interactive Wire Byte-Ray Dissector</h3>
-            <span id="dissect-byte-summary" class="section-caption mono">0 octets</span>
+            <h3 class="section-heading">Wire Byte-Ray Dissector</h3>
+            <span id="dissect-byte-summary" class="section-caption mono notranslate" translate="no">0 octets</span>
           </div>
           <div class="legend-row">
             <span class="legend-tag"><span class="swatch swatch-magic"></span>Header / Version</span>
@@ -102,7 +158,7 @@
             <span class="legend-tag"><span class="swatch swatch-pending"></span>Calendar Branch</span>
             <span class="legend-tag"><span class="swatch swatch-alert"></span>Profile Alert</span>
           </div>
-          <div id="span-stream" class="span-stream" aria-label="Parsed OpenTimestamps byte spans"></div>
+          <div id="span-stream" class="span-stream notranslate" aria-label="Parsed OpenTimestamps byte spans" translate="no"></div>
 
           <div class="custom-input-box">
             <div class="input-toolbar">
@@ -116,21 +172,21 @@
                 <button type="button" id="btn-reset-preset" class="action-btn">Reset preset</button>
               </div>
             </div>
-            <textarea id="custom-hex-input" class="hex-textarea" spellcheck="false" aria-label="Hexadecimal OpenTimestamps proof bytes" placeholder="Paste lowercase or uppercase hexadecimal .ots bytes here"></textarea>
+            <textarea id="custom-hex-input" class="hex-textarea notranslate" spellcheck="false" translate="no" aria-label="Hexadecimal OpenTimestamps proof bytes" placeholder="Paste hexadecimal .ots bytes here"></textarea>
           </div>
         </div>
 
         <div class="panel-card">
           <div class="section-bar">
             <h3 class="section-heading">Selected Span and Protocol Anatomy</h3>
-            <span id="selected-offset-chip" class="section-caption mono">+0x0000</span>
+            <span id="selected-offset-chip" class="section-caption mono notranslate" translate="no">+0x0000</span>
           </div>
 
           <div class="detail-box">
             <h4 id="detail-title" class="detail-title">Select any byte span</h4>
             <div id="detail-section" class="detail-meta"></div>
             <p id="detail-desc" class="detail-desc"></p>
-            <div id="detail-hex" class="hex-dump-box"></div>
+            <div id="detail-hex" class="hex-dump-box notranslate" translate="no"></div>
           </div>
 
           <div id="dynamic-subpanel"></div>
@@ -139,13 +195,13 @@
     </section>
 
     <!-- TAB 2: MULTI-VENDOR INTEROP MATRIX -->
-    <section id="panel-interop" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-interop">
+    <section id="panel-interop" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-interop" hidden>
       <div class="metric-strip" id="interop-metrics"></div>
 
       <div class="panel-card">
         <div class="section-bar">
           <div>
-            <h2 class="section-heading">Table A — Cross-Organization Interoperability Matrix (7 External Codebases + Clean-Room Triple Engine)</h2>
+            <h2 id="interop-table-caption" class="section-heading">Table A — Cross-Organization Interoperability Matrix (7 External Codebases + Triple Engine)</h2>
             <span class="section-caption">Real execution outputs across Umarise, OpenTimestamps JS/Python, EMILIA (-06), CryptoGeekPT (-03), DPS Lemonnier (-08), and WEXP / iSoluce SCITT</span>
           </div>
           <div class="btn-row">
@@ -154,18 +210,18 @@
             <button type="button" class="action-btn interop-filter-btn" data-filter="divergence">Divergences &amp; bugs</button>
           </div>
         </div>
-        <div class="table-scroll">
+        <div tabindex="0" role="region" aria-labelledby="interop-table-caption" class="table-wrapper table-wrapper-stack">
           <table class="data-table">
             <thead>
               <tr>
                 <th>Vector</th>
-                <th>Umarise Web &amp; JS OTS</th>
+                <th>Umarise &amp; JS OTS</th>
                 <th>Python OTS 0.5.0</th>
                 <th>EMILIA (-06)</th>
                 <th>CryptoGeekPT (-03)</th>
                 <th>DPS Lemonnier (-08)</th>
-                <th>Triple Engine (draft-08)</th>
-                <th>Triple Engine (strict)</th>
+                <th>Triple (draft08)</th>
+                <th>Triple (strict)</th>
               </tr>
             </thead>
             <tbody id="interop-tbody"></tbody>
@@ -175,7 +231,7 @@
 
       <div class="panel-card">
         <div class="section-bar">
-          <h2 class="section-heading">Live SCITT RFC 9943 / RFC 9942 / RFC 9921 Artifact Interop (WEXP &amp; Action State / iSoluce)</h2>
+          <h2 id="scitt-cose-caption" class="section-heading">Live SCITT RFC 9943 / RFC 9942 / RFC 9921 Artifact Interop (WEXP &amp; iSoluce)</h2>
           <span class="section-caption">Verified against upstream pycose 1.1.0, pyscitt 0.15.0, and cbor2 5.9.0</span>
         </div>
         <div id="scitt-cose-summary"></div>
@@ -183,29 +239,29 @@
 
       <div class="panel-card">
         <div class="section-bar">
-          <h2 class="section-heading">Table B — Internal Triple-Engine Differential Fuzzing (50,000 Seeded Vectors)</h2>
-          <span class="section-caption">Explicitly separated from external cross-organization interop per IETF hackathon reporting practice</span>
+          <h2 id="diff50k-caption" class="section-heading">Table B — Internal Triple-Engine Differential Verification (50,000 Seeded Vectors)</h2>
+          <span class="section-caption">Evaluated across Python 3 stdlib, safe Native Rust, and zero-import WebAssembly</span>
         </div>
         <div id="diff50k-summary"></div>
       </div>
     </section>
 
     <!-- TAB 3: Z3 FORMAL PROOFS -->
-    <section id="panel-z3" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-z3">
+    <section id="panel-z3" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-z3" hidden>
       <div class="metric-strip" id="z3-metrics"></div>
       <div class="panel-card">
         <div class="section-bar">
-          <h2 class="section-heading">Microsoft Z3 SMT Solver Verification Summary (7 Findings + Section 7.1 Partition Soundness)</h2>
-          <span class="section-caption">Every edge case synthesized as SAT in baseline draft-08 and proven UNSAT under Candidate -09 strict invariants</span>
+          <h2 id="z3-table-caption" class="section-heading">Microsoft Z3 SMT Solver Verification Summary (8 Protocol Findings + 3 Soundness Theorems)</h2>
+          <span class="section-caption">Every edge case synthesized as SAT in baseline draft08 and proven UNSAT under strict consensus and wire invariants</span>
         </div>
-        <div class="table-scroll">
+        <div tabindex="0" role="region" aria-labelledby="z3-table-caption" class="table-wrapper table-wrapper-stack">
           <table class="data-table">
             <thead>
               <tr>
                 <th>Finding</th>
                 <th>Protocol Property</th>
-                <th>Baseline draft-08 Counterexample (SAT)</th>
-                <th>Candidate -09 Strict Invariant (UNSAT)</th>
+                <th>Baseline draft08 Counterexample (SAT)</th>
+                <th>Strict Invariant (UNSAT)</th>
                 <th>Concrete Witness</th>
               </tr>
             </thead>
@@ -216,26 +272,26 @@
     </section>
 
     <!-- TAB 4: CANDIDATE DRAFT-09 SPEC DIFF -->
-    <section id="panel-diff" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-diff">
+    <section id="panel-diff" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-diff" hidden>
       <div class="panel-card">
         <div class="section-bar">
           <div>
-            <h2 class="section-heading">Proposed Collaborative Diff Against draft-fassbender-scitt-time-anchor-08.txt</h2>
-            <span class="section-caption">Verified cleanly with patch --dry-run (zero IANA actions, zero new keys, 100% wild .ots backward compatibility)</span>
+            <h2 class="section-heading">Illustrative Editorial Diff Against draft-fassbender-scitt-time-anchor-08.txt</h2>
+            <span class="section-caption">Non-normative implementer feedback verified cleanly with patch --dry-run (100% wild .ots backward compatibility)</span>
           </div>
           <div class="btn-row">
             <button type="button" id="btn-copy-diff" class="action-btn">Copy unified diff</button>
-            <a href="./scitt_time_anchor.wasm" download="scitt_time_anchor.wasm" class="action-btn">Download .wasm (98.8 KB)</a>
+            <a href="./scitt_time_anchor.wasm" download="scitt_time_anchor.wasm" id="btn-download-wasm" class="action-btn">Download .wasm</a>
           </div>
         </div>
-        <div id="diff-viewer" class="diff-viewer"></div>
+        <div id="diff-viewer" class="diff-viewer notranslate" translate="no"></div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>IETF 127 Hackathon — Clean-Room Implementation Report &amp; Candidate -09 Strict Profile (Apache-2.0)</span>
-    <span class="mono" id="footer-sha256"></span>
+    <span>SCITT Time-Anchor v2.0.0 — Clean-Room Triple-Engine Verifier (Apache-2.0)</span>
+    <span class="mono notranslate" id="footer-sha256" translate="no"></span>
   </footer>
 
   <script src="./wasm_bundle.js"></script>

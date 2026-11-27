@@ -28,6 +28,7 @@ pub const DRAFT08_MAX_OPERAND_BYTES: usize = 4_096;
 pub const DRAFT08_MAX_BRANCHES: usize = 256;
 pub const DRAFT08_MAX_OPS_PER_BRANCH: usize = 4_096;
 pub const DRAFT08_MAX_DEPTH: usize = 4_608;
+pub const DRAFT08_MAX_TOTAL_OPS: usize = 16_384;
 
 pub const STRICT_MAX_PROOF_BYTES: usize = 65_536;
 pub const STRICT_MAX_OPERAND_BYTES: usize = 512;
@@ -35,6 +36,7 @@ pub const HARDENED_MAX_RUNNING_BYTES: usize = 4_096;
 pub const STRICT_MAX_BRANCHES: usize = 64;
 pub const STRICT_MAX_OPS_PER_BRANCH: usize = 128;
 pub const STRICT_MAX_DEPTH: usize = 256;
+pub const STRICT_MAX_TOTAL_OPS: usize = 1_024;
 
 /// Matches `python-opentimestamps v0.4.5` `TimeAttestation.MAX_PAYLOAD_SIZE = 8192`.
 pub const MAX_ATTESTATION_PAYLOAD_BYTES: usize = 8_192;
@@ -176,13 +178,13 @@ pub fn read_varuint(buf: &[u8], mut pos: usize, canonical_u32: bool) -> Option<(
     None
 }
 
-pub fn read_varbytes<'a>(
-    buf: &'a [u8],
+pub fn read_varbytes(
+    buf: &[u8],
     pos: usize,
     min_len: usize,
     max_len: usize,
     canonical_u32: bool,
-) -> Option<(&'a [u8], usize)> {
+) -> Option<(&[u8], usize)> {
     let (ln_u64, next_pos) = read_varuint(buf, pos, canonical_u32)?;
     let ln = usize::try_from(ln_u64).ok()?;
     if ln < min_len || ln > max_len {
@@ -195,13 +197,162 @@ pub fn read_varbytes<'a>(
     Some((&buf[next_pos..end], end))
 }
 
-enum WorkFrame {
-    EnterTimestamp { ops_len: usize, depth: usize },
-    AfterBranchStep { ops_len: usize, depth: usize },
-    EnterStep { ops_len: usize, depth: usize },
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OtsOpNode {
+    pub parent: Option<usize>,
+    pub op: OtsOp,
 }
 
-pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof> {
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OtsDagBranch {
+    pub tip_node: Option<usize>,
+    pub ops_len: usize,
+    pub attestation: Attestation,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OtsDagProof {
+    pub version: u64,
+    pub file_hash_op: u8,
+    pub msg: Vec<u8>,
+    pub nodes: Vec<OtsOpNode>,
+    pub branches: Vec<OtsDagBranch>,
+}
+
+fn apply_ots_op(cur: &[u8], op: &OtsOp, max_running_bytes: usize) -> Option<Vec<u8>> {
+    match op {
+        OtsOp::Append(arg) => {
+            let total = cur.len().checked_add(arg.len())?;
+            if total > max_running_bytes {
+                return None;
+            }
+            let mut combined = Vec::with_capacity(total);
+            combined.extend_from_slice(cur);
+            combined.extend_from_slice(arg);
+            Some(combined)
+        }
+        OtsOp::Prepend(arg) => {
+            let total = arg.len().checked_add(cur.len())?;
+            if total > max_running_bytes {
+                return None;
+            }
+            let mut combined = Vec::with_capacity(total);
+            combined.extend_from_slice(arg);
+            combined.extend_from_slice(cur);
+            Some(combined)
+        }
+        OtsOp::Sha256 => Some(sha256(cur).to_vec()),
+        OtsOp::UnsupportedUnary(_) => None,
+    }
+}
+
+impl OtsDagProof {
+    pub fn branch_ops(&self, branch: &OtsDagBranch) -> Vec<OtsOp> {
+        let mut ops = Vec::with_capacity(branch.ops_len);
+        let mut cur = branch.tip_node;
+        while let Some(idx) = cur {
+            let node = &self.nodes[idx];
+            ops.push(node.op.clone());
+            cur = node.parent;
+        }
+        ops.reverse();
+        ops
+    }
+
+    /// Evaluates every branch tip in O(total_wire_ops) time by computing each shared prefix node
+    /// exactly once in topological order with reference-counted immediate buffer release.
+    pub fn eval_branch_digests(
+        &self,
+        initial_hash: &[u8],
+        max_running_bytes: usize,
+    ) -> Vec<Option<Vec<u8>>> {
+        let mut uses = vec![0usize; self.nodes.len()];
+        for node in &self.nodes {
+            if let Some(p) = node.parent {
+                uses[p] += 1;
+            }
+        }
+        for br in &self.branches {
+            if let Some(t) = br.tip_node {
+                uses[t] += 1;
+            }
+        }
+
+        let mut states: Vec<Option<Vec<u8>>> = vec![None; self.nodes.len()];
+        let root_ok = initial_hash.len() <= max_running_bytes;
+
+        for (idx, node) in self.nodes.iter().enumerate() {
+            let next_val = match node.parent {
+                None => {
+                    if root_ok {
+                        apply_ots_op(initial_hash, &node.op, max_running_bytes)
+                    } else {
+                        None
+                    }
+                }
+                Some(p) => {
+                    let res = states[p]
+                        .as_deref()
+                        .and_then(|cur| apply_ots_op(cur, &node.op, max_running_bytes));
+                    uses[p] = uses[p].saturating_sub(1);
+                    if uses[p] == 0 {
+                        states[p] = None;
+                    }
+                    res
+                }
+            };
+            if uses[idx] > 0 {
+                states[idx] = next_val;
+            }
+        }
+
+        let mut out = Vec::with_capacity(self.branches.len());
+        for br in &self.branches {
+            let digest = match br.tip_node {
+                None => {
+                    if root_ok && initial_hash.len() == 32 {
+                        Some(initial_hash.to_vec())
+                    } else {
+                        None
+                    }
+                }
+                Some(t) => {
+                    let res = states[t].as_ref().filter(|v| v.len() == 32).cloned();
+                    uses[t] = uses[t].saturating_sub(1);
+                    if uses[t] == 0 {
+                        states[t] = None;
+                    }
+                    res
+                }
+            };
+            out.push(digest);
+        }
+        out
+    }
+}
+
+enum WorkFrame {
+    EnterTimestamp {
+        parent_node: Option<usize>,
+        ops_len: usize,
+        depth: usize,
+    },
+    AfterBranchStep {
+        parent_node: Option<usize>,
+        ops_len: usize,
+        depth: usize,
+    },
+    EnterStep {
+        parent_node: Option<usize>,
+        ops_len: usize,
+        depth: usize,
+    },
+}
+
+/// Deserializes an OpenTimestamps proof into a shared-prefix DAG in O(wire_ops) time and memory,
+/// enforcing per-branch, total-operations (`DRAFT08_MAX_TOTAL_OPS` / `STRICT_MAX_TOTAL_OPS`),
+/// branch count, operand length, and nesting depth bounds.
+pub fn ots_deserialize_dag(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsDagProof> {
     let strict = mode == VerifierMode::Strict;
     let max_proof_bytes = if strict {
         STRICT_MAX_PROOF_BYTES
@@ -249,42 +400,64 @@ pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof>
     } else {
         DRAFT08_MAX_DEPTH
     };
+    let max_total_ops = if strict {
+        STRICT_MAX_TOTAL_OPS
+    } else {
+        DRAFT08_MAX_TOTAL_OPS
+    };
 
-    let mut branches: Vec<OtsBranch> = Vec::new();
-    let mut ops_stack: Vec<OtsOp> = Vec::new();
+    let mut nodes: Vec<OtsOpNode> = Vec::new();
+    let mut branches: Vec<OtsDagBranch> = Vec::new();
     let mut work: Vec<WorkFrame> = Vec::with_capacity(64);
     work.push(WorkFrame::EnterTimestamp {
+        parent_node: None,
         ops_len: 0,
         depth: 0,
     });
 
     while let Some(frame) = work.pop() {
         match frame {
-            WorkFrame::EnterTimestamp { ops_len, depth }
-            | WorkFrame::AfterBranchStep { ops_len, depth } => {
+            WorkFrame::EnterTimestamp {
+                parent_node,
+                ops_len,
+                depth,
+            }
+            | WorkFrame::AfterBranchStep {
+                parent_node,
+                ops_len,
+                depth,
+            } => {
                 if depth > max_depth || pos >= ots_bytes.len() {
                     return None;
                 }
-                ops_stack.truncate(ops_len);
                 if ots_bytes[pos] == TAG_BRANCH {
                     pos += 1;
-                    work.push(WorkFrame::AfterBranchStep { ops_len, depth });
+                    work.push(WorkFrame::AfterBranchStep {
+                        parent_node,
+                        ops_len,
+                        depth,
+                    });
                     work.push(WorkFrame::EnterStep {
+                        parent_node,
                         ops_len,
                         depth: depth + 1,
                     });
                 } else {
                     work.push(WorkFrame::EnterStep {
+                        parent_node,
                         ops_len,
                         depth: depth + 1,
                     });
                 }
             }
-            WorkFrame::EnterStep { ops_len, depth } => {
+            WorkFrame::EnterStep {
+                parent_node,
+                ops_len,
+                depth,
+            } => {
                 if depth > max_depth || pos >= ots_bytes.len() {
                     return None;
                 }
-                ops_stack.truncate(ops_len);
                 let tag = ots_bytes[pos];
                 pos += 1;
 
@@ -337,37 +510,47 @@ pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof>
                             Attestation::Unknown(att_tag)
                         };
 
-                        branches.push(OtsBranch {
-                            ops: ops_stack.clone(),
+                        branches.push(OtsDagBranch {
+                            tip_node: parent_node,
+                            ops_len,
                             attestation,
                         });
                     }
                     OP_APPEND | OP_PREPEND => {
-                        if ops_stack.len() >= max_ops_per_branch {
+                        if ops_len >= max_ops_per_branch || nodes.len() >= max_total_ops {
                             return None;
                         }
                         let (arg, next_pos) =
                             read_varbytes(ots_bytes, pos, 1, max_operand_bytes, strict)?;
                         pos = next_pos;
-                        if tag == OP_APPEND {
-                            ops_stack.push(OtsOp::Append(arg.to_vec()));
+                        let op = if tag == OP_APPEND {
+                            OtsOp::Append(arg.to_vec())
                         } else {
-                            ops_stack.push(OtsOp::Prepend(arg.to_vec()));
-                        }
-                        let new_len = ops_stack.len();
+                            OtsOp::Prepend(arg.to_vec())
+                        };
+                        let new_idx = nodes.len();
+                        nodes.push(OtsOpNode {
+                            parent: parent_node,
+                            op,
+                        });
                         work.push(WorkFrame::EnterTimestamp {
-                            ops_len: new_len,
+                            parent_node: Some(new_idx),
+                            ops_len: ops_len + 1,
                             depth,
                         });
                     }
                     OP_SHA256 => {
-                        if ops_stack.len() >= max_ops_per_branch {
+                        if ops_len >= max_ops_per_branch || nodes.len() >= max_total_ops {
                             return None;
                         }
-                        ops_stack.push(OtsOp::Sha256);
-                        let new_len = ops_stack.len();
+                        let new_idx = nodes.len();
+                        nodes.push(OtsOpNode {
+                            parent: parent_node,
+                            op: OtsOp::Sha256,
+                        });
                         work.push(WorkFrame::EnterTimestamp {
-                            ops_len: new_len,
+                            parent_node: Some(new_idx),
+                            ops_len: ops_len + 1,
                             depth,
                         });
                     }
@@ -375,13 +558,17 @@ pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof>
                     | OP_HEXLIFY
                         if !strict =>
                     {
-                        if ops_stack.len() >= max_ops_per_branch {
+                        if ops_len >= max_ops_per_branch || nodes.len() >= max_total_ops {
                             return None;
                         }
-                        ops_stack.push(OtsOp::UnsupportedUnary(tag));
-                        let new_len = ops_stack.len();
+                        let new_idx = nodes.len();
+                        nodes.push(OtsOpNode {
+                            parent: parent_node,
+                            op: OtsOp::UnsupportedUnary(tag),
+                        });
                         work.push(WorkFrame::EnterTimestamp {
-                            ops_len: new_len,
+                            parent_node: Some(new_idx),
+                            ops_len: ops_len + 1,
                             depth,
                         });
                     }
@@ -395,10 +582,29 @@ pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof>
         return None;
     }
 
-    Some(OtsProof {
+    Some(OtsDagProof {
         version,
         file_hash_op,
         msg,
+        nodes,
+        branches,
+    })
+}
+
+pub fn ots_deserialize(ots_bytes: &[u8], mode: VerifierMode) -> Option<OtsProof> {
+    let dag = ots_deserialize_dag(ots_bytes, mode)?;
+    let branches = dag
+        .branches
+        .iter()
+        .map(|b| OtsBranch {
+            ops: dag.branch_ops(b),
+            attestation: b.attestation.clone(),
+        })
+        .collect();
+    Some(OtsProof {
+        version: dag.version,
+        file_hash_op: dag.file_hash_op,
+        msg: dag.msg,
         branches,
     })
 }
@@ -413,28 +619,7 @@ pub fn ots_replay(
     }
     let mut cur = initial_hash.to_vec();
     for op in &branch.ops {
-        match op {
-            OtsOp::Append(arg) => {
-                if cur.len().checked_add(arg.len())? > max_running_bytes {
-                    return None;
-                }
-                cur.extend_from_slice(arg);
-            }
-            OtsOp::Prepend(arg) => {
-                let total = arg.len().checked_add(cur.len())?;
-                if total > max_running_bytes {
-                    return None;
-                }
-                let mut combined = Vec::with_capacity(total);
-                combined.extend_from_slice(arg);
-                combined.extend_from_slice(&cur);
-                cur = combined;
-            }
-            OtsOp::Sha256 => {
-                cur = sha256(&cur).to_vec();
-            }
-            OtsOp::UnsupportedUnary(_) => return None,
-        }
+        cur = apply_ots_op(&cur, op, max_running_bytes)?;
     }
     if cur.len() != 32 {
         return None;
@@ -445,7 +630,10 @@ pub fn ots_replay(
 /// Optional check for v2 producer-side RFC 6962 domain-separated batch trees (`0x00` leaf / `0x01` inner).
 /// Disabled (`false`) by default in all v1 `.ots` verifiers to preserve 100% wild OpenTimestamps compatibility.
 pub fn verify_rfc6962_batch_prefix(branch: &OtsBranch) -> bool {
-    let ops = &branch.ops;
+    verify_rfc6962_batch_prefix_ops(&branch.ops)
+}
+
+pub fn verify_rfc6962_batch_prefix_ops(ops: &[OtsOp]) -> bool {
     if ops.len() < 3 {
         return false;
     }
@@ -498,7 +686,7 @@ pub fn batch_merkle_root(leaves: &[[u8; 32]]) -> Option<[u8; 32]> {
     }
     let mut level: Vec<[u8; 32]> = leaves.to_vec();
     while level.len() > 1 {
-        let mut next = Vec::with_capacity((level.len() + 1) / 2);
+        let mut next = Vec::with_capacity(level.len().div_ceil(2));
         let mut i = 0;
         while i + 1 < level.len() {
             let mut pair = [0u8; 64];

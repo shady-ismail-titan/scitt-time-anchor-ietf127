@@ -11,16 +11,19 @@
     "total": 0
   },
   "wasm_linear_memory_telemetry": {
+    "mode": "piped",
+    "totalCalls": 120000,
     "memStart": 1114112,
-    "memAfter100kBatch": 4718592,
-    "memAfterExtra20kSingleCalls": 4718592,
-    "deltaAfterSteadyStateBytes": 0
+    "memAfter100kBatch": 2949120,
+    "memAfterExtra20kSingleCalls": 2949120,
+    "deltaAfterSteadyStateBytes": 0,
+    "verdict": "PASS"
   },
   "timings_ms": {
-    "gen_ms": 152.52,
-    "python_ms": 457.38,
-    "rust_ms": 1956.73,
-    "wasm_ms": 3210.53
+    "gen_ms": 162.95,
+    "python_ms": 994.87,
+    "rust_ms": 2270.22,
+    "wasm_ms": 3175.29
   },
   "verdict": "PASS"
 }

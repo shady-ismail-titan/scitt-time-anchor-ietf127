@@ -8,19 +8,19 @@
     "web/scitt_time_anchor.wasm (wasm32-unknown-unknown in Node V8)"
   ],
   "wasm_binary_metrics": {
-    "uncompressed_bytes": 114738,
-    "uncompressed_kb": 112.05,
-    "gzipped_bytes": 45822,
-    "gzipped_kb": 44.75
+    "uncompressed_bytes": 110256,
+    "uncompressed_kb": 107.67,
+    "gzipped_bytes": 48009,
+    "gzipped_kb": 46.88
   },
   "profile_distribution": {
-    "draft08": 22604,
-    "strict": 27396
+    "draft08": 22666,
+    "strict": 27334
   },
   "outcome_distribution": {
     "valid": 13539,
-    "invalid": 23443,
-    "unverifiable": 13018
+    "invalid": 23505,
+    "unverifiable": 12956
   },
   "families_20": {
     "F01_valid_mainnet_d5": 2500,
@@ -51,13 +51,13 @@
     "total_divergences": 0
   },
   "timings_ms": {
-    "vector_generation_ms": 90.66,
-    "python_parallel_eval_ms": 657.91,
-    "rust_native_cli_eval_ms": 1933.28,
-    "wasm_node_v8_eval_ms": 2432.52,
-    "rust_us_per_vector": 38.67,
-    "wasm_us_per_vector": 48.65,
-    "total_wall_ms": 5476.26
+    "vector_generation_ms": 91.22,
+    "python_parallel_eval_ms": 1256.03,
+    "rust_native_cli_eval_ms": 2038.99,
+    "wasm_node_v8_eval_ms": 2152.93,
+    "rust_us_per_vector": 40.78,
+    "wasm_us_per_vector": 43.06,
+    "total_wall_ms": 5895.35
   },
   "verdict": "PASS"
 }

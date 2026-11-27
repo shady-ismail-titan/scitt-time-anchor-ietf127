@@ -1,0 +1,9 @@
+{
+  "mode": "standalone",
+  "totalCalls": 120000,
+  "memStart": 1114112,
+  "memAfter100kBatch": 4063232,
+  "memAfterExtra20kSingleCalls": 4063232,
+  "deltaAfterSteadyStateBytes": 0,
+  "verdict": "PASS"
+}

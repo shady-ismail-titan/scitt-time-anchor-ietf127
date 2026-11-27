@@ -13,9 +13,9 @@ const K: [u32; 64] = [
 
 fn compress(state: &mut [u32; 8], block: &[u8; 64]) {
     let mut w = [0u32; 64];
-    for i in 0..16 {
+    for (i, slot) in w.iter_mut().enumerate().take(16) {
         let j = i * 4;
-        w[i] = u32::from_be_bytes([block[j], block[j + 1], block[j + 2], block[j + 3]]);
+        *slot = u32::from_be_bytes([block[j], block[j + 1], block[j + 2], block[j + 3]]);
     }
     for i in 16..64 {
         let s0 = w[i - 15].rotate_right(7) ^ w[i - 15].rotate_right(18) ^ (w[i - 15] >> 3);
@@ -73,14 +73,15 @@ pub fn sha256(data: &[u8]) -> [u8; 32] {
         0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
     ];
 
-    let mut chunks = data.chunks_exact(64);
-    for chunk in &mut chunks {
+    let mut offset = 0usize;
+    while offset + 64 <= data.len() {
         let mut blk = [0u8; 64];
-        blk.copy_from_slice(chunk);
+        blk.copy_from_slice(&data[offset..offset + 64]);
         compress(&mut state, &blk);
+        offset += 64;
     }
 
-    let rem = chunks.remainder();
+    let rem = &data[offset..];
     let bit_len = (data.len() as u64) * 8;
     let mut tail = [0u8; 128];
     tail[..rem.len()].copy_from_slice(rem);
@@ -119,7 +120,7 @@ pub fn hex_lower(bytes: &[u8]) -> String {
 }
 
 pub fn decode_hex(s: &str) -> Option<Vec<u8>> {
-    if s.len() % 2 != 0 {
+    if (s.len() & 1) != 0 {
         return None;
     }
     let bytes = s.as_bytes();
@@ -146,20 +147,26 @@ fn hex_nibble(b: u8) -> Option<u8> {
 pub fn decode_base64(input: &str) -> Option<Vec<u8>> {
     let mut clean = Vec::with_capacity(input.len());
     for &b in input.as_bytes() {
-        if !b.is_ascii_whitespace() {
+        if !matches!(b, b' ' | b'\t' | b'\r' | b'\n') {
             clean.push(b);
         }
     }
     if clean.is_empty() {
         return Some(Vec::new());
     }
-    if clean.len() % 4 != 0 {
+    if (clean.len() & 3) != 0 {
         return None;
     }
 
-    let mut out = Vec::with_capacity((clean.len() / 4) * 3);
-    for chunk in clean.chunks_exact(4) {
+    let total_chunks = clean.len() / 4;
+    let mut out = Vec::with_capacity(total_chunks * 3);
+    for chunk_idx in 0..total_chunks {
+        let chunk = &clean[chunk_idx * 4..chunk_idx * 4 + 4];
+        let is_last = chunk_idx + 1 == total_chunks;
         let pad = chunk.iter().rev().take_while(|&&c| c == b'=').count();
+        if !is_last && (pad > 0 || chunk.contains(&b'=')) {
+            return None;
+        }
         if pad > 2 || (chunk[2] == b'=' && chunk[3] != b'=') {
             return None;
         }
@@ -167,6 +174,10 @@ pub fn decode_base64(input: &str) -> Option<Vec<u8>> {
         let b = b64_val(chunk[1])?;
         let c = if chunk[2] == b'=' { 0 } else { b64_val(chunk[2])? };
         let d = if chunk[3] == b'=' { 0 } else { b64_val(chunk[3])? };
+        // RFC 4648 Section 3.5: non-zero trailing padding bits must be rejected.
+        if (pad == 2 && (b & 0x0f) != 0) || (pad == 1 && (c & 0x03) != 0) {
+            return None;
+        }
         let triple = ((a as u32) << 18) | ((b as u32) << 12) | ((c as u32) << 6) | (d as u32);
         out.push(((triple >> 16) & 0xff) as u8);
         if pad < 2 {

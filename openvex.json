@@ -1,0 +1,23 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/blob/main/openvex.json#v2.0.0",
+  "author": "Shady Ismail <audit@titancapitalforensics.com>",
+  "role": "Maintainer",
+  "timestamp": "2026-11-27T00:00:00Z",
+  "last_updated": "2026-11-27T00:00:00Z",
+  "version": 1,
+  "tooling": "scitt-time-anchor-openvex-baseline",
+  "statements": [],
+  "x-vex-baseline": {
+    "product_version": "2.0.0",
+    "covered_products": [
+      "pkg:pypi/scitt-time-anchor@2.0.0",
+      "pkg:cargo/scitt_time_anchor_rs@2.0.0",
+      "pkg:generic/scitt_time_anchor_wasm@2.0.0"
+    ],
+    "third_party_runtime_dependencies": 0,
+    "sbom_reference": "sbom.cdx.json",
+    "disclosure_policy": "SECURITY.md",
+    "hygiene_policy": "All three runtime deliverables have zero third-party dependencies. Statements are appended solely for verified real vulnerability identifiers (CVE/GHSA) affecting scitt-time-anchor or its build/runtime toolchain; synthetic or placeholder CVE entries are never emitted."
+  }
+}

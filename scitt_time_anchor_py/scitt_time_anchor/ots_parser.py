@@ -47,6 +47,7 @@ DRAFT08_MAX_OPERAND_BYTES = 4_096
 DRAFT08_MAX_BRANCHES = 256
 DRAFT08_MAX_OPS_PER_BRANCH = 4_096
 DRAFT08_MAX_DEPTH = 4_608
+DRAFT08_MAX_TOTAL_OPS = 16_384
 
 STRICT_MAX_PROOF_BYTES = 65_536
 STRICT_MAX_OPERAND_BYTES = 512
@@ -54,6 +55,7 @@ HARDENED_MAX_RUNNING_BYTES = 4_096
 STRICT_MAX_BRANCHES = 64
 STRICT_MAX_OPS_PER_BRANCH = 128
 STRICT_MAX_DEPTH = 256
+STRICT_MAX_TOTAL_OPS = 1_024
 
 # Matches `python-opentimestamps v0.4.5` `TimeAttestation.MAX_PAYLOAD_SIZE = 8192`
 MAX_ATTESTATION_PAYLOAD_BYTES = 8_192
@@ -109,6 +111,111 @@ class OtsProof:
     file_hash_op: int
     msg: bytes
     branches: Tuple[OtsBranch, ...]
+
+
+@dataclass(frozen=True)
+class OtsOpNode:
+    parent: Optional[int]
+    op: OtsOp
+
+
+@dataclass(frozen=True)
+class OtsDagBranch:
+    tip_node: Optional[int]
+    ops_len: int
+    attestation_kind: AttestationKind
+    attestation_tag: bytes
+    bitcoin_height: Optional[int] = None
+    pending_uri: Optional[str] = None
+    raw_attestation_payload: bytes = b""
+
+
+def _apply_ots_op(current: bytes, op: OtsOp, max_running_bytes: int) -> Optional[bytes]:
+    if op.tag == OP_APPEND:
+        if len(current) + len(op.operand) > max_running_bytes:
+            return None
+        return current + op.operand
+    if op.tag == OP_PREPEND:
+        if len(op.operand) + len(current) > max_running_bytes:
+            return None
+        return op.operand + current
+    if op.tag == OP_SHA256:
+        return hashlib.sha256(current).digest()
+    return None
+
+
+@dataclass(frozen=True)
+class OtsDagProof:
+    version: int
+    file_hash_op: int
+    msg: bytes
+    nodes: Tuple[OtsOpNode, ...]
+    branches: Tuple[OtsDagBranch, ...]
+
+    def branch_ops(self, branch: OtsDagBranch) -> Tuple[OtsOp, ...]:
+        ops: List[OtsOp] = []
+        cur = branch.tip_node
+        while cur is not None:
+            node = self.nodes[cur]
+            ops.append(node.op)
+            cur = node.parent
+        ops.reverse()
+        return tuple(ops)
+
+    def eval_branch_digests(
+        self,
+        initial_digest: bytes,
+        *,
+        max_running_bytes: int = HARDENED_MAX_RUNNING_BYTES,
+    ) -> List[Optional[bytes]]:
+        """Evaluate every branch tip in O(total_wire_ops) time by computing each shared prefix node
+        once in topological order with reference-counted immediate buffer release.
+        """
+        n_nodes = len(self.nodes)
+        uses = [0] * n_nodes
+        for node in self.nodes:
+            if node.parent is not None:
+                uses[node.parent] += 1
+        for br in self.branches:
+            if br.tip_node is not None:
+                uses[br.tip_node] += 1
+
+        states: List[Optional[bytes]] = [None] * n_nodes
+        root_ok = len(initial_digest) <= max_running_bytes
+
+        for idx, node in enumerate(self.nodes):
+            p = node.parent
+            if p is None:
+                next_val = (
+                    _apply_ots_op(initial_digest, node.op, max_running_bytes)
+                    if root_ok
+                    else None
+                )
+            else:
+                parent_state = states[p]
+                next_val = (
+                    _apply_ots_op(parent_state, node.op, max_running_bytes)
+                    if parent_state is not None
+                    else None
+                )
+                uses[p] -= 1
+                if uses[p] == 0:
+                    states[p] = None
+            if uses[idx] > 0:
+                states[idx] = next_val
+
+        out: List[Optional[bytes]] = []
+        for br in self.branches:
+            t = br.tip_node
+            if t is None:
+                out.append(initial_digest if (root_ok and len(initial_digest) == 32) else None)
+            else:
+                st = states[t]
+                uses[t] -= 1
+                if uses[t] == 0:
+                    states[t] = None
+                out.append(st if (st is not None and len(st) == 32) else None)
+        return out
 
 
 def encode_varuint(value: int) -> bytes:
@@ -220,11 +327,14 @@ def read_varbytes(
     return buf[next_pos:end_pos], end_pos
 
 
-def ots_deserialize(
+def ots_deserialize_dag(
     ots_bytes: bytes,
     mode: VerifierMode = VerifierMode.DRAFT08,
-) -> Optional[OtsProof]:
-    """Iterative O(1)-call-stack `.ots` parser matching `scitt_time_anchor_rs/src/ots.rs`."""
+) -> Optional[OtsDagProof]:
+    """Iterative O(1)-call-stack shared-prefix DAG `.ots` parser matching `scitt_time_anchor_rs/src/ots.rs`.
+    Enforces per-branch, total-operations (`DRAFT08_MAX_TOTAL_OPS` / `STRICT_MAX_TOTAL_OPS`),
+    branch count, operand length, and nesting depth bounds in O(wire_ops) time and memory.
+    """
     strict = mode == VerifierMode.STRICT
     max_proof_bytes = STRICT_MAX_PROOF_BYTES if strict else DRAFT08_MAX_PROOF_BYTES
     if len(ots_bytes) < len(OTS_MAGIC) + 3 or len(ots_bytes) > max_proof_bytes:
@@ -260,29 +370,28 @@ def ots_deserialize(
     max_branches = STRICT_MAX_BRANCHES if strict else DRAFT08_MAX_BRANCHES
     max_ops_per_branch = STRICT_MAX_OPS_PER_BRANCH if strict else DRAFT08_MAX_OPS_PER_BRANCH
     max_depth = STRICT_MAX_DEPTH if strict else DRAFT08_MAX_DEPTH
+    max_total_ops = STRICT_MAX_TOTAL_OPS if strict else DRAFT08_MAX_TOTAL_OPS
 
-    branches: List[OtsBranch] = []
-    ops_stack: List[OtsOp] = []
-    # Frame tuple: (state, ops_len, depth)
-    work: List[Tuple[str, int, int]] = [("enter_ts", 0, 0)]
+    nodes: List[OtsOpNode] = []
+    branches: List[OtsDagBranch] = []
+    # Frame tuple: (state, parent_node, ops_len, depth)
+    work: List[Tuple[str, Optional[int], int, int]] = [("enter_ts", None, 0, 0)]
     total_len = len(ots_bytes)
 
     while work:
-        state, ops_len, depth = work.pop()
+        state, parent_node, ops_len, depth = work.pop()
         if state in ("enter_ts", "after_branch"):
             if depth > max_depth or pos >= total_len:
                 return None
-            del ops_stack[ops_len:]
             if ots_bytes[pos] == TAG_BRANCH:
                 pos += 1
-                work.append(("after_branch", ops_len, depth))
-                work.append(("enter_step", ops_len, depth + 1))
+                work.append(("after_branch", parent_node, ops_len, depth))
+                work.append(("enter_step", parent_node, ops_len, depth + 1))
             else:
-                work.append(("enter_step", ops_len, depth + 1))
+                work.append(("enter_step", parent_node, ops_len, depth + 1))
         else:
             if depth > max_depth or pos >= total_len:
                 return None
-            del ops_stack[ops_len:]
             tag = ots_bytes[pos]
             pos += 1
 
@@ -312,8 +421,9 @@ def ots_deserialize(
                     if p_end != len(payload):
                         return None
                     branches.append(
-                        OtsBranch(
-                            ops=tuple(ops_stack),
+                        OtsDagBranch(
+                            tip_node=parent_node,
+                            ops_len=ops_len,
                             attestation_kind=AttestationKind.BITCOIN,
                             attestation_tag=att_tag,
                             bitcoin_height=height,
@@ -337,8 +447,9 @@ def ots_deserialize(
                         return None
                     uri_str = uri_bytes.decode("ascii")
                     branches.append(
-                        OtsBranch(
-                            ops=tuple(ops_stack),
+                        OtsDagBranch(
+                            tip_node=parent_node,
+                            ops_len=ops_len,
                             attestation_kind=AttestationKind.PENDING,
                             attestation_tag=att_tag,
                             pending_uri=uri_str,
@@ -349,15 +460,16 @@ def ots_deserialize(
                     if strict:
                         return None
                     branches.append(
-                        OtsBranch(
-                            ops=tuple(ops_stack),
+                        OtsDagBranch(
+                            tip_node=parent_node,
+                            ops_len=ops_len,
                             attestation_kind=AttestationKind.UNKNOWN,
                             attestation_tag=att_tag,
                             raw_attestation_payload=payload,
                         )
                     )
             elif tag in (OP_APPEND, OP_PREPEND):
-                if len(ops_stack) >= max_ops_per_branch:
+                if ops_len >= max_ops_per_branch or len(nodes) >= max_total_ops:
                     return None
                 op_res = read_varbytes(
                     ots_bytes,
@@ -369,13 +481,15 @@ def ots_deserialize(
                 if op_res is None:
                     return None
                 operand, pos = op_res
-                ops_stack.append(OtsOp(tag=tag, operand=operand))
-                work.append(("enter_ts", len(ops_stack), depth))
+                new_idx = len(nodes)
+                nodes.append(OtsOpNode(parent=parent_node, op=OtsOp(tag=tag, operand=operand)))
+                work.append(("enter_ts", new_idx, ops_len + 1, depth))
             elif tag == OP_SHA256:
-                if len(ops_stack) >= max_ops_per_branch:
+                if ops_len >= max_ops_per_branch or len(nodes) >= max_total_ops:
                     return None
-                ops_stack.append(OtsOp(tag=OP_SHA256))
-                work.append(("enter_ts", len(ops_stack), depth))
+                new_idx = len(nodes)
+                nodes.append(OtsOpNode(parent=parent_node, op=OtsOp(tag=OP_SHA256)))
+                work.append(("enter_ts", new_idx, ops_len + 1, depth))
             elif tag in (
                 OP_LEGACY_01,
                 OP_SHA1,
@@ -384,21 +498,50 @@ def ots_deserialize(
                 OP_REVERSE,
                 OP_HEXLIFY,
             ):
-                if strict or len(ops_stack) >= max_ops_per_branch:
+                if strict or ops_len >= max_ops_per_branch or len(nodes) >= max_total_ops:
                     return None
-                ops_stack.append(OtsOp(tag=tag))
-                work.append(("enter_ts", len(ops_stack), depth))
+                new_idx = len(nodes)
+                nodes.append(OtsOpNode(parent=parent_node, op=OtsOp(tag=tag)))
+                work.append(("enter_ts", new_idx, ops_len + 1, depth))
             else:
                 return None
 
     if pos != total_len or not branches:
         return None
 
-    return OtsProof(
+    return OtsDagProof(
         version=version,
         file_hash_op=file_hash_op,
         msg=msg,
+        nodes=tuple(nodes),
         branches=tuple(branches),
+    )
+
+
+def ots_deserialize(
+    ots_bytes: bytes,
+    mode: VerifierMode = VerifierMode.DRAFT08,
+) -> Optional[OtsProof]:
+    """Iterative O(1)-call-stack `.ots` parser matching `scitt_time_anchor_rs/src/ots.rs`."""
+    dag = ots_deserialize_dag(ots_bytes, mode=mode)
+    if dag is None:
+        return None
+    flat_branches = tuple(
+        OtsBranch(
+            ops=dag.branch_ops(br),
+            attestation_kind=br.attestation_kind,
+            attestation_tag=br.attestation_tag,
+            bitcoin_height=br.bitcoin_height,
+            pending_uri=br.pending_uri,
+            raw_attestation_payload=br.raw_attestation_payload,
+        )
+        for br in dag.branches
+    )
+    return OtsProof(
+        version=dag.version,
+        file_hash_op=dag.file_hash_op,
+        msg=dag.msg,
+        branches=flat_branches,
     )
 
 
@@ -408,48 +551,75 @@ def ots_replay(
     *,
     max_running_bytes: int = HARDENED_MAX_RUNNING_BYTES,
 ) -> Optional[bytes]:
-    current = initial_digest
+    if len(initial_digest) > max_running_bytes:
+        return None
+    current: Optional[bytes] = initial_digest
     for op in branch.ops:
-        if op.tag == OP_APPEND:
-            if len(current) + len(op.operand) > max_running_bytes:
-                return None
-            current = current + op.operand
-        elif op.tag == OP_PREPEND:
-            if len(op.operand) + len(current) > max_running_bytes:
-                return None
-            current = op.operand + current
-        elif op.tag == OP_SHA256:
-            current = hashlib.sha256(current).digest()
-        else:
+        assert current is not None
+        current = _apply_ots_op(current, op, max_running_bytes)
+        if current is None:
             return None
-    if len(current) != 32:
+    if current is None or len(current) != 32:
         return None
     return current
 
 
-def verify_rfc6962_batch_prefix(branch: OtsBranch) -> bool:
-    """Optional producer-side Section 5.3 domain-separated batch helper (disabled by default on v1 `.ots`)."""
-    ops = branch.ops
+def verify_rfc6962_batch_prefix_ops(ops: Sequence[OtsOp]) -> bool:
+    """Optional producer-side Section 5.3 domain-separated batch helper (disabled by default on v1 `.ots`).
+    Matches `scitt_time_anchor_rs/src/ots.rs::verify_rfc6962_batch_prefix_ops` 100%.
+    """
     if len(ops) < 3:
         return False
-    if ops[0].tag != OP_APPEND or len(ops[0].operand) != 16:
-        return False
-    if ops[1] != OtsOp(tag=OP_PREPEND, operand=b"\x00"):
-        return False
-    if ops[2] != OtsOp(tag=OP_SHA256):
+    op0, op1, op2 = ops[0], ops[1], ops[2]
+    leaf_ok = (
+        op0.tag == OP_APPEND
+        and len(op0.operand) == 16
+        and op1 == OtsOp(tag=OP_PREPEND, operand=b"\x00")
+        and op2 == OtsOp(tag=OP_SHA256)
+    ) or (
+        op0 == OtsOp(tag=OP_PREPEND, operand=b"\x00")
+        and op1.tag == OP_APPEND
+        and len(op1.operand) == 16
+        and op2 == OtsOp(tag=OP_SHA256)
+    )
+    if not leaf_ok:
         return False
 
     idx = 3
     while idx < len(ops):
         cur = ops[idx]
         if cur.tag in (OP_APPEND, OP_PREPEND) and len(cur.operand) == 32:
-            if idx + 2 < len(ops) and ops[idx + 1] == OtsOp(tag=OP_PREPEND, operand=b"\x01"):
-                if ops[idx + 2] != OtsOp(tag=OP_SHA256):
-                    return False
+            if (
+                idx + 2 < len(ops)
+                and ops[idx + 1] == OtsOp(tag=OP_PREPEND, operand=b"\x01")
+                and ops[idx + 2] == OtsOp(tag=OP_SHA256)
+            ):
                 idx += 3
                 continue
+            break
+        if cur == OtsOp(tag=OP_PREPEND, operand=b"\x01"):
+            if idx + 2 >= len(ops):
+                return False
+            if (
+                ops[idx + 1].tag == OP_APPEND
+                and len(ops[idx + 1].operand) == 32
+                and ops[idx + 2] == OtsOp(tag=OP_SHA256)
+            ):
+                idx += 3
+                continue
+            return False
+        if cur.tag == OP_PREPEND and len(cur.operand) == 33 and cur.operand[0] == 0x01:
+            if idx + 1 >= len(ops) or ops[idx + 1] != OtsOp(tag=OP_SHA256):
+                return False
+            idx += 2
+            continue
         break
     return True
+
+
+def verify_rfc6962_batch_prefix(branch: OtsBranch) -> bool:
+    """Optional producer-side Section 5.3 domain-separated batch helper (disabled by default on v1 `.ots`)."""
+    return verify_rfc6962_batch_prefix_ops(branch.ops)
 
 
 def ots_serialize_single_branch(

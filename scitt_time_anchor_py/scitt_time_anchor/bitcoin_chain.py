@@ -17,7 +17,24 @@ BITCOIN_MAINNET_GENESIS_HEX = (
 )
 # Mainnet CSV / BIP-113 activation block height
 BITCOIN_MAINNET_BIP113_HEIGHT = 419_328
+# Bitcoin Mainnet consensus PoW ceiling (difficulty 1: nBits = 0x1d00ffff)
+BITCOIN_MAINNET_POW_LIMIT_NBITS = 0x1D00FFFF
+# Post-CSV/BIP-113 Mainnet maximum target ceiling (nBits = 0x181fffff, difficulty ~8.4M vs >209B at block 419,328)
+BITCOIN_MAINNET_POST_BIP113_MAX_NBITS = 0x181FFFFF
+BITCOIN_RETARGET_INTERVAL = 2016
+BITCOIN_TARGET_TIMESPAN = 14 * 24 * 60 * 60  # 1,209,600 seconds
 UINT256_MAX = (1 << 256) - 1
+
+# Verified Bitcoin Mainnet historical milestone checkpoints (Genesis, Halvings, CSV/BIP-113, SegWit, Taproot).
+BITCOIN_MAINNET_CHECKPOINTS: Dict[int, str] = {
+    0: BITCOIN_MAINNET_GENESIS_HEX,
+    210_000: "000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e",
+    419_328: "000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5",
+    481_824: "0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893",
+    630_000: "000000000000000000024bead8df69990852c202db0e0097c1a12ea637d7e96d",
+    709_632: "0000000000000000000687bca986194dc2c1f949318629b44bb54ec0a94d8244",
+    840_000: "0000000000000000000320283a032748cef8227873ff4872689bf23f1cda83a5",
+}
 
 
 class HeaderSource(str, Enum):
@@ -68,6 +85,49 @@ def set_compact_exact(nbits: int) -> Optional[int]:
     if target == 0 or f_negative or f_overflow or target > UINT256_MAX:
         return None
     return target
+
+
+def target_to_compact_exact(target: int) -> int:
+    """Exact port of Bitcoin Core `arith_uint256::GetCompact(false)`."""
+    if target <= 0:
+        return 0
+    n_size = (target.bit_length() + 7) // 8
+    if n_size <= 3:
+        n_compact = (target << (8 * (3 - n_size))) & 0x00FFFFFF
+    else:
+        n_compact = (target >> (8 * (n_size - 3))) & 0x00FFFFFF
+    if n_compact & 0x00800000:
+        n_compact >>= 8
+        n_size += 1
+    return (n_compact & 0x007FFFFF) | ((n_size & 0xFF) << 24)
+
+
+BITCOIN_MAINNET_POW_LIMIT = set_compact_exact(BITCOIN_MAINNET_POW_LIMIT_NBITS) or UINT256_MAX
+BITCOIN_MAINNET_POST_BIP113_MAX_TARGET = (
+    set_compact_exact(BITCOIN_MAINNET_POST_BIP113_MAX_NBITS) or BITCOIN_MAINNET_POW_LIMIT
+)
+
+
+def calculate_next_work_required(
+    last_target: int,
+    first_block_time: int,
+    last_block_time: int,
+    pow_limit: int,
+) -> int:
+    """Exact port of Bitcoin Core `CalculateNextWorkRequired` (BIP-9 / consensus retarget)."""
+    actual_timespan = max(0, last_block_time - first_block_time)
+    min_ts = BITCOIN_TARGET_TIMESPAN // 4
+    max_ts = BITCOIN_TARGET_TIMESPAN * 4
+    if actual_timespan < min_ts:
+        actual_timespan = min_ts
+    elif actual_timespan > max_ts:
+        actual_timespan = max_ts
+    new_target = (last_target * actual_timespan) // BITCOIN_TARGET_TIMESPAN
+    if new_target > pow_limit:
+        new_target = pow_limit
+    if new_target <= 0:
+        new_target = 1
+    return target_to_compact_exact(new_target)
 
 
 def block_work_from_target(target: int) -> int:
@@ -168,6 +228,7 @@ class ValidatedHeaderChain:
         verify_pow_and_links: bool = True,
         allow_sparse_checkpoints: bool = False,
         enforce_retarget_4x_bound: bool = False,
+        enforce_consensus_targets: bool = False,
         min_chainwork: int = 0,
     ) -> None:
         self.ledger_id = ledger_id
@@ -184,6 +245,7 @@ class ValidatedHeaderChain:
         sorted_heights = sorted(headers_by_height.keys())
         slices: List[List[int]] = []
         cur_slice: List[int] = []
+        is_mainnet = ledger_id == BITCOIN_MAINNET_GENESIS_HEX
 
         for h in sorted_heights:
             if cur_slice and h != cur_slice[-1] + 1:
@@ -200,19 +262,61 @@ class ValidatedHeaderChain:
             if verify_pow_and_links:
                 if not parsed.check_pow():
                     raise ValueError(f"Invalid PoW at height {h}")
+                if is_mainnet:
+                    expected_cp = BITCOIN_MAINNET_CHECKPOINTS.get(h)
+                    if expected_cp is not None and parsed.block_hash_display != expected_cp:
+                        raise ValueError(
+                            f"Mainnet checkpoint hash mismatch at height {h}: {parsed.block_hash_display}"
+                        )
+                cur_t = parsed.target()
+                if cur_t is None:
+                    raise ValueError(f"Invalid target at height {h}")
+                if enforce_consensus_targets and is_mainnet:
+                    if cur_t > BITCOIN_MAINNET_POW_LIMIT:
+                        raise ValueError(
+                            f"Target exceeds Bitcoin Mainnet powLimit at height {h}"
+                        )
+                    if (
+                        h >= BITCOIN_MAINNET_BIP113_HEIGHT
+                        and cur_t > BITCOIN_MAINNET_POST_BIP113_MAX_TARGET
+                    ):
+                        raise ValueError(
+                            f"Trivially easy post-CSV Mainnet target at height {h}"
+                        )
                 if cur_slice:
                     prev_hdr = self._validated[cur_slice[-1]]
                     if parsed.prev_block_hash_internal != prev_hdr.block_hash_internal:
                         raise ValueError(f"Broken prev_block_hash link at height {h}")
                     if enforce_retarget_4x_bound:
                         prev_t = prev_hdr.target()
-                        cur_t = parsed.target()
-                        if prev_t is None or cur_t is None:
+                        if prev_t is None:
                             raise ValueError("Invalid target during retarget check")
-                        if (h % 2016) != 0 and cur_t != prev_t:
-                            raise ValueError(f"Mid-epoch difficulty mutation at {h}")
-                        if cur_t > min(UINT256_MAX, prev_t * 4):
-                            raise ValueError(f"Difficulty drop exceeds 4x bound at {h}")
+                        if (h % BITCOIN_RETARGET_INTERVAL) != 0:
+                            if cur_t != prev_t:
+                                raise ValueError(f"Mid-epoch difficulty mutation at {h}")
+                        else:
+                            upper_t = min(
+                                BITCOIN_MAINNET_POW_LIMIT if (enforce_consensus_targets and is_mainnet) else UINT256_MAX,
+                                prev_t * 4,
+                            )
+                            if cur_t > upper_t:
+                                raise ValueError(f"Difficulty drop exceeds 4x bound at {h}")
+                            if prev_t >= 4 and (cur_t + (cur_t >> 15)) < (prev_t // 4):
+                                raise ValueError(f"Difficulty jump exceeds 4x bound at {h}")
+                            epoch_start_h = h - BITCOIN_RETARGET_INTERVAL
+                            if len(cur_slice) >= BITCOIN_RETARGET_INTERVAL:
+                                first_hdr = self._validated.get(epoch_start_h)
+                                if first_hdr is not None:
+                                    expected_nbits = calculate_next_work_required(
+                                        prev_t,
+                                        first_hdr.ntime,
+                                        prev_hdr.ntime,
+                                        BITCOIN_MAINNET_POW_LIMIT if is_mainnet else UINT256_MAX,
+                                    )
+                                    if parsed.nbits != expected_nbits:
+                                        raise ValueError(
+                                            f"Retarget nBits mismatch at {h}: got {parsed.nbits:#x}, expected {expected_nbits:#x}"
+                                        )
                 bip113_active = (
                     ledger_id != BITCOIN_MAINNET_GENESIS_HEX
                     or h >= BITCOIN_MAINNET_BIP113_HEIGHT
@@ -253,23 +357,41 @@ class ValidatedHeaderChain:
         valid_chains: List[ValidatedHeaderChain] = []
         for cfg in candidates:
             try:
-                h_map = {int(k): bytes.fromhex(v) for k, v in cfg["headers_hex"].items()}
+                h_map: Dict[int, bytes] = {}
+                for k, v in cfg["headers_hex"].items():
+                    if (
+                        not isinstance(k, str)
+                        or not k
+                        or len(k) > 20
+                        or (len(k) > 1 and k[0] == "0")
+                        or not (k.isascii() and k.isdigit())
+                    ):
+                        raise ValueError("Non-canonical height key")
+                    h_val = int(k)
+                    if h_val > (1 << 64) - 1:
+                        raise ValueError("Height exceeds u64::MAX")
+                    h_map[h_val] = bytes.fromhex(v)
                 min_cw = 0
                 if strict:
                     cw_str = cfg.get("min_chainwork_hex")
                     if cw_str not in (None, "0", "0x0"):
-                        parsed_cw = parse_u256_hex_64(str(cw_str))
+                        if not isinstance(cw_str, str):
+                            continue
+                        parsed_cw = parse_u256_hex_64(cw_str)
                         if parsed_cw is None:
                             continue
                         min_cw = parsed_cw
                 vc = cls(
                     h_map,
                     ledger_id=cfg.get("ledger_id", BITCOIN_MAINNET_GENESIS_HEX),
-                    verify_pow_and_links=cfg.get("verify_pow_and_links", True),
+                    verify_pow_and_links=(
+                        True if strict else cfg.get("verify_pow_and_links", True)
+                    ),
                     allow_sparse_checkpoints=cfg.get("allow_sparse_checkpoints", False),
                     enforce_retarget_4x_bound=(
-                        cfg.get("enforce_retarget_4x_bound", False) and strict
+                        True if strict else cfg.get("enforce_retarget_4x_bound", False)
                     ),
+                    enforce_consensus_targets=strict,
                     min_chainwork=min_cw,
                 )
                 valid_chains.append(vc)

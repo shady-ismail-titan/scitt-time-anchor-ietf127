@@ -14,11 +14,10 @@ from .ots_parser import (
     HARDENED_MAX_RUNNING_BYTES,
     OP_SHA256,
     AttestationKind,
-    OtsBranch,
+    OtsDagBranch,
     VerifierMode,
-    ots_deserialize,
-    ots_replay,
-    verify_rfc6962_batch_prefix,
+    ots_deserialize_dag,
+    verify_rfc6962_batch_prefix_ops,
 )
 
 MIN_CONFIRMATIONS = 6
@@ -87,6 +86,7 @@ def verify_anchor(
     require_rfc6962_batch: bool = False,
 ) -> VerificationResult:
     strict = mode == VerifierMode.STRICT
+    effective_min_conf = max(min_confirmations, MIN_CONFIRMATIONS) if strict else min_confirmations
 
     if artifact_bytes is None:
         return VerificationResult(Outcome.UNVERIFIABLE, step=1, mode=mode)
@@ -100,38 +100,37 @@ def verify_anchor(
     if computed_hash_hex != stripped_claimed:
         return VerificationResult(Outcome.INVALID, step=2, mode=mode)
 
-    parsed = ots_deserialize(proof_bundle.ots_proof, mode=mode)
+    parsed = ots_deserialize_dag(proof_bundle.ots_proof, mode=mode)
     if parsed is None:
         return VerificationResult(Outcome.INVALID, step=3, mode=mode)
     if parsed.file_hash_op != OP_SHA256 or parsed.msg != computed_hash_bytes:
         return VerificationResult(Outcome.INVALID, step=3, mode=mode)
 
-    btc_branches: List[OtsBranch] = [
-        b
-        for b in parsed.branches
+    btc_branches: List[Tuple[int, OtsDagBranch]] = [
+        (idx, b)
+        for idx, b in enumerate(parsed.branches)
         if b.attestation_kind == AttestationKind.BITCOIN and b.bitcoin_height is not None
     ]
     if not btc_branches:
         return VerificationResult(Outcome.UNVERIFIABLE, step=4, mode=mode)
 
     if strict and require_rfc6962_batch:
-        for b in btc_branches:
-            if not verify_rfc6962_batch_prefix(b):
+        for _, b in btc_branches:
+            if not verify_rfc6962_batch_prefix_ops(parsed.branch_ops(b)):
                 return VerificationResult(Outcome.INVALID, step=3, mode=mode)
 
+    all_digests = parsed.eval_branch_digests(
+        computed_hash_bytes,
+        max_running_bytes=HARDENED_MAX_RUNNING_BYTES,
+    )
     branch_states: List[_BranchState] = []
     verified_headers: List[Tuple[int, BitcoinHeader]] = []
     mismatched_count = 0
 
-    for branch in btc_branches:
+    for br_idx, branch in btc_branches:
         assert branch.bitcoin_height is not None
         h = branch.bitcoin_height
-
-        digest = ots_replay(
-            branch,
-            computed_hash_bytes,
-            max_running_bytes=HARDENED_MAX_RUNNING_BYTES,
-        )
+        digest = all_digests[br_idx]
 
         if candidate_store is not None:
             candidate_raw = candidate_store.fetch_block_header_by_height(h)
@@ -192,7 +191,7 @@ def verify_anchor(
         confirmed_candidates: List[Tuple[int, BitcoinHeader, int]] = []
         for h, hdr in verified_headers:
             k = validated_chain.confirmations_on(h)
-            if k is not None and k >= min_confirmations:
+            if k is not None and k >= effective_min_conf:
                 confirmed_candidates.append((h, hdr, k))
         if not confirmed_candidates:
             first_h, _ = verified_headers[0]
@@ -209,7 +208,7 @@ def verify_anchor(
     else:
         first_h, first_hdr = verified_headers[0]
         first_k = validated_chain.confirmations_on(first_h)
-        if first_k is None or first_k < min_confirmations:
+        if first_k is None or first_k < effective_min_conf:
             return VerificationResult(
                 Outcome.UNVERIFIABLE,
                 step=9,

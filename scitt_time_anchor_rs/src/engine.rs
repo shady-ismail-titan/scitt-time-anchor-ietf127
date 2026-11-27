@@ -17,6 +17,8 @@ use crate::verifier::{
     verify_anchor, Outcome, ProofBundle, VerificationResult, MIN_CONFIRMATIONS,
 };
 
+pub const MAX_JSON_LINE_BYTES: usize = 4_194_304;
+
 fn format_opt_u64(v: Option<u64>) -> String {
     match v {
         Some(n) => n.to_string(),
@@ -33,7 +35,7 @@ fn format_opt_u32(v: Option<u32>) -> String {
 
 pub fn format_result_json(case_id: &str, r: &VerificationResult) -> String {
     format!(
-        "{{\"block_height_h\": {}, \"block_time_rwcp\": {}, \"confirmations\": {}, \"fmtp_11\": {}, \"fmtp_5\": {}, \"fmtp_6\": {}, \"id\": {}, \"mismatched_branches\": {}, \"mode\": {}, \"mtp_bip113\": {}, \"outcome\": {}, \"step\": {}}}",
+        "{{\"block_height_h\": {}, \"block_time_rwcp\": {}, \"confirmations\": {}, \"cose_signature_verified\": false, \"fmtp_11\": {}, \"fmtp_5\": {}, \"fmtp_6\": {}, \"id\": {}, \"mismatched_branches\": {}, \"mode\": {}, \"mtp_bip113\": {}, \"outcome\": {}, \"step\": {}, \"verification_scope\": \"temporal_anchor_only\"}}",
         format_opt_u64(r.block_height_h),
         format_opt_u32(r.block_time_rwcp),
         format_opt_u64(r.confirmations),
@@ -53,10 +55,24 @@ fn invalid_step0(mode: VerifierMode) -> VerificationResult {
     VerificationResult::early(Outcome::Invalid, 0, mode)
 }
 
+fn parse_canonical_height_key(k: &str) -> Option<u64> {
+    let bytes = k.as_bytes();
+    if bytes.is_empty() {
+        return None;
+    }
+    if bytes.len() > 1 && bytes[0] == b'0' {
+        return None;
+    }
+    if !bytes.iter().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    k.parse::<u64>().ok()
+}
+
 fn parse_headers_map(obj: &BTreeMap<String, JsonVal>) -> Option<BTreeMap<u64, Vec<u8>>> {
     let mut out = BTreeMap::new();
     for (k, v) in obj {
-        let h = k.parse::<u64>().ok()?;
+        let h = parse_canonical_height_key(k)?;
         let hex_s = v.as_str()?;
         let raw = decode_hex(hex_s)?;
         out.insert(h, raw);
@@ -74,23 +90,32 @@ pub fn build_chain_from_json_obj(
         .and_then(|v| v.as_str())
         .unwrap_or(BITCOIN_MAINNET_GENESIS_HEX)
         .to_string();
-    let verify_pow_and_links = vc_obj
-        .get("verify_pow_and_links")
-        .and_then(|v| v.as_bool())
-        .unwrap_or(true);
+    let verify_pow_and_links = if strict {
+        true
+    } else {
+        vc_obj
+            .get("verify_pow_and_links")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(true)
+    };
     let allow_sparse_checkpoints = vc_obj
         .get("allow_sparse_checkpoints")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
-    let enforce_retarget_4x_bound = vc_obj
-        .get("enforce_retarget_4x_bound")
-        .and_then(|v| v.as_bool())
-        .unwrap_or(false)
-        && strict;
+    let enforce_retarget_4x_bound = if strict {
+        true
+    } else {
+        vc_obj
+            .get("enforce_retarget_4x_bound")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(false)
+    };
     let min_chainwork = if strict {
-        match vc_obj.get("min_chainwork_hex").and_then(|v| v.as_str()) {
-            Some("0") | Some("0x0") | None => U256::ZERO,
-            Some(hex_cw) => U256::from_hex(hex_cw)?,
+        match vc_obj.get("min_chainwork_hex") {
+            None | Some(JsonVal::Null) => U256::ZERO,
+            Some(JsonVal::Str(s)) if s == "0" || s == "0x0" => U256::ZERO,
+            Some(JsonVal::Str(hex_cw)) => U256::from_hex(hex_cw)?,
+            Some(_) => return None,
         }
     } else {
         U256::ZERO
@@ -105,6 +130,7 @@ pub fn build_chain_from_json_obj(
             verify_pow_and_links,
             allow_sparse_checkpoints,
             enforce_retarget_4x_bound,
+            enforce_consensus_targets: strict,
             min_chainwork,
         },
     )
@@ -128,11 +154,14 @@ pub fn select_best_fork_from_json(
     if mode == VerifierMode::Draft08 {
         return Some(valid_chains.remove(0));
     }
-    valid_chains.sort_by(|a, b| b.total_chainwork.cmp(&a.total_chainwork));
+    valid_chains.sort_by_key(|a| std::cmp::Reverse(a.total_chainwork));
     Some(valid_chains.remove(0))
 }
 
 pub fn evaluate_line(line: &str, default_mode: VerifierMode) -> String {
+    if line.len() > MAX_JSON_LINE_BYTES {
+        return "{\"error\": \"bad_json\"}".to_string();
+    }
     let map = match parse_json_object(line) {
         Some(m) => m,
         None => return "{\"error\": \"bad_json\"}".to_string(),
@@ -167,7 +196,7 @@ pub fn evaluate_line(line: &str, default_mode: VerifierMode) -> String {
             Some(b) => b,
             None => return format_result_json(&case_id, &invalid_step0(mode)),
         };
-        match parse_cose_sign1_statement(&cose_raw, false) {
+        match parse_cose_sign1_statement(&cose_raw, strict) {
             Some(stmt) => Some(stmt.raw_bytes),
             None => return format_result_json(&case_id, &invalid_step0(mode)),
         }
@@ -180,7 +209,7 @@ pub fn evaluate_line(line: &str, default_mode: VerifierMode) -> String {
             Some(b) => b,
             None => return format_result_json(&case_id, &invalid_step0(mode)),
         };
-        let stmt = match parse_cose_sign1_statement(&cose_raw, false) {
+        let stmt = match parse_cose_sign1_statement(&cose_raw, strict) {
             Some(s) => s,
             None => return format_result_json(&case_id, &invalid_step0(mode)),
         };
@@ -209,6 +238,7 @@ pub fn evaluate_line(line: &str, default_mode: VerifierMode) -> String {
             rcpt_vec.as_deref(),
             det_vec.as_deref(),
             req_rcpt,
+            strict,
         ) {
             Some(tbs) => Some(tbs),
             None => return format_result_json(&case_id, &invalid_step0(mode)),

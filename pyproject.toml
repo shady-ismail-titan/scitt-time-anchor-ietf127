@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scitt-time-anchor"
+version = "2.0.0"
+description = "Clean-room zero-dependency Python verifier for draft-fassbender-scitt-time-anchor-08 and strict consensus profile"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [
+  { name = "Shady Ismail" },
+]
+keywords = ["ietf", "scitt", "opentimestamps", "cose", "cbor", "bitcoin", "rfc9942", "rfc9943"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security :: Cryptography",
+]
+dependencies = []
+
+[project.scripts]
+scitt-time-anchor = "scitt_time_anchor.cli:main"
+
+[project.urls]
+Homepage = "https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/"
+Repository = "https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127"
+
+[tool.setuptools.packages.find]
+where = ["scitt_time_anchor_py"]
+include = ["scitt_time_anchor*"]

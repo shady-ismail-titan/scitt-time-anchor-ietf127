@@ -24,6 +24,14 @@ pub enum CborValue {
     Null,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+enum CborMapKey {
+    Uint(u64),
+    NegInt(i128),
+    Bytes(Vec<u8>),
+    Text(String),
+}
+
 fn cbor_hdr(major: u8, val: u64) -> Vec<u8> {
     let prefix = major << 5;
     if val < 24 {
@@ -171,30 +179,30 @@ fn decode_item(
                 return None;
             }
             let mut pairs = Vec::with_capacity(ln);
-            let mut seen_raw_keys = BTreeSet::new();
-            let mut prev_raw_key: Option<Vec<u8>> = None;
+            let mut seen_semantic_keys: BTreeSet<CborMapKey> = BTreeSet::new();
+            let mut prev_raw_key: Option<&[u8]> = None;
             for _ in 0..ln {
                 let k_start = next;
                 let (k, k_end) = decode_item(buf, next, depth + 1, strict_det, false)?;
-                match k {
-                    CborValue::Uint(_)
-                    | CborValue::NegInt(_)
-                    | CborValue::Bytes(_)
-                    | CborValue::Text(_) => {}
+                let sem_key = match &k {
+                    CborValue::Uint(u) => CborMapKey::Uint(*u),
+                    CborValue::NegInt(n) => CborMapKey::NegInt(*n),
+                    CborValue::Bytes(b) => CborMapKey::Bytes(b.clone()),
+                    CborValue::Text(s) => CborMapKey::Text(s.clone()),
                     _ => return None,
-                }
-                let raw_key = buf[k_start..k_end].to_vec();
+                };
+                let raw_key = &buf[k_start..k_end];
                 if strict_det {
-                    if let Some(ref prev) = prev_raw_key {
-                        if raw_key <= *prev {
+                    if let Some(prev) = prev_raw_key {
+                        if raw_key <= prev {
                             return None;
                         }
                     }
+                    prev_raw_key = Some(raw_key);
                 }
-                if !seen_raw_keys.insert(raw_key.clone()) {
+                if !seen_semantic_keys.insert(sem_key) {
                     return None;
                 }
-                prev_raw_key = Some(raw_key);
                 // Allow nested semantic CBOR tags inside map values when parsing COSE envelopes
                 let (v, v_end) = decode_item(buf, k_end, depth + 1, strict_det, allow_any_tag)?;
                 pairs.push((k, v));
@@ -285,6 +293,19 @@ pub fn parse_cose_sign1_statement(
         _ => return None,
     };
 
+    if strict_deterministic && !prot.is_empty() {
+        let (prot_val, prot_end) = decode_item(&prot, 0, 0, true, true)?;
+        if prot_end != prot.len() {
+            return None;
+        }
+        match prot_val {
+            // RFC 9052 Section 3: an empty protected header map MUST be encoded as zero-length bstr (b""),
+            // never as the 1-byte empty CBOR map b"\xa0".
+            CborValue::Map(m) if !m.is_empty() => {}
+            _ => return None,
+        }
+    }
+
     Some(CoseSign1Statement {
         protected_hdr: prot,
         unprotected_hdr: unprot,
@@ -294,29 +315,44 @@ pub fn parse_cose_sign1_statement(
     })
 }
 
-/// Extract ALL RFC 9942 COSE Receipts (`header 394` => `[ + COSE_Receipt ]`, or single `bstr`).
-pub fn extract_embedded_receipts(stmt: &CoseSign1Statement) -> Option<Vec<Vec<u8>>> {
+fn find_unprotected_receipt_headers<'a>(
+    stmt: &'a CoseSign1Statement,
+) -> (Option<&'a CborValue>, Option<&'a CborValue>) {
+    let mut val_394: Option<&'a CborValue> = None;
+    let mut val_str: Option<&'a CborValue> = None;
     for (k, v) in &stmt.unprotected_hdr {
-        let matches_label = matches!(k, CborValue::Uint(u) if *u == SCITT_RECEIPTS_HEADER_LABEL)
-            || matches!(k, CborValue::Text(s) if s == "scitt_receipt");
-        if matches_label {
-            match v {
-                CborValue::Bytes(b) if !b.is_empty() => return Some(vec![b.clone()]),
-                CborValue::Array(items) if !items.is_empty() => {
-                    let mut out = Vec::with_capacity(items.len());
-                    for item in items {
-                        match item {
-                            CborValue::Bytes(b) if !b.is_empty() => out.push(b.clone()),
-                            _ => return None,
-                        }
-                    }
-                    return Some(out);
-                }
-                _ => return None,
-            }
+        match k {
+            CborValue::Uint(u) if *u == SCITT_RECEIPTS_HEADER_LABEL => val_394 = Some(v),
+            CborValue::Text(s) if s == "scitt_receipt" => val_str = Some(v),
+            _ => {}
         }
     }
-    None
+    (val_394, val_str)
+}
+
+/// Extract ALL RFC 9942 COSE Receipts (`header 394` => `[ + COSE_Receipt ]`, or single `bstr`).
+/// Prioritizes integer label `394` over legacy `"scitt_receipt"`. In `strict` mode, rejects
+/// statements containing BOTH `394` and `"scitt_receipt"` simultaneously as ambiguous.
+pub fn extract_embedded_receipts(stmt: &CoseSign1Statement, strict: bool) -> Option<Vec<Vec<u8>>> {
+    let (val_394, val_str) = find_unprotected_receipt_headers(stmt);
+    if strict && val_394.is_some() && val_str.is_some() {
+        return None;
+    }
+    let chosen = val_394.or(val_str)?;
+    match chosen {
+        CborValue::Bytes(b) if !b.is_empty() => Some(vec![b.clone()]),
+        CborValue::Array(items) if !items.is_empty() => {
+            let mut out = Vec::with_capacity(items.len());
+            for item in items {
+                match item {
+                    CborValue::Bytes(b) if !b.is_empty() => out.push(b.clone()),
+                    _ => return None,
+                }
+            }
+            Some(out)
+        }
+        _ => None,
+    }
 }
 
 /// Build deterministic CBOR commitment aligned with RFC 9921 §3.1.1 (`bstr`-wrapped `signature`),
@@ -327,15 +363,22 @@ pub fn compute_scitt_ots_tbs_bytes(
     receipt_bytes: Option<&[u8]>,
     detached_payload: Option<&[u8]>,
     require_receipt: bool,
+    strict: bool,
 ) -> Option<Vec<u8>> {
     let eff_payload: &[u8] = match stmt.payload.as_deref() {
         Some(p) => p,
         None => detached_payload?,
     };
+    if strict {
+        let (v394, vstr) = find_unprotected_receipt_headers(stmt);
+        if v394.is_some() && vstr.is_some() {
+            return None;
+        }
+    }
     let receipts_list: Vec<Vec<u8>> = match receipt_bytes {
         Some(rb) if !rb.is_empty() => vec![rb.to_vec()],
         Some(_) => return None,
-        None => extract_embedded_receipts(stmt).unwrap_or_default(),
+        None => extract_embedded_receipts(stmt, strict).unwrap_or_default(),
     };
     if require_receipt && receipts_list.is_empty() {
         return None;
@@ -394,6 +437,7 @@ pub fn parse_proof_bundle_cbor(
         let mut ots_proof: Option<Vec<u8>> = None;
         let mut tbs_hash: Option<Vec<u8>> = None;
         let mut cached_h: Option<u64> = None;
+        let mut origin_id: Option<String> = None;
 
         for (k, v) in pairs {
             let idx = match k {
@@ -413,7 +457,10 @@ pub fn parse_proof_bundle_cbor(
                     CborValue::Uint(u) => cached_h = Some(u),
                     _ => return None,
                 },
-                4 => {}
+                4 => match v {
+                    CborValue::Text(s) => origin_id = Some(s),
+                    _ => return None,
+                },
                 _ => return None,
             }
         }
@@ -421,7 +468,7 @@ pub fn parse_proof_bundle_cbor(
         return Some(ParsedBundleCbor {
             ots_proof: ots_proof?,
             claimed_hash: hex_lower(&th),
-            origin_id: None,
+            origin_id,
             bitcoin_block_height: cached_h,
         });
     }
