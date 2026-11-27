@@ -36,4 +36,4 @@ A single semantic SCITT `COSE_Sign1` transparent statement carrying an RFC 9942 
 - **Unprotected Header Relay Invariance (`5` transit hops):**
   - Raw outer `cose_sign1`: **0 / 5** valid (breaks with Step 2 `HASH_MISMATCH` on every relay mutation).
   - `scitt_ots_ctt` (`--mode strict`): **5 / 5** valid (`100%` invariant while keeping RFC 9942 header `394` receipts cryptographically bound).
-- **Triple-Engine Parity:** **0 divergences** across all `266` cases evaluated independently on Python, Native Rust, and Offline WebAssembly (`elapsed: 117.15 ms`).
+- **Triple-Engine Parity:** **0 divergences** across all `266` cases evaluated independently on Python, Native Rust, and Offline WebAssembly (`elapsed: 103.88 ms`).

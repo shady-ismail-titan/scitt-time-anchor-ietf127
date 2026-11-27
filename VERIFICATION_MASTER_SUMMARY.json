@@ -45,5 +45,5 @@
     "wasm_steady_state_heap_delta_bytes": 0
   },
   "draft09_patch_dry_run_clean": true,
-  "elapsed_seconds": 6.94
+  "elapsed_seconds": 1.8
 }

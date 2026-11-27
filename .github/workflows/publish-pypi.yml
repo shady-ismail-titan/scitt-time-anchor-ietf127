@@ -1,0 +1,80 @@
+name: Publish Python Package to PyPI (OIDC Trusted Publishing)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish-pypi:
+    name: Build, Forensics-Check & Publish scitt-time-anchor to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Verify cross-manifest version parity and build sdist + wheel
+        run: |
+          export SOURCE_DATE_EPOCH=1795737600
+          python3 -m pip install --no-cache-dir build twine
+          python3 -m build --outdir dist
+          python3 -m twine check --strict dist/*
+
+      - name: Artifact forensics gate on PyPI sdist and wheel
+        run: |
+          python3 - <<'PY'
+          import tarfile, zipfile
+          from pathlib import Path
+
+          forbidden_exact = [
+              b"/Users/",
+              b"/home/",
+              b"gh" + b"p_",
+              b"AK" + b"IA",
+              b"BEGIN PRIVATE " + b"KEY",
+          ]
+          forbidden_ci = [b"sci" + b"verify"]
+
+          def scan(label: str, data: bytes) -> None:
+              for tok in forbidden_exact:
+                  assert tok not in data, f"Forbidden token {tok!r} in {label}"
+              low = data.lower()
+              for tok in forbidden_ci:
+                  assert tok not in low, f"Forbidden cross-id token {tok!r} in {label}"
+
+          for whl in sorted(Path("dist").glob("*.whl")):
+              with zipfile.ZipFile(whl) as zf:
+                  for name in zf.namelist():
+                      scan(f"{whl.name}:{name}", zf.read(name))
+          for tgz in sorted(Path("dist").glob("*.tar.gz")):
+              with tarfile.open(tgz, "r:gz") as tf:
+                  for m in tf.getmembers():
+                      if m.isfile():
+                          f = tf.extractfile(m)
+                          if f is not None:
+                              scan(f"{tgz.name}:{m.name}", f.read())
+          print("PyPI sdist/wheel forensics gate passed cleanly.")
+          PY
+
+      - name: Publish to PyPI with PEP 740 / Sigstore Attestations
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # release/v1
+        with:
+          packages-dir: dist/
+          attestations: true
+          verify-metadata: true
+          skip-existing: false

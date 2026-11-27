@@ -129,6 +129,6 @@
       "outer_sha256": "251808aad889161dd5bd197fbc8b5a2c6d491def11bf5c32305b98d1b4b5a78d"
     }
   ],
-  "elapsed_ms": 117.15,
+  "elapsed_ms": 103.88,
   "verdict": "PASS"
 }

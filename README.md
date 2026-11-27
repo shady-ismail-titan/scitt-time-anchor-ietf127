@@ -1,11 +1,16 @@
 # SCITT Time-Anchor Triple-Engine Verifier (`v2.0.0`)
 
 [![CI](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/ci.yml/badge.svg)](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/ci.yml)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/17201/badge)](https://www.bestpractices.dev/projects/17201)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/shady-ismail-titan/scitt-time-anchor-ietf127/badge)](https://scorecard.dev/viewer/?uri=github.com/shady-ismail-titan/scitt-time-anchor-ietf127)
-[![REUSE Compliance](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/reuse.yml/badge.svg)](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/reuse.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](./LICENSE)
+[![REUSE Compliance](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/actions/workflows/reuse.yml/badge.svg)](https://api.reuse.software/info/github.com/shady-ismail-titan/scitt-time-anchor-ietf127)
+[![SWH](https://archive.softwareheritage.org/badge/swh:1:snp:fbd4659cafd38bc3d3c2009a97a3006530446640/)](https://archive.softwareheritage.org/swh:1:snp:fbd4659cafd38bc3d3c2009a97a3006530446640)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/blob/main/LICENSE)
 
-**Zero-Backend Offline Browser WASM Lab:** [https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/](https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/)
+**Zero-Backend Offline Browser WASM Lab:** [https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/](https://shady-ismail-titan.github.io/scitt-time-anchor-ietf127/)  
+**Permanent UNESCO Software Heritage Snapshot:** [`swh:1:snp:fbd4659cafd38bc3d3c2009a97a3006530446640`](https://archive.softwareheritage.org/swh:1:snp:fbd4659cafd38bc3d3c2009a97a3006530446640)
+
+> **Verification Scope Boundary:** `scitt-time-anchor` verifies Bitcoin-anchored temporal inclusion (`verification_scope: "temporal_anchor_only"`, `cose_signature_verified: false`). Cryptographic COSE signature verification is delegated to your SCITT verifier / Trust Store per [`THREAT_MODEL.md`](https://github.com/shady-ismail-titan/scitt-time-anchor-ietf127/blob/main/THREAT_MODEL.md).
 
 Independent clean-room reference verifiers for `draft-fassbender-scitt-time-anchor-08` implemented in Python 3, safe Rust (`#![forbid(unsafe_code)]`), and offline WebAssembly (`wasm32-unknown-unknown`), paired with Z3 SMT invariant proofs, a 64-variant `draft-templeman-scitt-framing-space-01` CBOR framing-space empirical study, a reproducible multi-vendor interoperability harness, and non-normative implementer feedback for the IETF SCITT Working Group.
 
